@@ -1,0 +1,14 @@
+➜  mini git:(master) ✗ env -i ./minishell 
+/mnt/nfs/homes/myassine/Desktop/work/minish/mini$> env
+PWD=/mnt/nfs/homes/myassine/Desktop/work/minish/mini$> 
+SHLVL=1
+_=/usr/bin/env
+/mnt/nfs/homes/myassine/Desktop/work/minish/mini$> ./minishell
+/mnt/nfs/homes/myassine/Desktop/work/minish/mini$> env
+PWD=/mnt/nfs/homes/myassine/Desktop/work/minish/mini$> 
+SHLVL=2
+_=/usr/bin/env
+/mnt/nfs/homes/myassine/Desktop/work/minish/mini$> exit
+/mnt/nfs/homes/myassine/Desktop/work/minish/mini$> exit
+munmap_chunk(): invalid pointer
+[1]    955394 IOT instruction (core dumped)  env -i ./minishell
