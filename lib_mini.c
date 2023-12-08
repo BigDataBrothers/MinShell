@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/09 02:17:16 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/08 18:09:02 by myassine         ###   ########.fr       */
+/*   Updated: 2023/12/08 20:38:32 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -317,7 +317,7 @@ void	return_neg(char *str)
 			str[i] *= -1;
 }
 
-int		nbr_arg(char **token, int j)
+int		nbr_arg(char **token, int j, __attribute__((unused))int *count)
 {
 	int i = 0;
 	int len = j;
@@ -340,6 +340,7 @@ int		nbr_arg(char **token, int j)
 	}
 	j -= len;
 	j -= i;
+	// j -= *count;
 	printf("i = %d || j = %d\n", i , j);
 	return (j);
 }

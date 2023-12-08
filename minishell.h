@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 00:51:05 by myassine          #+#    #+#             */
-/*   Updated: 2023/11/23 21:04:46 by myassine         ###   ########.fr       */
+/*   Updated: 2023/12/08 20:32:21 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,7 +149,7 @@ char	*ft_strstr(const char *big, const char *little);
 int		ft_lstsize(t_env *lst);
 int		len_tab(char **tab);
 void	return_neg(char *str);
-int		nbr_arg(char **token, int j);
+int		nbr_arg(char **token, int j, int *count);
 
 //Check_char
 
@@ -207,6 +207,6 @@ t_dir	*new_dir(char *redir, char *target, t_dir *dir);
 t_dir 	*malloc_dir();
 t_block *new_block(void);
 char 	**add_new_block_tab(char ***tab, char *str);
-char	**tab_arg(t_block *block, char **token, int j);
+// char	**tab_arg(t_block *block, char **token, int j);
 
 #endif

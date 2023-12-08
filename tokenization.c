@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 21:39:12 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/08 18:07:22 by myassine         ###   ########.fr       */
+/*   Updated: 2023/12/08 20:30:07 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int treat_token(char **token, int *j, t_block *tmp, int *count) //token[*j]
 	//  int *count
 	//	token[*j]
 
-		if ((*count) == 0)
+		if ((*count) == 0 && !is_redir(token[*j]))
 		{
 			tmp->cmd = ft_strdup(token[*j]);//
 			(*count)++;
@@ -36,7 +36,7 @@ int treat_token(char **token, int *j, t_block *tmp, int *count) //token[*j]
 		{
 			int v = 0;
 			int argc = 0;
-			argc = nbr_arg(token, (*j));
+			argc = nbr_arg(token, (*j), count);
 			if (argc == -1)
 				return (1);
 			printf("argc == %d \n", argc);
@@ -51,6 +51,12 @@ int treat_token(char **token, int *j, t_block *tmp, int *count) //token[*j]
 					if (!token[*j + 1])
 						return (1);
 					(*j)+=2;
+				}
+				else if(*count == 0)
+				{
+					tmp->cmd = ft_strdup(token[*j]);//
+					(*count)++;
+					(*j)++;
 				}
 				else
 				{

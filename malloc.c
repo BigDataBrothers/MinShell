@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 21:16:58 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/07 11:57:47 by myassine         ###   ########.fr       */
+/*   Updated: 2023/12/08 20:32:18 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,10 +74,10 @@ t_dir *new_dir(char *redir, char *target, t_dir *dir)
 	return dir;
 }
 
-char	**tab_arg(t_block *block, char **token, int j)
-{
-	block->arg = malloc(sizeof(char *) * (nbr_arg(token, j) + 1));
-	if (!block->arg)
-		return (NULL);
-	return (block->arg);
-}
+// char	**tab_arg(t_block *block, char **token, int j)
+// {
+// 	block->arg = malloc(sizeof(char *) * (nbr_arg(token, j) + 1));
+// 	if (!block->arg)
+// 		return (NULL);
+// 	return (block->arg);
+// }
