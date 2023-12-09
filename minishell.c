@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 00:52:02 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/08 20:35:03 by myassine         ###   ########.fr       */
+/*   Updated: 2023/12/09 21:06:23 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,6 @@ char *get_current_directory_with_prompt()
 	static char	cwd[PATH_MAX];
 
 	getcwd(cwd, sizeof(cwd));
-	// if (getcwd(cwd, sizeof(cwd)) == NULL)
-	// {
-	    // perror("getcwd");
-	    // exit(EXIT_FAILURE);
-	// }
 	return (cwd);
 }
 //ls -l | grep .c | wc -l > file.txt < input.txt
@@ -207,7 +202,7 @@ void all_free_1(t_block *test, char *input)
 		free(input);
 }
 
-void printBlock(const t_block *block)
+void printBlock(t_block *block)
 {
     if (block == NULL)
 	{
@@ -226,28 +221,36 @@ void printBlock(const t_block *block)
 	else
         printf("No arguments/options\n");
 
-    if (block->dir && block->dir->app_redir_doc[FILES] != NULL) 
-	{
-        printf("Directories:\n");
-        t_dir *currentDir = block->dir;
+    // if (block->dir && block->dir->app_redir_doc[FILES] != NULL) 
+	// {
+    //     printf("Directories:\n");
+    //     t_dir *currentDir = block->dir;
 	
         // while (currentDir[FILES] != NULL) 
 		// {
-		int i = 0;
-		while (currentDir->app_redir_doc[FILES][i])
-		{
-			printf("  Redirection type: %s\n", currentDir->app_redir_doc[REDIR][i]);
-			printf("  Directory file: %s\n", currentDir->app_redir_doc[FILES][i]);
-			i++;
-		}
+		// int i = 0;
+		// while (currentDir->app_redir_doc[FILES][i])
+		// {
+		// 	printf("  Redirection type: %s\n", currentDir->app_redir_doc[REDIR][i]);
+		// 	printf("  Directory file: %s\n", currentDir->app_redir_doc[FILES][i]);
+		// 	i++;
+		// }
 		// 	currentDir = (t_dir *)currentDir->next;
         // }
-	block = block->next;
-    }
-	else 
+	// block = block->next;
+    // }
+	// else 
+	// {
+    //     printf("No directories\n");
+    // }
+	while (block->dir)
 	{
-        printf("No directories\n");
-    }
+		dprintf(2, "[%d]\n", block->dir->fd);
+		dprintf(2, "[%d]\n", block->dir->type);
+		dprintf(2, "[%s]\n", block->dir->file);
+		block->dir = block->dir->next;
+	}
+
 }
 
 
@@ -319,39 +322,19 @@ void redirect_input(char *filename) {
     dup2(file, STDIN_FILENO);
     close(file);
 }
-/*
-int main(int argc, char *argv[]) {
-    if (argc < 2) {
-        fprintf(stderr, "Usage: %s <filename>\n", argv[0]);
-        exit(EXIT_FAILURE);
-    }
 
-    int saved_in;
-    int saved_out;
-
-    saved_in = dup(STDIN_FILENO);
-    saved_out = dup(STDOUT_FILENO);
-
-    // Gère la redirection de la sortie standard vers un fichier (>)
-    redirect_output(argv[1], 0); // 0 signifie troncature, écrase le fichier s'il existe
-
-    // Gère la redirection de la sortie standard pour ajouter au fichier (>>)
-    // redirect_output(argv[1], 1); // Commenté pour éviter l'écrasement du fichier
-
-    // Gère la redirection de l'entrée standard depuis un fichier (<)
-    // redirect_input(argv[1]);
-
-    // À partir de ce point, tout ce qui est écrit dans stdout sera redirigé vers le fichier
-
-    printf("Ceci sera écrit dans le fichier.\n");
-
-    // Restaure les descripteurs de fichiers originaux
-    dup2(saved_in, STDIN_FILENO);
-    dup2(saved_out, STDOUT_FILENO);
-
-    return 0;
+void apply_redirections_to_command_line(t_block *test)
+{
+	while (test->dir)	{
+		if (test->dir->type == APPEND)
+			redirect_output(test->dir->file, O_APPEND);
+		else if (test->dir->type ==  IN)
+			redirect_input(test->dir->file);
+		else if (test->dir->type ==  OUT)
+			redirect_output(test->dir->file, O_TRUNC);
+		test->dir = test->dir->next;
+	}
 }
-*/
 
 int	main(int argc, char **argv, char *envp[])
 {
@@ -409,7 +392,9 @@ int	main(int argc, char **argv, char *envp[])
 		input = expa_chang(input, env, head_env);
 		test = NULL;
 		test = tokenization(input);//chaque t_block et 1 cmd + args
+		// printBlock(test);
 		return_neg(test->cmd);
+		dprintf(2, "%s\n", input);
 		test->cmd = if_quote(test->cmd);
 		if (!test->arg)
 			args = malloc(sizeof(char *) * 2);//
@@ -434,6 +419,9 @@ int	main(int argc, char **argv, char *envp[])
 			}
 			args[i] = NULL;
 		}
+		
+		//return_neg(input);
+		// [START OF BUILTINS]
 		if(!ft_strcmp(args[0], "exit" ) && !args[1])
 			eof(input, envs, env, head_env);
 		else if(!ft_strcmp(args[0], "cd" ) && chdir(args[1]) == 0)
@@ -478,32 +466,35 @@ int	main(int argc, char **argv, char *envp[])
 		}
 		else if(!ft_strcmp(args[0], "export"))
 		{
-			ft_export(env, head_env, envs, input);
+			//ft_export(env, head_env, envs, input);
+			ft_exp(env, head_env, envs, test);
 			all_free_1(test, input);
 			freeStringArray(args);
 			continue;
 		}
-        
-
+		// [END OF BUILTINS]
+		// [******************************]
 		// OUVRIR REDIRECTION ICI
-		
-    int saved_in;
-    int saved_out;
-
-    	saved_in = dup(STDIN_FILENO);
-    	saved_out = dup(STDOUT_FILENO);
-		int k = 0;
-		while (test->dir && test->dir->app_redir_doc[FILES] != NULL && test->dir->app_redir_doc[FILES][k])
-		{
-			if(!ft_strcmp(test->dir->app_redir_doc[REDIR][k], ">"))
-				redirect_output(test->dir->app_redir_doc[FILES][k], O_TRUNC);
-			else if(!ft_strcmp(test->dir->app_redir_doc[REDIR][k], ">>"))
-				redirect_output(test->dir->app_redir_doc[FILES][k], O_APPEND);
-			else if(!ft_strcmp(test->dir->app_redir_doc[REDIR][k], "<"))
-				 redirect_input(test->dir->app_redir_doc[FILES][k]);
-			k++;
-		}
-			
+		// int saved_in;
+		// int saved_out;
+    	// saved_in = dup(STDIN_FILENO);
+    	// saved_out = dup(STDOUT_FILENO);
+		// [******************************]
+		// [START OF OLD REDIRECTION PROCESSES]
+		// int k = 0;
+		// while (test->dir && test->dir->app_redir_doc[FILES] != NULL && test->dir->app_redir_doc[FILES][k])
+		// {
+		// 	if(!ft_strcmp(test->dir->app_redir_doc[REDIR][k], ">"))
+		// 		redirect_output(test->dir->app_redir_doc[FILES][k], O_TRUNC);
+		// 	else if(!ft_strcmp(test->dir->app_redir_doc[REDIR][k], ">>"))
+		// 		redirect_output(test->dir->app_redir_doc[FILES][k], O_APPEND);
+		// 	else if(!ft_strcmp(test->dir->app_redir_doc[REDIR][k], "<"))
+		// 		 redirect_input(test->dir->app_redir_doc[FILES][k]);
+		// 	k++;
+		// }
+		// [END OF OLD REDIRECTION PROCESSES]
+		// [******************************]
+		// [CREATE CHILDREN FOR EXEC]
 		if ((pid = fork()) < 0) 
 		{
 			printf("fork\n");
@@ -511,8 +502,10 @@ int	main(int argc, char **argv, char *envp[])
 		}
 		if (pid == 0)
 		{
+			// [START OF CHILDREN'S JOURNEY TO EXEC]
 			char *str;
 			str = NULL;
+			apply_redirections_to_command_line(test);
 			if((str = verif_cmd(args, envs)) == NULL)
 			{
 				all_free_1(test, input);
@@ -545,19 +538,19 @@ int	main(int argc, char **argv, char *envp[])
 			}
 			if(envs)
 				freeStringArray(envs);
+			// [END OF CHILDREN'S JOURNEY TO EXEC]
 		}
-		// FERMER REDIRECTION ICI
-		dup2(saved_in, STDIN_FILENO);
-    	dup2(saved_out, STDOUT_FILENO);
-		// printBlock(test);
+		// [FERMER REDIRECTION ICI]
+		// dup2(saved_in, STDIN_FILENO);
+    	// dup2(saved_out, STDOUT_FILENO);
 		if(envs)
-				freeStringArray(envs);
+			freeStringArray(envs);
 		signal(SIGINT, SIG_IGN);
 		int status;	
 		waitpid(-1, &status, 0);
 		if(test)
 			free_block_list(test);
-		free(input);	
+		free(input);
 		if(args)
 			freeStringArray(args);
 	}

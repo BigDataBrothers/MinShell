@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 00:51:05 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/08 20:32:21 by myassine         ###   ########.fr       */
+/*   Updated: 2023/12/09 20:26:15 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,11 +72,17 @@ typedef	struct s_env
 	struct  s_env				*next;
 }	t_env;
 
-typedef struct s_dir//a voir
+typedef struct s_dir
 {
 	char	***app_redir_doc;
-	void	*next;
-}	t_dir;
+
+	char 	*file;
+	int 	fd;
+	int		type;
+
+	// void	*next;
+	struct s_dir *next;
+}				t_dir;
 
 typedef struct s_block
 {
@@ -85,6 +91,14 @@ typedef struct s_block
 	void	*next;
 	t_dir	*dir;
 }	t_block;
+
+enum REDIR_TYPES
+{
+	APPEND,
+	IN,
+	OUT,
+	HEREDOC
+};
 
 //Tokenizer
 char		**ft_split_path(char const *s, char c);
@@ -126,6 +140,8 @@ void	ft_unset(t_env *env, t_env *head_env, char *input);
 void	ft_echo(t_env *env, t_env *head_env, char *input);
 void	ft_pwd(char *input);
 void	ft_cd(char *input);
+
+void	ft_exp(t_env *env, t_env *head_env, char **envs, t_block *block);
 
 //Lib_mini
 char 	*removeCharAtIndex(char *str, int i);

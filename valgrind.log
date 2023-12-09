@@ -1,214 +1,52 @@
-==1648381== Memcheck, a memory error detector
-==1648381== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
-==1648381== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
-==1648381== Command: ./minishell
-==1648381== Parent PID: 1648318
-==1648381== 
-==1648381== Invalid read of size 1
-==1648381==    at 0x10E170: ft_strcmp (lib_mini.c:123)
-==1648381==    by 0x10A641: main (minishell.c:498)
-==1648381==  Address 0x4b70930 is 0 bytes inside a block of size 2 free'd
-==1648381==    at 0x484B27F: free (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==1648381==    by 0x10BCF4: freeStringArray (free.c:78)
-==1648381==    by 0x10EFF9: treat_cmd_line (tokenization.c:113)
-==1648381==    by 0x10F079: tokenization (tokenization.c:132)
-==1648381==    by 0x10A186: main (minishell.c:411)
-==1648381==  Block was alloc'd at
-==1648381==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==1648381==    by 0x10EA9F: get_string (ft_split_path.c:70)
-==1648381==    by 0x10EC4A: ft_split_path (ft_split_path.c:102)
-==1648381==    by 0x10EF9C: treat_cmd_line (tokenization.c:106)
-==1648381==    by 0x10F079: tokenization (tokenization.c:132)
-==1648381==    by 0x10A186: main (minishell.c:411)
-==1648381== 
-==1648381== Invalid read of size 1
-==1648381==    at 0x10E141: ft_strcmp (lib_mini.c:125)
-==1648381==    by 0x10A641: main (minishell.c:498)
-==1648381==  Address 0x4b70930 is 0 bytes inside a block of size 2 free'd
-==1648381==    at 0x484B27F: free (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==1648381==    by 0x10BCF4: freeStringArray (free.c:78)
-==1648381==    by 0x10EFF9: treat_cmd_line (tokenization.c:113)
-==1648381==    by 0x10F079: tokenization (tokenization.c:132)
-==1648381==    by 0x10A186: main (minishell.c:411)
-==1648381==  Block was alloc'd at
-==1648381==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==1648381==    by 0x10EA9F: get_string (ft_split_path.c:70)
-==1648381==    by 0x10EC4A: ft_split_path (ft_split_path.c:102)
-==1648381==    by 0x10EF9C: treat_cmd_line (tokenization.c:106)
-==1648381==    by 0x10F079: tokenization (tokenization.c:132)
-==1648381==    by 0x10A186: main (minishell.c:411)
-==1648381== 
-==1648381== Syscall param openat(filename) points to unaddressable byte(s)
-==1648381==    at 0x49DC72B: open (open64.c:41)
-==1648381==    by 0x109EDC: redirect_output (minishell.c:300)
-==1648381==    by 0x10A66F: main (minishell.c:499)
-==1648381==  Address 0x4b70980 is 0 bytes inside a block of size 5 free'd
-==1648381==    at 0x484B27F: free (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==1648381==    by 0x10BCF4: freeStringArray (free.c:78)
-==1648381==    by 0x10EFF9: treat_cmd_line (tokenization.c:113)
-==1648381==    by 0x10F079: tokenization (tokenization.c:132)
-==1648381==    by 0x10A186: main (minishell.c:411)
-==1648381==  Block was alloc'd at
-==1648381==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==1648381==    by 0x10EA9F: get_string (ft_split_path.c:70)
-==1648381==    by 0x10EC4A: ft_split_path (ft_split_path.c:102)
-==1648381==    by 0x10EF9C: treat_cmd_line (tokenization.c:106)
-==1648381==    by 0x10F079: tokenization (tokenization.c:132)
-==1648381==    by 0x10A186: main (minishell.c:411)
-==1648381== 
-==1648381== Invalid free() / delete / delete[] / realloc()
-==1648381==    at 0x484B27F: free (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==1648381==    by 0x10BB81: free_dir (free.c:25)
-==1648381==    by 0x10BC61: free_block (free.c:52)
-==1648381==    by 0x10BCA9: free_block_list (free.c:65)
-==1648381==    by 0x10A978: main (minishell.c:559)
-==1648381==  Address 0x4b70980 is 0 bytes inside a block of size 5 free'd
-==1648381==    at 0x484B27F: free (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==1648381==    by 0x10BCF4: freeStringArray (free.c:78)
-==1648381==    by 0x10EFF9: treat_cmd_line (tokenization.c:113)
-==1648381==    by 0x10F079: tokenization (tokenization.c:132)
-==1648381==    by 0x10A186: main (minishell.c:411)
-==1648381==  Block was alloc'd at
-==1648381==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==1648381==    by 0x10EA9F: get_string (ft_split_path.c:70)
-==1648381==    by 0x10EC4A: ft_split_path (ft_split_path.c:102)
-==1648381==    by 0x10EF9C: treat_cmd_line (tokenization.c:106)
-==1648381==    by 0x10F079: tokenization (tokenization.c:132)
-==1648381==    by 0x10A186: main (minishell.c:411)
-==1648381== 
-==1648381== Invalid read of size 1
-==1648381==    at 0x10E170: ft_strcmp (lib_mini.c:123)
-==1648381==    by 0x10A6A4: main (minishell.c:500)
-==1648381==  Address 0x4b87690 is 0 bytes inside a block of size 2 free'd
-==1648381==    at 0x484B27F: free (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==1648381==    by 0x10BCF4: freeStringArray (free.c:78)
-==1648381==    by 0x10EFF9: treat_cmd_line (tokenization.c:113)
-==1648381==    by 0x10F079: tokenization (tokenization.c:132)
-==1648381==    by 0x10A186: main (minishell.c:411)
-==1648381==  Block was alloc'd at
-==1648381==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==1648381==    by 0x10EA9F: get_string (ft_split_path.c:70)
-==1648381==    by 0x10EC4A: ft_split_path (ft_split_path.c:102)
-==1648381==    by 0x10EF9C: treat_cmd_line (tokenization.c:106)
-==1648381==    by 0x10F079: tokenization (tokenization.c:132)
-==1648381==    by 0x10A186: main (minishell.c:411)
-==1648381== 
-==1648381== Invalid read of size 1
-==1648381==    at 0x10E141: ft_strcmp (lib_mini.c:125)
-==1648381==    by 0x10A6A4: main (minishell.c:500)
-==1648381==  Address 0x4b87690 is 0 bytes inside a block of size 2 free'd
-==1648381==    at 0x484B27F: free (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==1648381==    by 0x10BCF4: freeStringArray (free.c:78)
-==1648381==    by 0x10EFF9: treat_cmd_line (tokenization.c:113)
-==1648381==    by 0x10F079: tokenization (tokenization.c:132)
-==1648381==    by 0x10A186: main (minishell.c:411)
-==1648381==  Block was alloc'd at
-==1648381==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==1648381==    by 0x10EA9F: get_string (ft_split_path.c:70)
-==1648381==    by 0x10EC4A: ft_split_path (ft_split_path.c:102)
-==1648381==    by 0x10EF9C: treat_cmd_line (tokenization.c:106)
-==1648381==    by 0x10F079: tokenization (tokenization.c:132)
-==1648381==    by 0x10A186: main (minishell.c:411)
-==1648381== 
-==1648381== Invalid read of size 1
-==1648381==    at 0x10E170: ft_strcmp (lib_mini.c:123)
-==1648381==    by 0x10A704: main (minishell.c:502)
-==1648381==  Address 0x4b87690 is 0 bytes inside a block of size 2 free'd
-==1648381==    at 0x484B27F: free (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==1648381==    by 0x10BCF4: freeStringArray (free.c:78)
-==1648381==    by 0x10EFF9: treat_cmd_line (tokenization.c:113)
-==1648381==    by 0x10F079: tokenization (tokenization.c:132)
-==1648381==    by 0x10A186: main (minishell.c:411)
-==1648381==  Block was alloc'd at
-==1648381==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==1648381==    by 0x10EA9F: get_string (ft_split_path.c:70)
-==1648381==    by 0x10EC4A: ft_split_path (ft_split_path.c:102)
-==1648381==    by 0x10EF9C: treat_cmd_line (tokenization.c:106)
-==1648381==    by 0x10F079: tokenization (tokenization.c:132)
-==1648381==    by 0x10A186: main (minishell.c:411)
-==1648381== 
-==1648381== Invalid read of size 1
-==1648381==    at 0x10E141: ft_strcmp (lib_mini.c:125)
-==1648381==    by 0x10A704: main (minishell.c:502)
-==1648381==  Address 0x4b87690 is 0 bytes inside a block of size 2 free'd
-==1648381==    at 0x484B27F: free (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==1648381==    by 0x10BCF4: freeStringArray (free.c:78)
-==1648381==    by 0x10EFF9: treat_cmd_line (tokenization.c:113)
-==1648381==    by 0x10F079: tokenization (tokenization.c:132)
-==1648381==    by 0x10A186: main (minishell.c:411)
-==1648381==  Block was alloc'd at
-==1648381==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==1648381==    by 0x10EA9F: get_string (ft_split_path.c:70)
-==1648381==    by 0x10EC4A: ft_split_path (ft_split_path.c:102)
-==1648381==    by 0x10EF9C: treat_cmd_line (tokenization.c:106)
-==1648381==    by 0x10F079: tokenization (tokenization.c:132)
-==1648381==    by 0x10A186: main (minishell.c:411)
-==1648381== 
-==1648381== Syscall param openat(filename) points to unaddressable byte(s)
-==1648381==    at 0x49DC72B: open (open64.c:41)
-==1648381==    by 0x109F3D: redirect_input (minishell.c:312)
-==1648381==    by 0x10A72D: main (minishell.c:503)
-==1648381==  Address 0x4b876e0 is 0 bytes inside a block of size 6 free'd
-==1648381==    at 0x484B27F: free (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==1648381==    by 0x10BCF4: freeStringArray (free.c:78)
-==1648381==    by 0x10EFF9: treat_cmd_line (tokenization.c:113)
-==1648381==    by 0x10F079: tokenization (tokenization.c:132)
-==1648381==    by 0x10A186: main (minishell.c:411)
-==1648381==  Block was alloc'd at
-==1648381==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==1648381==    by 0x10EA9F: get_string (ft_split_path.c:70)
-==1648381==    by 0x10EC4A: ft_split_path (ft_split_path.c:102)
-==1648381==    by 0x10EF9C: treat_cmd_line (tokenization.c:106)
-==1648381==    by 0x10F079: tokenization (tokenization.c:132)
-==1648381==    by 0x10A186: main (minishell.c:411)
-==1648381== 
-==1648381== Syscall param openat(filename) points to unaddressable byte(s)
-==1648381==    at 0x49DC72B: open (open64.c:41)
-==1648381==    by 0x109EDC: redirect_output (minishell.c:300)
-==1648381==    by 0x10A6D2: main (minishell.c:501)
-==1648381==  Address 0x4b8ce80 is 0 bytes inside a block of size 6 free'd
-==1648381==    at 0x484B27F: free (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==1648381==    by 0x10BCF4: freeStringArray (free.c:78)
-==1648381==    by 0x10EFF9: treat_cmd_line (tokenization.c:113)
-==1648381==    by 0x10F079: tokenization (tokenization.c:132)
-==1648381==    by 0x10A186: main (minishell.c:411)
-==1648381==  Block was alloc'd at
-==1648381==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==1648381==    by 0x10EA9F: get_string (ft_split_path.c:70)
-==1648381==    by 0x10EC4A: ft_split_path (ft_split_path.c:102)
-==1648381==    by 0x10EF9C: treat_cmd_line (tokenization.c:106)
-==1648381==    by 0x10F079: tokenization (tokenization.c:132)
-==1648381==    by 0x10A186: main (minishell.c:411)
-==1648381== 
-==1648381== 
-==1648381== HEAP SUMMARY:
-==1648381==     in use at exit: 215,003 bytes in 370 blocks
-==1648381==   total heap usage: 2,875 allocs, 2,521 frees, 383,225 bytes allocated
-==1648381== 
-==1648381== 16 bytes in 1 blocks are definitely lost in loss record 8 of 76
-==1648381==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==1648381==    by 0x10C1C5: add_new_block_tab (malloc.c:39)
-==1648381==    by 0x10C34F: new_dir (malloc.c:72)
-==1648381==    by 0x10EE1B: treat_token (tokenization.c:50)
-==1648381==    by 0x10EFC6: treat_cmd_line (tokenization.c:110)
-==1648381==    by 0x10F079: tokenization (tokenization.c:132)
-==1648381==    by 0x10A186: main (minishell.c:411)
-==1648381== 
-==1648381== 16 bytes in 1 blocks are definitely lost in loss record 9 of 76
-==1648381==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==1648381==    by 0x10C1C5: add_new_block_tab (malloc.c:39)
-==1648381==    by 0x10C369: new_dir (malloc.c:73)
-==1648381==    by 0x10EE1B: treat_token (tokenization.c:50)
-==1648381==    by 0x10EFC6: treat_cmd_line (tokenization.c:110)
-==1648381==    by 0x10F079: tokenization (tokenization.c:132)
-==1648381==    by 0x10A186: main (minishell.c:411)
-==1648381== 
-==1648381== LEAK SUMMARY:
-==1648381==    definitely lost: 32 bytes in 2 blocks
-==1648381==    indirectly lost: 0 bytes in 0 blocks
-==1648381==      possibly lost: 0 bytes in 0 blocks
-==1648381==    still reachable: 0 bytes in 0 blocks
-==1648381==         suppressed: 214,971 bytes in 368 blocks
-==1648381== 
-==1648381== For lists of detected and suppressed errors, rerun with: -s
-==1648381== ERROR SUMMARY: 72 errors from 12 contexts (suppressed: 0 from 0)
+==2622667== Memcheck, a memory error detector
+==2622667== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==2622667== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==2622667== Command: ./minishell
+==2622667== Parent PID: 2622610
+==2622667== 
+==2622667== 
+==2622667== HEAP SUMMARY:
+==2622667==     in use at exit: 219,306 bytes in 415 blocks
+==2622667==   total heap usage: 1,098 allocs, 683 frees, 257,868 bytes allocated
+==2622667== 
+==2622667== 2 bytes in 1 blocks are indirectly lost in loss record 1 of 73
+==2622667==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2622667==    by 0x10EB0D: get_string (ft_split_path.c:70)
+==2622667==    by 0x10ECB8: ft_split_path (ft_split_path.c:102)
+==2622667==    by 0x10D37E: cut_export_argument (builtins.c:271)
+==2622667==    by 0x10D507: ft_exp (builtins.c:303)
+==2622667==    by 0x10A644: main (minishell.c:470)
+==2622667== 
+==2622667== 8 bytes in 1 blocks are indirectly lost in loss record 4 of 73
+==2622667==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2622667==    by 0x10DF9B: ft_strjoin (lib_mini.c:26)
+==2622667==    by 0x109634: ft_lstsplit (minishell.c:62)
+==2622667==    by 0x10A08F: main (minishell.c:363)
+==2622667== 
+==2622667== 18 (16 direct, 2 indirect) bytes in 1 blocks are definitely lost in loss record 11 of 73
+==2622667==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2622667==    by 0x10EBF1: ft_split_path (ft_split_path.c:93)
+==2622667==    by 0x10D37E: cut_export_argument (builtins.c:271)
+==2622667==    by 0x10D507: ft_exp (builtins.c:303)
+==2622667==    by 0x10A644: main (minishell.c:470)
+==2622667== 
+==2622667== 4,369 bytes in 73 blocks are indirectly lost in loss record 57 of 73
+==2622667==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2622667==    by 0x10DF9B: ft_strjoin (lib_mini.c:26)
+==2622667==    by 0x1096D3: ft_lstsplit (minishell.c:72)
+==2622667==    by 0x10A08F: main (minishell.c:363)
+==2622667== 
+==2622667== 4,977 (600 direct, 4,377 indirect) bytes in 1 blocks are definitely lost in loss record 59 of 73
+==2622667==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2622667==    by 0x109585: ft_lstsplit (minishell.c:49)
+==2622667==    by 0x10A08F: main (minishell.c:363)
+==2622667== 
+==2622667== LEAK SUMMARY:
+==2622667==    definitely lost: 616 bytes in 2 blocks
+==2622667==    indirectly lost: 4,379 bytes in 75 blocks
+==2622667==      possibly lost: 0 bytes in 0 blocks
+==2622667==    still reachable: 0 bytes in 0 blocks
+==2622667==         suppressed: 214,311 bytes in 338 blocks
+==2622667== 
+==2622667== For lists of detected and suppressed errors, rerun with: -s
+==2622667== ERROR SUMMARY: 2 errors from 2 contexts (suppressed: 0 from 0)

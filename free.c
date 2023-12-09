@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/27 18:58:47 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/07 10:48:24 by myassine         ###   ########.fr       */
+/*   Updated: 2023/12/09 21:06:34 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,19 +17,26 @@ void free_dir(t_dir *dir)
 {
     if (dir) 
     {
-        if (dir->app_redir_doc) {
+        while (dir)
+        {
             char ***doc = dir->app_redir_doc;
-            while (*doc) {
-                char **page = *doc;
-                while (*page) {
-                    free(*page);
-                    page++;
-                }
-                free(*doc);
-                doc++;
-            }
-            free(dir->app_redir_doc);
+            freeStringArrays(doc);
+            dir = dir-> next;
         }
+        // if (dir->app_redir_doc) {
+        //     char ***doc = dir->app_redir_doc;
+            // while (*doc) {
+            //     char **page = *doc;
+            //     while (*page) {
+            //         free(*page);
+            //         page++;
+            //     }
+            //     free(*doc);
+            //     doc++;
+            // }
+            // free(dir->app_redir_doc);
+            
+        // }
         free(dir);
     }
 }
@@ -49,7 +56,7 @@ void free_block(t_block *block)
             }
             free(block->arg);
         }
-        free_dir(block->dir);
+        // free_dir(block->dir);
         free(block);
     }
 }

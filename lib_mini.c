@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/09 02:17:16 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/08 20:38:32 by myassine         ###   ########.fr       */
+/*   Updated: 2023/12/09 16:42:58 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -324,12 +324,12 @@ int		nbr_arg(char **token, int j, __attribute__((unused))int *count)
 	
 	while(token[j])
 	{
-		printf("token[%d] : %s\n", j, token[j]);
+	//	printf("token[%d] : %s\n", j, token[j]);
 		if(is_redir(token[j]))
 		{
 			if (!token[j + 1])
 				return (-1);
-			printf("redir oh : %s\n", token[j]);
+	//		printf("redir oh : %s\n", token[j]);
 			j+=2;
 			i+=2;
 			
@@ -341,6 +341,6 @@ int		nbr_arg(char **token, int j, __attribute__((unused))int *count)
 	j -= len;
 	j -= i;
 	// j -= *count;
-	printf("i = %d || j = %d\n", i , j);
+	//printf("i = %d || j = %d\n", i , j);
 	return (j);
 }

@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 20:54:16 by myassine          #+#    #+#             */
-/*   Updated: 2023/11/16 21:48:31 by myassine         ###   ########.fr       */
+/*   Updated: 2023/12/10 00:19:34 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	print_exp(t_env *env, t_env *head_env)
 	while (env)
 	{
 		if(env->str[0])
-			printf("export %s", env->str[0]);
+			printf("declare -x %s", env->str[0]);
 		if(env->str[1])
 			printf("=\"%s\"\n", env->str[1]);
 		else if(!env->str[1])
@@ -38,11 +38,11 @@ void	print_exp(t_env *env, t_env *head_env)
 	}
 	env = head_env;
 }
-
+// [FONCTION QUI CHECK L'ELEMENT EXPORTABLE, A REVISER SI ERREUR]
 int	check_export(char *str)
 {
 	int i = 0;
-	int sig_egal = 0;
+	// int sig_egal = 0;
 
 	while(str[i] && (is_alpha(str[i]) || is_underscor(str[i])))
 		i++;
@@ -50,24 +50,21 @@ int	check_export(char *str)
 		return (0);
 	while(str[i] && is_alnum(str[i]))
 		i++;
-	if(str[i] && is_egal(str[i]))
-	{
-		i++;
-		sig_egal++;
-	}
-	if(str[i] && !is_alnum(str[i]) && !is_egal(str[i]))
-		return (0);
-	if(str[i])
-	{
-		while(str[i])
-		{
-			if(!is_alnum(str[i]) && !is_egal(str[i]))
-				return (0);
-			i++;
-		}
-	}
-	if(sig_egal)
-		return (2);
+	// if(str[i] && is_egal(str[i]))
+	// {
+	// 	i++;
+	// 	sig_egal++;
+	// }
+	// if(str[i] && !is_alnum(str[i]) && !is_egal(str[i]) && !is_double_quote(str[i]) && !is_simple_quote(str[i]))
+	// 	return (0);
+	// while(str[i])
+	// {
+	// 	if(!is_alnum(str[i]) && !is_egal(str[i]) && !is_double_quote(str[i]) && !is_simple_quote(str[i]) && !is_space(str[i]))
+	// 		return (0);
+	// 	i++;
+	// }
+	// if(sig_egal)
+	// 	return (2);
 	return (1);
 }
 
@@ -257,6 +254,44 @@ void	ft_env(t_env *env, t_env *head_env, char *input)
 	if(!ft_strcmp(tab[0], "env") && !tab[1])
 		print_env(env, head_env);
 	freeStringArray(tab);
+}
+
+int cut_export_argument(char* arg_export)
+{
+	char **exported = ft_split_path(arg_export, '=');
+	int i = 0;
+
+	int status_export = check_export(exported[0]);
+	if (!status_export)
+		return (printf("export: `%s': not a valid identifier\n", exported[0]), SUCCESS);
+	
+	
+	return (SUCCESS);
+}
+
+void	ft_exp(t_env *env, t_env *head_env, char **envs, t_block *block)
+{
+	(void)envs;
+	if (!block->arg)
+	{
+		print_exp(env, head_env);
+		return;
+	}
+	if(!ft_strcmp(block->cmd, "export") && block->arg[0] == NULL)
+	{
+		print_exp(env, head_env);
+		return;
+	}
+	if(!ft_strcmp(block->cmd, "export"))
+	{
+		int i = 0;
+		while (block->arg[i])
+		{
+			if (!cut_export_argument(block->arg[i]))
+				return;// (FAILURE); // free dans le cas ou probleme
+			i++;
+		}
+	}
 }
 
 void	ft_export(t_env *env, t_env *head_env, char **envs, char *input)
