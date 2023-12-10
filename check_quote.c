@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 19:44:09 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/09 18:59:26 by myassine         ###   ########.fr       */
+/*   Updated: 2023/12/10 17:44:23 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,20 +133,23 @@ char *if_quote(char *input)
 {
 	int i = 0;
 	char c = 0;
-	while (input[i])
+	if(input)
 	{
-		if(is_double_quote(input[i]) || is_simple_quote(input[i]))
+		while (input[i])
 		{
-			c = input[i];
-			char *str = NULL;
-			str = removeCharAtIndex(input, i);
-			while(str[i] != c)
-				i++;
-			input = removeCharAtIndex(str, i);
-			free(str);
+			if(is_double_quote(input[i]) || is_simple_quote(input[i]))
+			{
+				c = input[i];
+				char *str = NULL;
+				str = removeCharAtIndex(input, i);
+				while(str[i] != c)
+					i++;
+				input = removeCharAtIndex(str, i);
+				free(str);
+			}
+			if(input[i])
+				i++;	
 		}
-		if(input[i])
-			i++;	
 	}
 	return (input);
 }

@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 00:52:02 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/09 21:06:23 by myassine         ###   ########.fr       */
+/*   Updated: 2023/12/10 18:04:37 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -394,7 +394,7 @@ int	main(int argc, char **argv, char *envp[])
 		test = tokenization(input);//chaque t_block et 1 cmd + args
 		// printBlock(test);
 		return_neg(test->cmd);
-		dprintf(2, "%s\n", input);
+		//dprintf(2, "%s\n", input);
 		test->cmd = if_quote(test->cmd);
 		if (!test->arg)
 			args = malloc(sizeof(char *) * 2);//
@@ -422,55 +422,58 @@ int	main(int argc, char **argv, char *envp[])
 		
 		//return_neg(input);
 		// [START OF BUILTINS]
-		if(!ft_strcmp(args[0], "exit" ) && !args[1])
-			eof(input, envs, env, head_env);
-		else if(!ft_strcmp(args[0], "cd" ) && chdir(args[1]) == 0)
+		if(test->cmd)
 		{
-			all_free_1(test, input);
-			freeStringArray(args);
-			continue;
-		}
-		else if(!ft_strcmp(args[0], "cd" ) && !args[1] && chdir(ft_get_env("HOME", env, head_env)) == 0)
-		{
-			all_free_1(test, input);
-			freeStringArray(args);
-			continue;
-		}
-		else if(!ft_strcmp(args[0], "pwd"))
-		{
-			ft_pwd(input);
-			all_free_1(test, input);
-			freeStringArray(args);
-			continue;
-		}
-		else if(!ft_strcmp(args[0], "echo"))
-		{
-			ft_echo(env, head_env, input);
-			all_free_1(test, input);
-			freeStringArray(args);
-			continue;
-		}
-		else if(!ft_strcmp(args[0], "unset"))
-		{
-			ft_unset(env, head_env, input);
-			all_free_1(test, input);
-			freeStringArray(args);
-			continue;
-		}
-		else if(!ft_strcmp(args[0], "env"))
-		{
-			ft_env(env, head_env, input);
-			all_free_1(test, input);
-			freeStringArray(args);
-			continue;
-		}
-		else if(!ft_strcmp(args[0], "export"))
-		{
-			//ft_export(env, head_env, envs, input);
-			ft_exp(env, head_env, envs, test);
-			all_free_1(test, input);
-			freeStringArray(args);
-			continue;
+			if(!ft_strcmp(args[0], "exit" ) && !args[1])
+				eof(input, envs, env, head_env);
+			else if(!ft_strcmp(args[0], "cd" ) && chdir(args[1]) == 0)
+			{
+				all_free_1(test, input);
+				freeStringArray(args);
+				continue;
+			}
+			else if(!ft_strcmp(args[0], "cd" ) && !args[1] && chdir(ft_get_env("HOME", env, head_env)) == 0)
+			{
+				all_free_1(test, input);
+				freeStringArray(args);
+				continue;
+			}
+			else if(!ft_strcmp(args[0], "pwd"))
+			{
+				ft_pwd(input);
+				all_free_1(test, input);
+				freeStringArray(args);
+				continue;
+			}
+			else if(!ft_strcmp(args[0], "echo"))
+			{
+				ft_echo(env, head_env, input);
+				all_free_1(test, input);
+				freeStringArray(args);
+				continue;
+			}
+			else if(!ft_strcmp(args[0], "unset"))
+			{
+				ft_unset(env, head_env, input);
+				all_free_1(test, input);
+				freeStringArray(args);
+				continue;
+			}
+			else if(!ft_strcmp(args[0], "env"))
+			{
+				ft_env(env, head_env, input);
+				all_free_1(test, input);
+				freeStringArray(args);
+				continue;
+			}
+			else if(!ft_strcmp(args[0], "export"))
+			{
+				//ft_export(env, head_env, envs, input);
+				ft_exp(env, head_env, envs, test);
+				all_free_1(test, input);
+				freeStringArray(args);
+				continue;
+			}
 		}
 		// [END OF BUILTINS]
 		// [******************************]

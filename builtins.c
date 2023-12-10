@@ -6,13 +6,20 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 20:54:16 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/10 00:19:34 by myassine         ###   ########.fr       */
+/*   Updated: 2023/12/10 18:03:28 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 //si j ai le tps tri l env de export par ordre alpha
+
+
+//test
+// myassine@made-f0Cr2s1:~$ < file cat >> file
+//cat: -: input file is output file
+//ls > file
+//< file >> file
 
 int	is_plus(char c)
 {
@@ -49,7 +56,11 @@ int	check_export(char *str)
 	if(i == 0)
 		return (0);
 	while(str[i] && is_alnum(str[i]))
+	{
+		if(!is_alnum(str[i]))
+			return (0);
 		i++;
+	}
 	// if(str[i] && is_egal(str[i]))
 	// {
 	// 	i++;
@@ -259,7 +270,7 @@ void	ft_env(t_env *env, t_env *head_env, char *input)
 int cut_export_argument(char* arg_export)
 {
 	char **exported = ft_split_path(arg_export, '=');
-	int i = 0;
+	// int i = 0;
 
 	int status_export = check_export(exported[0]);
 	if (!status_export)
@@ -272,6 +283,7 @@ int cut_export_argument(char* arg_export)
 void	ft_exp(t_env *env, t_env *head_env, char **envs, t_block *block)
 {
 	(void)envs;
+	//printf("arg = %s\n", block->arg[0]);
 	if (!block->arg)
 	{
 		print_exp(env, head_env);
