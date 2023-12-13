@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 00:52:02 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/10 18:04:37 by myassine         ###   ########.fr       */
+/*   Updated: 2023/12/13 17:44:37 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,8 @@ char **getPath(char **env)
 
 char	*verif_cmd(char **args, char **env)
 {
+	// if(args[0] == NULL)
+	// 	return ("");
 	if(access(args[0], F_OK) == 0)
 		return (args[0]);
 	char *tmp = NULL;
@@ -243,14 +245,20 @@ void printBlock(t_block *block)
 	// {
     //     printf("No directories\n");
     // }
-	while (block->dir)
+	// if(block->dir)
+	// {
+	// if(block->dir->file)
+	// }
+	if(block->dir)
 	{
-		dprintf(2, "[%d]\n", block->dir->fd);
-		dprintf(2, "[%d]\n", block->dir->type);
-		dprintf(2, "[%s]\n", block->dir->file);
-		block->dir = block->dir->next;
+		while (block->dir)
+		{
+			dprintf(2, "[%d]\n", block->dir->fd);
+			dprintf(2, "[%d]\n", block->dir->type);
+			dprintf(2, "[%s]\n", block->dir->file);
+			block->dir = block->dir->next;
+		}
 	}
-
 }
 
 
@@ -290,8 +298,6 @@ void	open_write_file(char *input, t_block *block/*, int i*/)
 	// }
 }
 
-// void	exec()
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <fcntl.h>
@@ -300,10 +306,10 @@ void	open_write_file(char *input, t_block *block/*, int i*/)
 void redirect_output(char *filename, int append) {
     int flags = O_WRONLY | O_CREAT;
 	flags |= append;
-    int file = open(filename, flags, S_IRUSR | S_IWUSR);
+    int file = open(filename, flags, S_IRUSR | S_IWUSR);//verifier autorisation fichier cree par open
 
     if (file == -1) {
-        perror("Erreur lors de l'ouverture du fichier");
+        //perror("Erreur lors de l'ouverture du fichier");
         exit(EXIT_FAILURE);
     }
 
@@ -315,8 +321,9 @@ void redirect_input(char *filename) {
     int file = open(filename, O_RDONLY);
 
     if (file == -1) {
-        perror("Erreur lors de l'ouverture du fichier");
-        exit(EXIT_FAILURE);
+    //    perror("minishell: %s: No such file or directory\n", filename);
+        printf("minishell: %s: No such file or directory\n", filename);
+		exit(EXIT_FAILURE);
     }
 
     dup2(file, STDIN_FILENO);
@@ -325,7 +332,8 @@ void redirect_input(char *filename) {
 
 void apply_redirections_to_command_line(t_block *test)
 {
-	while (test->dir)	{
+	while (test->dir)
+	{
 		if (test->dir->type == APPEND)
 			redirect_output(test->dir->file, O_APPEND);
 		else if (test->dir->type ==  IN)
@@ -334,6 +342,44 @@ void apply_redirections_to_command_line(t_block *test)
 			redirect_output(test->dir->file, O_TRUNC);
 		test->dir = test->dir->next;
 	}
+}
+/*
+	consider les bulltin comme des command pour ne pas print que la cmd existe pas
+	gerer tout les cas avec des quot char negatif
+	si command ecrit avec chemin absolut l executer
+*/
+
+int is_bultin(char **args, t_env *env, t_env *head_env)
+{
+	if(!ft_strcmp(args[0], "cd" ) && chdir(args[1]) == 0)
+	{
+		return (1);
+	}
+	else if(!ft_strcmp(args[0], "cd" ) && !args[1] && chdir(ft_get_env("HOME", env, head_env)) == 0)
+	{
+		return (1);
+	}
+	else if(!ft_strcmp(args[0], "pwd"))
+	{
+		return (1);
+	}
+	else if(!ft_strcmp(args[0], "echo"))
+	{
+		return (1);
+	}
+	else if(!ft_strcmp(args[0], "unset"))
+	{
+		return (1);
+	}
+	else if(!ft_strcmp(args[0], "env"))
+	{
+		return (1);
+	}
+	else if(!ft_strcmp(args[0], "export"))
+	{
+		return (1);
+	}
+	return (0);
 }
 
 int	main(int argc, char **argv, char *envp[])
@@ -392,9 +438,7 @@ int	main(int argc, char **argv, char *envp[])
 		input = expa_chang(input, env, head_env);
 		test = NULL;
 		test = tokenization(input);//chaque t_block et 1 cmd + args
-		// printBlock(test);
 		return_neg(test->cmd);
-		//dprintf(2, "%s\n", input);
 		test->cmd = if_quote(test->cmd);
 		if (!test->arg)
 			args = malloc(sizeof(char *) * 2);//
@@ -419,9 +463,13 @@ int	main(int argc, char **argv, char *envp[])
 			}
 			args[i] = NULL;
 		}
-		
-		//return_neg(input);
 		// [START OF BUILTINS]
+			int a = 0;
+			while(args[a])
+			{
+				return_neg(args[a]);
+				a++;
+			}
 		if(test->cmd)
 		{
 			if(!ft_strcmp(args[0], "exit" ) && !args[1])
@@ -469,35 +517,12 @@ int	main(int argc, char **argv, char *envp[])
 			else if(!ft_strcmp(args[0], "export"))
 			{
 				//ft_export(env, head_env, envs, input);
-				ft_exp(env, head_env, envs, test);
+				ft_export(env, head_env, envs, input);
 				all_free_1(test, input);
 				freeStringArray(args);
 				continue;
 			}
 		}
-		// [END OF BUILTINS]
-		// [******************************]
-		// OUVRIR REDIRECTION ICI
-		// int saved_in;
-		// int saved_out;
-    	// saved_in = dup(STDIN_FILENO);
-    	// saved_out = dup(STDOUT_FILENO);
-		// [******************************]
-		// [START OF OLD REDIRECTION PROCESSES]
-		// int k = 0;
-		// while (test->dir && test->dir->app_redir_doc[FILES] != NULL && test->dir->app_redir_doc[FILES][k])
-		// {
-		// 	if(!ft_strcmp(test->dir->app_redir_doc[REDIR][k], ">"))
-		// 		redirect_output(test->dir->app_redir_doc[FILES][k], O_TRUNC);
-		// 	else if(!ft_strcmp(test->dir->app_redir_doc[REDIR][k], ">>"))
-		// 		redirect_output(test->dir->app_redir_doc[FILES][k], O_APPEND);
-		// 	else if(!ft_strcmp(test->dir->app_redir_doc[REDIR][k], "<"))
-		// 		 redirect_input(test->dir->app_redir_doc[FILES][k]);
-		// 	k++;
-		// }
-		// [END OF OLD REDIRECTION PROCESSES]
-		// [******************************]
-		// [CREATE CHILDREN FOR EXEC]
 		if ((pid = fork()) < 0) 
 		{
 			printf("fork\n");
@@ -509,7 +534,9 @@ int	main(int argc, char **argv, char *envp[])
 			char *str;
 			str = NULL;
 			apply_redirections_to_command_line(test);
-			if((str = verif_cmd(args, envs)) == NULL)
+			if(args[0] == NULL)
+			{;}
+			else if((str = verif_cmd(args, envs)) == NULL)
 			{
 				all_free_1(test, input);
 				if(args)
@@ -529,7 +556,8 @@ int	main(int argc, char **argv, char *envp[])
 			}
 			if (execve(args[0], args, envs) == -1)
 			{
-			    printf("%s: command not found\n", args[0]);
+				if(args[0] || !is_bultin(args, env, head_env))
+			    	printf("%s: command not found\n", args[0]);
 				if(envs)
 					freeStringArray(envs);
 				if(args)
@@ -543,9 +571,6 @@ int	main(int argc, char **argv, char *envp[])
 				freeStringArray(envs);
 			// [END OF CHILDREN'S JOURNEY TO EXEC]
 		}
-		// [FERMER REDIRECTION ICI]
-		// dup2(saved_in, STDIN_FILENO);
-    	// dup2(saved_out, STDOUT_FILENO);
 		if(envs)
 			freeStringArray(envs);
 		signal(SIGINT, SIG_IGN);

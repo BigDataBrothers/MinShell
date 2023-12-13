@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 21:39:12 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/09 21:09:36 by myassine         ###   ########.fr       */
+/*   Updated: 2023/12/13 16:41:42 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,8 @@ int	treat_cmd_line(char *cmd_line, t_block *tmp)
 		return (free(tmp->dir), freeStringArray(token), 0);
 	while (tmp->dir)
 	{
-		if (tmp->dir->next->file == NULL)	{
+		if (tmp->dir->next->file == NULL)
+		{
 			free(tmp->dir->next);
 			tmp->dir->next = NULL;
 			break ;

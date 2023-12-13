@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 20:54:16 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/10 18:03:28 by myassine         ###   ########.fr       */
+/*   Updated: 2023/12/13 18:14:53 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void	print_exp(t_env *env, t_env *head_env)
 int	check_export(char *str)
 {
 	int i = 0;
-	// int sig_egal = 0;
+	int sig_egal = 0;
 
 	while(str[i] && (is_alpha(str[i]) || is_underscor(str[i])))
 		i++;
@@ -61,11 +61,11 @@ int	check_export(char *str)
 			return (0);
 		i++;
 	}
-	// if(str[i] && is_egal(str[i]))
-	// {
-	// 	i++;
-	// 	sig_egal++;
-	// }
+	if(str[i] && is_egal(str[i]))
+	{
+		i++;
+		sig_egal++;
+	}
 	// if(str[i] && !is_alnum(str[i]) && !is_egal(str[i]) && !is_double_quote(str[i]) && !is_simple_quote(str[i]))
 	// 	return (0);
 	// while(str[i])
@@ -74,8 +74,8 @@ int	check_export(char *str)
 	// 		return (0);
 	// 	i++;
 	// }
-	// if(sig_egal)
-	// 	return (2);
+	if(sig_egal)
+		return (2);
 	return (1);
 }
 
@@ -159,6 +159,10 @@ t_env	*export_env_1(t_env *env, t_env *head_env, char *str)
 {
 	t_env *new_block_env;
 
+	// printf("str = %s\n", str);
+	// str = if_quote(str);
+	// printf("str = %s\n", str);
+	printf("exp 1\n");
 	new_block_env = malloc(sizeof(t_env));
 	if(!new_block_env)
 		return NULL;
@@ -177,7 +181,9 @@ t_env	*export_env_1(t_env *env, t_env *head_env, char *str)
 t_env	*export_env_2(t_env *env, t_env *head_env, char *str)
 {
 	t_env *new_block_env;
+	printf("exp 2\n");
 
+	str = if_quote(str);
 	new_block_env = malloc(sizeof(t_env));
 	if(!new_block_env)
 		return NULL;
@@ -209,14 +215,17 @@ t_env	*rpl_env_var(t_env *env, t_env *head_env, char *str)
 		char *p_e = pre_egal(str);
 		if(!p_e)
 			return NULL;//a voir plus tard
-		if(!ft_strcmp(env->next->str[0],p_e))
+		if(env->next && !ft_strcmp(env->next->str[0],p_e))
 		{
 			free(p_e);
 			if (tmp)
 			{
 				if(tmp->str[1] != NULL)
 					free(tmp->str[1]);
-				tmp->str[1] = post_egal(str);
+				char *te = ft_strdup(str);
+				te = if_quote(str);
+				tmp->str[1] = post_egal(te);//
+				free(te);
 				if(!tmp->str[1])
 					return (NULL);
 			}
@@ -280,31 +289,31 @@ int cut_export_argument(char* arg_export)
 	return (SUCCESS);
 }
 
-void	ft_exp(t_env *env, t_env *head_env, char **envs, t_block *block)
-{
-	(void)envs;
-	//printf("arg = %s\n", block->arg[0]);
-	if (!block->arg)
-	{
-		print_exp(env, head_env);
-		return;
-	}
-	if(!ft_strcmp(block->cmd, "export") && block->arg[0] == NULL)
-	{
-		print_exp(env, head_env);
-		return;
-	}
-	if(!ft_strcmp(block->cmd, "export"))
-	{
-		int i = 0;
-		while (block->arg[i])
-		{
-			if (!cut_export_argument(block->arg[i]))
-				return;// (FAILURE); // free dans le cas ou probleme
-			i++;
-		}
-	}
-}
+// void	ft_exp(t_env *env, t_env *head_env, char **envs, t_block *block)
+// {
+// 	(void)envs;
+// 	//printf("arg = %s\n", block->arg[0]);
+// 	if (!block->arg)
+// 	{
+// 		print_exp(env, head_env);
+// 		return;
+// 	}
+// 	if(!ft_strcmp(block->cmd, "export") && block->arg[0] == NULL)
+// 	{
+// 		print_exp(env, head_env);
+// 		return;
+// 	}
+// 	if(!ft_strcmp(block->cmd, "export"))
+// 	{
+// 		int i = 0;
+// 		while (block->arg[i])
+// 		{
+// 			if (!cut_export_argument(block->arg[i]))
+// 				return;// (FAILURE); // free dans le cas ou probleme
+// 			i++;
+// 		}
+// 	}
+// }
 
 void	ft_export(t_env *env, t_env *head_env, char **envs, char *input)
 {
