@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/09 02:19:09 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/13 17:05:58 by myassine         ###   ########.fr       */
+/*   Updated: 2023/12/15 18:01:56 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,10 +100,14 @@ char *process_exp_variable(char *input, int *i, t_env *env, t_env *head_env)
     char *post_exp = ft_substr(input, j, ft_strlen(input));
     char *tmp = NULL;
     tmp = exp_(exp, env, head_env);
-    j = -1;
-    while(tmp[++j])
-        if(is_spec_char(tmp[j]))
-            tmp[j] *= -1;
+    j = 0;
+    if(tmp)
+        while(tmp[j])
+    {
+            if(is_spec_char(tmp[j]))
+                tmp[j] *= -1;
+            j++;
+        }
     char *post_input = ft_strjoin(pre_exp, tmp);
     char *abs = NULL;
     abs = ft_strjoin(post_input, post_exp);

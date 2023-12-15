@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 20:54:16 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/13 18:14:53 by myassine         ###   ########.fr       */
+/*   Updated: 2023/12/15 18:48:43 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,7 +162,6 @@ t_env	*export_env_1(t_env *env, t_env *head_env, char *str)
 	// printf("str = %s\n", str);
 	// str = if_quote(str);
 	// printf("str = %s\n", str);
-	printf("exp 1\n");
 	new_block_env = malloc(sizeof(t_env));
 	if(!new_block_env)
 		return NULL;
@@ -181,7 +180,6 @@ t_env	*export_env_1(t_env *env, t_env *head_env, char *str)
 t_env	*export_env_2(t_env *env, t_env *head_env, char *str)
 {
 	t_env *new_block_env;
-	printf("exp 2\n");
 
 	str = if_quote(str);
 	new_block_env = malloc(sizeof(t_env));
@@ -432,13 +430,18 @@ int check_n(char **tab)
 		return (2);
 	return (0);
 }
-
-void	ft_echo(t_env *env, t_env *head_env, char *input)
+// myassine@made-f0Dr11s4:~/Desktop/gv/MinShell$ echo bb vv aa ok << test
+// > bb
+// > ff
+// > test
+// bb vv aa ok
+void	ft_echo(t_env *env, t_env *head_env, char *input, t_block *block)
 {
 	char 	**tab;
 	char	*cpy_str;
 	char	*tmp;
 	int		i = 0;
+	block = block;
 	
 	tab = ft_split_path(input, ' ');
 	if(!tab)
@@ -461,12 +464,13 @@ void	ft_echo(t_env *env, t_env *head_env, char *input)
 	tmp = cpy_str;
 	*&cpy_str+=i;
 	return_neg(cpy_str);
+	// printf("b->d->type === %d\n", block->dir->type);
 	if((!ft_strcmp(tab[0], "echo")) && (!tab[1]))
 		printf("\n");
 	else if((!ft_strcmp(tab[0], "echo")) && (tab[1])
-		&& check_n(tab) == 2)
+		&& check_n(tab) == 2)// && !(block->dir->type == OUT))// || !(block->dir->type == APPEND))
 		printc(cpy_str);
-	else if((!ft_strcmp(tab[0], "echo")) && (tab[1]))
+	else if((!ft_strcmp(tab[0], "echo")) && (tab[1]))// && !(block->dir->type == OUT))// || !(block->dir->type == APPEND))
 	{
 		printc(cpy_str);
 		printf("\n");

@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 00:52:02 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/13 17:44:37 by myassine         ###   ########.fr       */
+/*   Updated: 2023/12/15 19:36:25 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,8 +99,8 @@ char **getPath(char **env)
 
 char	*verif_cmd(char **args, char **env)
 {
-	// if(args[0] == NULL)
-	// 	return ("");
+	if(args[0] == NULL)
+	 	return (NULL);
 	if(access(args[0], F_OK) == 0)
 		return (args[0]);
 	char *tmp = NULL;
@@ -222,33 +222,6 @@ void printBlock(t_block *block)
     }
 	else
         printf("No arguments/options\n");
-
-    // if (block->dir && block->dir->app_redir_doc[FILES] != NULL) 
-	// {
-    //     printf("Directories:\n");
-    //     t_dir *currentDir = block->dir;
-	
-        // while (currentDir[FILES] != NULL) 
-		// {
-		// int i = 0;
-		// while (currentDir->app_redir_doc[FILES][i])
-		// {
-		// 	printf("  Redirection type: %s\n", currentDir->app_redir_doc[REDIR][i]);
-		// 	printf("  Directory file: %s\n", currentDir->app_redir_doc[FILES][i]);
-		// 	i++;
-		// }
-		// 	currentDir = (t_dir *)currentDir->next;
-        // }
-	// block = block->next;
-    // }
-	// else 
-	// {
-    //     printf("No directories\n");
-    // }
-	// if(block->dir)
-	// {
-	// if(block->dir->file)
-	// }
 	if(block->dir)
 	{
 		while (block->dir)
@@ -298,17 +271,13 @@ void	open_write_file(char *input, t_block *block/*, int i*/)
 	// }
 }
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <fcntl.h>
-#include <unistd.h>
-
 void redirect_output(char *filename, int append) {
     int flags = O_WRONLY | O_CREAT;
 	flags |= append;
     int file = open(filename, flags, S_IRUSR | S_IWUSR);//verifier autorisation fichier cree par open
 
-    if (file == -1) {
+    if (file == -1)
+	{
         //perror("Erreur lors de l'ouverture du fichier");
         exit(EXIT_FAILURE);
     }
@@ -329,8 +298,28 @@ void redirect_input(char *filename) {
     dup2(file, STDIN_FILENO);
     close(file);
 }
+//Un pipe est egal a une redirection in et out
 
-void apply_redirections_to_command_line(t_block *test)
+void redirect_heredoc(char *delimiter, t_env *env, t_env *head_env)
+{
+    char *input;
+    while (1)
+	{
+        char *prompt = "> ";
+        input = readline(prompt);
+        if (!input)
+            break;
+        if (!ft_strcmp(input, delimiter))
+		{
+            free(input);
+            break;
+        }
+		input = expa_chang(input, env, head_env);
+        free(input);
+    }
+}
+
+void apply_redirections_to_command_line(t_block *test, t_env *env, t_env *head_env)
 {
 	while (test->dir)
 	{
@@ -340,6 +329,9 @@ void apply_redirections_to_command_line(t_block *test)
 			redirect_input(test->dir->file);
 		else if (test->dir->type ==  OUT)
 			redirect_output(test->dir->file, O_TRUNC);
+		else if(test->dir->type == HEREDOC)
+			redirect_heredoc(test->dir->file, env, head_env);
+			
 		test->dir = test->dir->next;
 	}
 }
@@ -352,36 +344,51 @@ void apply_redirections_to_command_line(t_block *test)
 int is_bultin(char **args, t_env *env, t_env *head_env)
 {
 	if(!ft_strcmp(args[0], "cd" ) && chdir(args[1]) == 0)
-	{
 		return (1);
-	}
 	else if(!ft_strcmp(args[0], "cd" ) && !args[1] && chdir(ft_get_env("HOME", env, head_env)) == 0)
-	{
 		return (1);
-	}
 	else if(!ft_strcmp(args[0], "pwd"))
-	{
 		return (1);
-	}
 	else if(!ft_strcmp(args[0], "echo"))
-	{
 		return (1);
-	}
 	else if(!ft_strcmp(args[0], "unset"))
-	{
 		return (1);
-	}
 	else if(!ft_strcmp(args[0], "env"))
-	{
 		return (1);
-	}
 	else if(!ft_strcmp(args[0], "export"))
-	{
 		return (1);
-	}
 	return (0);
 }
+/*
+/mnt/nfs/homes/myassine/Desktop/gv/MinShell$> echo ok > file
+ok > file
+/mnt/nfs/homes/myassine/Desktop/gv/MinShell$> cat file
 
+
+/mnt/nfs/homes/myassine/Desktop/gv/MinShell$> echo $?
+$?
+
+
+/mnt/nfs/homes/myassine/Desktop/gv/MinShell$> ./minishell
+/mnt/nfs/homes/myassine/Desktop/gv/MinShell$> ps
+==1293896== Invalid read of size 8
+==1293896==    at 0x10A0AD: apply_redirections_to_command_line (minishell.c:335)
+
+
+/mnt/nfs/homes/myassine/Desktop/gv/MinShell$> << eof
+> ab
+> ^C
+(usaully quit heredoc prompt)
+
+
+/mnt/nfs/homes/myassine/Desktop/gv/MinShell$> unset PATH
+/mnt/nfs/homes/myassine/Desktop/gv/MinShell$> export PATH=/usr/bin
+/mnt/nfs/homes/myassine/Desktop/gv/MinShell$> ls
+ls: command not found
+
+
+
+*/
 int	main(int argc, char **argv, char *envp[])
 {
 	if(argc > 1)
@@ -464,15 +471,100 @@ int	main(int argc, char **argv, char *envp[])
 			args[i] = NULL;
 		}
 		// [START OF BUILTINS]
-			int a = 0;
-			while(args[a])
-			{
-				return_neg(args[a]);
-				a++;
-			}
-		if(test->cmd)
+		int a = 0;
+		while(args[a])
 		{
-			if(!ft_strcmp(args[0], "exit" ) && !args[1])
+			return_neg(args[a]);
+			a++;
+		}
+		// apply_redirections_to_command_line(test, env, head_env);
+		//? faire les redir avant les bulltin?
+		// if(test->cmd)//comment faire pour que les bultin se fasse dasn les redir
+		// {
+		// 	if(!ft_strcmp(args[0], "exit" ) && !args[1])
+		// 		eof(input, envs, env, head_env);
+		// 	else if(!ft_strcmp(args[0], "cd" ) && chdir(args[1]) == 0)
+		// 	{
+		// 		all_free_1(test, input);
+		// 		freeStringArray(args);
+		// 		continue;
+		// 	}
+		// 	else if(!ft_strcmp(args[0], "cd" ) && !args[1] && chdir(ft_get_env("HOME", env, head_env)) == 0)
+		// 	{
+		// 		all_free_1(test, input);
+		// 		freeStringArray(args);
+		// 		continue;
+		// 	}
+		// 	else if(!ft_strcmp(args[0], "pwd"))
+		// 	{
+		// 		ft_pwd(input);
+		// 		all_free_1(test, input);
+		// 		freeStringArray(args);
+		// 		continue;
+		// 	}
+		// 	else if(!ft_strcmp(args[0], "echo"))
+		// 	{
+		// 		ft_echo(env, head_env, input, test);
+		// 		all_free_1(test, input);
+		// 		freeStringArray(args);
+		// 		continue;
+		// 	}
+		// 	else if(!ft_strcmp(args[0], "unset"))
+		// 	{
+		// 		ft_unset(env, head_env, input);
+		// 		all_free_1(test, input);
+		// 		freeStringArray(args);
+		// 		continue;
+		// 	}
+		// 	else if(!ft_strcmp(args[0], "env"))
+		// 	{
+		// 		ft_env(env, head_env, input);
+		// 		all_free_1(test, input);
+		// 		freeStringArray(args);
+		// 		continue;
+		// 	}
+		// 	else if(!ft_strcmp(args[0], "export"))
+		// 	{
+		// 		ft_export(env, head_env, envs, input);
+		// 		all_free_1(test, input);
+		// 		freeStringArray(args);
+		// 		continue;
+		// 	}
+		// }
+		if ((pid = fork()) < 0) 
+		{
+			printf("fork\n");
+			exit(EXIT_FAILURE);
+		}
+		if (pid == 0)
+		{
+			// [START OF CHILDREN'S JOURNEY TO EXEC]
+			char *str;
+			str = NULL;
+			 apply_redirections_to_command_line(test, env, head_env);
+			if(args[0] == NULL)
+				;
+			else if((str = verif_cmd(args, envs)) == NULL)
+			{
+				all_free_1(test, input);
+				if(args)
+					freeStringArray(args);
+				if(envs)
+					freeStringArray(envs);
+				if(str)
+					free(str);
+				if(env)
+					free_env(env, head_env);
+				exit(127);
+			}
+			if(str)
+			{
+				args[0] = ft_strdup(str);
+				free(str);
+			}
+			/*A FAIRE
+			 sois executee sois faire les bultin*/
+			 if(!ft_strcmp(args[0], "exit" ) && !args[1])
 				eof(input, envs, env, head_env);
 			else if(!ft_strcmp(args[0], "cd" ) && chdir(args[1]) == 0)
 			{
@@ -495,7 +587,7 @@ int	main(int argc, char **argv, char *envp[])
 			}
 			else if(!ft_strcmp(args[0], "echo"))
 			{
-				ft_echo(env, head_env, input);
+				ft_echo(env, head_env, input, test);
 				all_free_1(test, input);
 				freeStringArray(args);
 				continue;
@@ -516,45 +608,13 @@ int	main(int argc, char **argv, char *envp[])
 			}
 			else if(!ft_strcmp(args[0], "export"))
 			{
-				//ft_export(env, head_env, envs, input);
 				ft_export(env, head_env, envs, input);
 				all_free_1(test, input);
 				freeStringArray(args);
 				continue;
 			}
-		}
-		if ((pid = fork()) < 0) 
-		{
-			printf("fork\n");
-			exit(EXIT_FAILURE);
-		}
-		if (pid == 0)
-		{
-			// [START OF CHILDREN'S JOURNEY TO EXEC]
-			char *str;
-			str = NULL;
-			apply_redirections_to_command_line(test);
-			if(args[0] == NULL)
-			{;}
-			else if((str = verif_cmd(args, envs)) == NULL)
-			{
-				all_free_1(test, input);
-				if(args)
-					freeStringArray(args);
-				if(envs)
-					freeStringArray(envs);
-				if(str)
-					free(str);
-				if(env)
-				free_env(env, head_env);
-				exit(127);
-			}
-			if(str)
-			{
-				args[0] = ft_strdup(str);
-				free(str);
-			}
-			if (execve(args[0], args, envs) == -1)
+			else 
+			if(execve(args[0], args, envs) == -1)
 			{
 				if(args[0] || !is_bultin(args, env, head_env))
 			    	printf("%s: command not found\n", args[0]);
