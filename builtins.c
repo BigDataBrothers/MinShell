@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 20:54:16 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/15 18:48:43 by myassine         ###   ########.fr       */
+/*   Updated: 2023/12/18 19:25:37 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -481,6 +481,12 @@ void	ft_echo(t_env *env, t_env *head_env, char *input, t_block *block)
 	(void)head_env;
 }
 
+void	ft_putstr_fd(char *s, int fd)
+{
+	if (*s)
+		write(fd, s, ft_strlen(s));
+}
+
 void	ft_pwd(char *input)
 {
 	char **tab;
@@ -489,8 +495,13 @@ void	ft_pwd(char *input)
 	if(!tab)
 		return ;
 	if(!ft_strcmp(tab[0], "pwd"))
-		//print_env(env, head_env);
-		printf("%s\n",get_current_directory_with_prompt());
+	{
+		char *path;
+		path = get_current_directory_with_prompt();
+		printf("%s\n", path);
+		free(path);
+		// ft_putstr_fd(path ,1);
+	}
 	freeStringArray(tab);
 }
 

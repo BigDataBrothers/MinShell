@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 21:16:58 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/09 19:29:03 by myassine         ###   ########.fr       */
+/*   Updated: 2023/12/18 21:42:20 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,10 +58,10 @@ t_dir *malloc_dir()
 	if (!dir)
 		return (NULL);
 	memset(dir, 0, sizeof(t_dir));
-	dir->app_redir_doc = malloc(sizeof(char **) * 3);
-	dir->app_redir_doc[FILES] = NULL;
-	dir->app_redir_doc[REDIR] = NULL;
-	dir->app_redir_doc[NONE] = NULL;
+	// dir->app_redir_doc = malloc(sizeof(char **) * 3);
+	// dir->app_redir_doc[FILES] = NULL;
+	// dir->app_redir_doc[REDIR] = NULL;
+	// dir->app_redir_doc[NONE] = NULL;
 	return(dir);
 }
 
@@ -69,8 +69,10 @@ t_dir *new_dir(char *redir, char *target, t_dir *dir)
 {
 	if (!dir)
 		dir = malloc_dir();
-	add_new_block_tab(dir->app_redir_doc + FILES, target);
-	add_new_block_tab(dir->app_redir_doc + REDIR, redir);
+	(void)redir;
+	(void)target;
+	// add_new_block_tab(dir->app_redir_doc + FILES, target);
+	// add_new_block_tab(dir->app_redir_doc + REDIR, redir);
 	return dir;
 }
 

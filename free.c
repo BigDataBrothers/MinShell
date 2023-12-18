@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/27 18:58:47 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/09 21:06:34 by myassine         ###   ########.fr       */
+/*   Updated: 2023/12/18 21:43:56 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,29 +15,14 @@
 
 void free_dir(t_dir *dir)
 {
-    if (dir) 
+    while(dir)
     {
-        while (dir)
+        if(dir->file)
         {
-            char ***doc = dir->app_redir_doc;
-            freeStringArrays(doc);
-            dir = dir-> next;
+            free(dir->file);
+            dir->file = NULL;
         }
-        // if (dir->app_redir_doc) {
-        //     char ***doc = dir->app_redir_doc;
-            // while (*doc) {
-            //     char **page = *doc;
-            //     while (*page) {
-            //         free(*page);
-            //         page++;
-            //     }
-            //     free(*doc);
-            //     doc++;
-            // }
-            // free(dir->app_redir_doc);
-            
-        // }
-        free(dir);
+        dir = dir->next;
     }
 }
 
@@ -52,12 +37,17 @@ void free_block(t_block *block)
             char **arg = block->arg;
             while (*arg) {
                 free(*arg);
+                // arg = NULL;
                 arg++;
             }
             free(block->arg);
+            block->arg = NULL;
         }
+        // printf("block->dir: %p\n", block->dir);
+        free(block->dir);
         // free_dir(block->dir);
         free(block);
+        block = NULL;
     }
 }
 
@@ -80,7 +70,7 @@ void freeStringArray(char **array)
 	i = 0;
     if (array == NULL)
         return;
-    while(array[i] != NULL)
+    while(array && array[i])
 	{
         free(array[i]);
 		array[i] = NULL;

@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 21:39:12 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/13 16:41:42 by myassine         ###   ########.fr       */
+/*   Updated: 2023/12/18 21:10:50 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,8 +109,8 @@ int	treat_cmd_line(char *cmd_line, t_block *tmp)
 
 	// [START CLEAN LAST POINTER LISTE CHAINEE T_DIR*]
 	tmp->dir = head;
-	if (tmp->dir->file == NULL)
-		return (free(tmp->dir), freeStringArray(token), 0);
+	if (tmp->dir && tmp->dir->file == NULL)
+		return (freeStringArray(token), 0);
 	while (tmp->dir)
 	{
 		if (tmp->dir->next->file == NULL)
@@ -140,6 +140,10 @@ t_block *tokenization(char *input)
 	split_input = ft_split_path(input, '|');
 	while (split_input[i])
 	{
+		tmp->cmd = NULL;
+		tmp->arg = NULL;
+		tmp->next = NULL;
+		tmp->dir = NULL;
 		if (treat_cmd_line(split_input[i], tmp)) // PIPELINE
 			return (NULL);
 		if (split_input[i + 1])
