@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 21:39:12 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/18 21:10:50 by myassine         ###   ########.fr       */
+/*   Updated: 2023/12/21 20:04:35 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,6 +127,54 @@ int	treat_cmd_line(char *cmd_line, t_block *tmp)
 	return (0);
 }
 
+// char	*separt_peel_of(char *input)
+// {
+// 	int i = 0;
+// 	int spec = 0;
+// 	while(input[i])
+// 	{
+// 		if(input[i] == '>' && input[i + 1] && input[i + 1] == '>')
+// 		{
+// 			char *n_str = malloc(sizeof)
+// 		}
+// 		i++;
+// 	}
+// }
+
+char	*add_spaces(char *str)
+{
+	char	*result;
+	int		i;
+	int		j;
+
+	result = (char *)malloc(sizeof(char) * (strlen(str) * 2 + 1));
+	if (result == NULL)
+		return (NULL);
+	i = 0;
+	j = i;
+	while (str[i] != '\0')
+	{
+		if (str[i] == '>' || str[i] == '<' || str[i] == '|')
+		{
+			result[j++] = ' ';
+			result[j++] = str[i++];
+			if (str[i] == '>' || str[i] == '<')
+				result[j++] = str[i++];
+			result[j++] = ' ';
+		}
+		else if (str[i] == ' ')
+		{
+			result[j++] = str[i++];
+			while (str[i] == ' ')
+				i++;
+		}
+		else
+			result[j++] = str[i++];
+	}
+	result[j] = '\0';
+	return (result);
+}
+
 t_block *tokenization(char *input)
 {
 	char	**split_input;
@@ -137,6 +185,11 @@ t_block *tokenization(char *input)
 	i = 0;
 	original = new_block();
 	tmp = original;
+	char *tmp_input = ft_strdup(input);
+	free(input);
+	input = NULL;
+	input = add_spaces(tmp_input);
+	free(tmp_input);
 	split_input = ft_split_path(input, '|');
 	while (split_input[i])
 	{

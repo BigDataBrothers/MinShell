@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 00:52:02 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/20 22:38:27 by myassine         ###   ########.fr       */
+/*   Updated: 2023/12/21 20:20:18 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -658,7 +658,6 @@ int	main(int argc, char **argv, char *envp[])
 
 /*
 	A FAIRE ;
-		gerer les espace (exemple : cat<file)
 		pipe a gerer
 		leaks a gerer
 		$? valeur de retour a gerer
