@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 20:54:16 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/18 19:25:37 by myassine         ###   ########.fr       */
+/*   Updated: 2023/12/20 20:09:49 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -435,50 +435,37 @@ int check_n(char **tab)
 // > ff
 // > test
 // bb vv aa ok
-void	ft_echo(t_env *env, t_env *head_env, char *input, t_block *block)
+void	ft_echo(t_block *block)
 {
-	char 	**tab;
-	char	*cpy_str;
-	char	*tmp;
-	int		i = 0;
-	block = block;
-	
-	tab = ft_split_path(input, ' ');
-	if(!tab)
-		return ;
-	cpy_str = ft_strdup(input);
-	skip_whitespace(cpy_str, &i);
-	while(cpy_str[i] && is_alpha(cpy_str[i]))
-		i++;
-	skip_whitespace(cpy_str, &i);
-	while(cpy_str[i] && cpy_str[i] == '-' && cpy_str[i + 1] && cpy_str[i + 1] == 'n' && check_n(tab) == 2)
+	int x = 0;
+	int i;
+	int check_n = 0;
+	while(block->arg[x])
 	{
-		if(cpy_str[i] == '-' && cpy_str[i + 1] && cpy_str[i + 1] == 'n')
+		i = 1;
+		if(block->arg[x][0] != '-')
+			break;
+		while(block->arg[x][i])
 		{
+			if(block->arg[x][i] != 'n')
+				break;
+			check_n++;
 			i++;
-			while(cpy_str[i] && cpy_str[i] == 'n')
-				i++;
 		}
-		skip_whitespace(cpy_str, &i);
+		if(block->arg[x][i] && block->arg[x][i] != 'n')
+			break;
+		x++;
 	}
-	tmp = cpy_str;
-	*&cpy_str+=i;
-	return_neg(cpy_str);
-	// printf("b->d->type === %d\n", block->dir->type);
-	if((!ft_strcmp(tab[0], "echo")) && (!tab[1]))
-		printf("\n");
-	else if((!ft_strcmp(tab[0], "echo")) && (tab[1])
-		&& check_n(tab) == 2)// && !(block->dir->type == OUT))// || !(block->dir->type == APPEND))
-		printc(cpy_str);
-	else if((!ft_strcmp(tab[0], "echo")) && (tab[1]))// && !(block->dir->type == OUT))// || !(block->dir->type == APPEND))
+	int tab_len = len_tab(block->arg);
+	while(block->arg[x])
 	{
-		printc(cpy_str);
-		printf("\n");
+		printf("%s", block->arg[x]);
+		if(x < tab_len - 1)
+			printf(" ");
+		x++;
 	}
-	freeStringArray(tab);
-	free(tmp);
-	(void)env;
-	(void)head_env;
+	if (!check_n)
+		printf("\n");
 }
 
 void	ft_putstr_fd(char *s, int fd)
@@ -499,8 +486,6 @@ void	ft_pwd(char *input)
 		char *path;
 		path = get_current_directory_with_prompt();
 		printf("%s\n", path);
-		free(path);
-		// ft_putstr_fd(path ,1);
 	}
 	freeStringArray(tab);
 }

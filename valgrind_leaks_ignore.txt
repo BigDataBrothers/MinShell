@@ -5,6 +5,12 @@
     fun:readline
 }
 {
+    leak ???
+    Memcheck:Leak
+    ...
+    fun:???
+}
+{
     leak add_history
     Memcheck:Leak
     ...

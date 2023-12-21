@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/12 06:55:24 by myassine          #+#    #+#             */
-/*   Updated: 2023/11/22 18:45:30 by myassine         ###   ########.fr       */
+/*   Updated: 2023/12/20 22:37:25 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,3 +108,12 @@ char	**ft_split_path(char const *s, char c)
 	}
 	return (split);
 }
+
+
+/*
+//ls -la>eof|grep src
+int i = 0;
+
+
+
+*/

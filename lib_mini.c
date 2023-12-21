@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/09 02:17:16 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/10 17:46:58 by myassine         ###   ########.fr       */
+/*   Updated: 2023/12/20 19:04:06 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,7 +120,11 @@ int ft_strcmp(const char *s1, const char *s2)
 	int	i;
 
 	i = 0;
-	if(!s1)
+	if(!s1 && s2)
+		return (1);
+	if(s1 && !s2)
+		return (1);
+	if(!s1 && !s2)
 		return (0);
 	while (s1[i] || s2[i])
 	{

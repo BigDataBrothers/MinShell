@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 00:51:05 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/18 22:17:42 by myassine         ###   ########.fr       */
+/*   Updated: 2023/12/20 19:08:34 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -196,7 +196,7 @@ int 	len_word_exp(const char *str, int i);
 void	ft_export(t_env *env, t_env *head_env, char **envs, char *input);
 void	ft_env(t_env *env, t_env *head_env, char *input);
 void	ft_unset(t_env *env, t_env *head_env, char *input);
-void	ft_echo(t_env *env, t_env *head_env, char *input, t_block *block);
+void	ft_echo(t_block *block);
 void	ft_pwd(char *input);
 void	ft_cd(char *input);
 

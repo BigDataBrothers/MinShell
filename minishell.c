@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 00:52:02 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/18 22:18:47 by myassine         ###   ########.fr       */
+/*   Updated: 2023/12/20 22:38:27 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 void	eof(char *input, char **envs, t_env *env, t_env *head_env)
 {
-	printf("exit\n");
+	// printf("&exit&\n");
 	terminat(input, envs, env, head_env);
 	exit(0);
 }
@@ -144,7 +144,6 @@ char	*verif_cmd(char **args, char **env)
 	args[0] = ft_strdup(tmp);
 	if (tmp)
 		free(tmp);
-	printf("%s: command not found\n", args[0]);
 	return (NULL);
 }
 
@@ -239,62 +238,67 @@ void printBlock(t_block *block)
 	}
 }
 
-// void	open_write_file(char *input, t_block *block/*, int i*/)
-// {
-// 	t_dir *currentDir = block->dir;
-// 	/// int stdin;
-// 	/// int stdout;
-// 	int fd;
+int	ft_strncmp(const char *s1, const char *s2, size_t n)
+{
+	size_t	i;
 
-// 	/// stdin = dup(STDIN_FILENO);
-// 	/// stdout = dup(STDOUT_FILENO);
-// 	/// while(i >= 0)
-// 	/// {
-// 		while(currentDir != NULL)
-// 		{
-// 		if(ft_strcmp(">", currentDir->app_redir_doc[REDIR][0]))
-// 			fd = open(currentDir->app_redir_doc[FILES][0], O_CREAT | O_WRONLY | O_TRUNC, 0666);
-// 		if(fd == -1)
-// 		{
-// 			///erreur
-// 			perror("open error\n");
-// 			/// return ;
-// 			exit(EXIT_FAILURE);
-// 		}
-// 		if(dup2(fd, STDOUT_FILENO) == -1)
-// 		{
-// 			perror("dup2 error");
-// 			exit(EXIT_FAILURE);
-// 		}
-// 		close(fd);
-// 		(void)input;
-// 		currentDir = (t_dir *)currentDir->next;
-// 		}
-// 		// i--;
-// 	// }
-// }
+	i = 0;
+	while ((s1[i] || s2[i]) && i < n)
+	{
+		if (s1[i] != s2[i])
+			return ((unsigned char)s1[i] - (unsigned char)s2[i]);
+		i++;
+	}
+	return (0);
+}
 
-void redirect_output(char *filename, int append) {
-    int flags = O_WRONLY | O_CREAT;
-	flags |= append;
-    int file = open(filename, flags, S_IRUSR | S_IWUSR);//verifier autorisation fichier cree par open
+//Un pipe est egal a une redirection in et out
+
+
+void redirect_output(char *filename)
+{
+    int file = open(filename, O_CREAT | O_TRUNC | O_WRONLY, 0644);
 
     if (file == -1)
-	{
-        //perror("Erreur lors de l'ouverture du fichier");
+    {
+        perror("Erreur lors de l'ouverture du fichier");
         exit(EXIT_FAILURE);
     }
 
-    dup2(file, STDOUT_FILENO);
+
+    if (dup2(file, STDOUT_FILENO) == -1)
+    {
+        perror("Erreur lors de la redirection de la sortie standard");
+        close(file);
+        exit(EXIT_FAILURE);
+    }
     close(file);
 }
 
-void redirect_input(char *filename) {
+void append_output(char *filename)
+{
+    int file = open(filename, O_CREAT | O_APPEND | O_WRONLY, 0644);
+
+    if (file == -1)
+    {
+        perror("Erreur lors de l'ouverture du fichier en mode ajout");
+        exit(EXIT_FAILURE);
+    }
+    if (dup2(file, STDOUT_FILENO) == -1)
+    {
+        perror("Erreur lors de la redirection de la sortie standard");
+        close(file);
+        exit(EXIT_FAILURE);
+    }
+    close(file);
+}
+
+void redirect_input(char *filename)
+{
     int file = open(filename, O_RDONLY);
 
     if (file == -1) 
 	{
-    //    perror("minishell: %s: No such file or directory\n", filename);
         printf("minishell: %s: No such file or directory\n", filename);
 		exit(EXIT_FAILURE);
     }
@@ -302,39 +306,54 @@ void redirect_input(char *filename) {
     dup2(file, STDIN_FILENO);
     close(file);
 }
-//Un pipe est egal a une redirection in et out
 
-void redirect_heredoc(char *delimiter, t_env *env, t_env *head_env)
+
+void redirect_heredoc(char *delimiter, t_env *env, t_env *head_env, int saved_stdin)
 {
+    char *filename = "heredoc_temp_file.txt";
+    int heredoc_file = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+    if (heredoc_file == -1) {
+        perror("Erreur lors de la création du fichier heredoc");
+        exit(EXIT_FAILURE);
+    }
     char *input;
-    while (1)
+    // size_t delimiter_len = ft_strlen(delimiter);
+    size_t input_len;
+	dup2(saved_stdin, STDIN_FILENO);
+	while (1)
 	{
-        char *prompt = "> ";
+		char *prompt = "> ";
         input = readline(prompt);
-        if (!input)
-            break;
-        if (!ft_strcmp(input, delimiter))
+        if (!input || ft_strcmp(input, delimiter) == 0)
 		{
             free(input);
             break;
         }
-		input = expa_chang(input, env, head_env);
+        input = expa_chang(input, env, head_env);
+        input_len = ft_strlen(input);
+        if (write(heredoc_file, input, input_len) == -1 || write(heredoc_file, "\n", 1) == -1)
+		{
+            perror("Erreur lors de l'écriture dans le fichier heredoc");
+            exit(EXIT_FAILURE);
+        }
         free(input);
     }
+	redirect_input("heredoc_temp_file.txt");
+    close(heredoc_file);
 }
 
-void apply_redirections_to_command_line(t_block *test, t_env *env, t_env *head_env)
-{
+void apply_redirections_to_command_line(t_block *test, t_env *env, t_env *head_env, int saved_stdin)
+{	
 	while (test && test->dir && test->dir->file)
 	{
 		if (test->dir->type == APPEND)
-			redirect_output(test->dir->file, O_APPEND);
+			append_output(test->dir->file);
 		else if (test->dir->type ==  IN)
 			redirect_input(test->dir->file);
 		else if (test->dir->type ==  OUT)
-			redirect_output(test->dir->file, O_TRUNC);
+			redirect_output(test->dir->file);
 		else if(test->dir->type == HEREDOC)
-			redirect_heredoc(test->dir->file, env, head_env);
+			redirect_heredoc(test->dir->file, env, head_env, saved_stdin);
 		test->dir = test->dir->next;
 	}
 }
@@ -453,7 +472,7 @@ int	main(int argc, char **argv, char *envp[])
 
 			
 		if (!test->arg)
-			args = malloc(sizeof(char *) * 2);//
+			args = malloc(sizeof(char *) * 2);
 		else
 			args = malloc(sizeof(char *) * (len_tab(test->arg) + 2));
 		if(!args)
@@ -485,88 +504,43 @@ int	main(int argc, char **argv, char *envp[])
 
 		// --------------------- start gael ----------------------
 		(void)pid;
+		int saved_stdout = dup(STDOUT_FILENO);
+    	int saved_stdin = dup(STDIN_FILENO);
 		if (command_alone > 0)
 		{
 			printf(BACK_RED"multi"RST"\n");
 			// [START OF CHILDREN'S JOURNEY TO EXEC]
 			char *str;
 			str = NULL;
-			apply_redirections_to_command_line(test, env, head_env);
+			apply_redirections_to_command_line(test, env, head_env, saved_stdin);
 			if (args[0] == NULL)
 				;
 			else if((str = verif_cmd(args, envs)) == NULL)
-			{
-				all_free_1(test, input);
-				if(args)
-					freeStringArray(args);
-				free(args);
-				if(envs)
-					freeStringArray(envs);
-				if(str)
-					free(str);
-				if(env)
-					free_env(env, head_env);
-				exit(127);
-			}
+				{}
 			if(str)
 			{
 				args[0] = ft_strdup(str);
 				free(str);
 			}
-			if(!ft_strcmp(args[0], "exit" ))
+			if(args && !ft_strcmp(args[0], "exit" ))
 			{
-				dprintf(2, "exit builtin: \n");
+				dprintf(2, "exit\n");
 				eof(input, envs, env, head_env);
 			}
-			else if(!ft_strcmp(args[0], "cd" ) && chdir(args[1]) == 0)
-			{
-				all_free_1(test, input);
-				freeStringArray(args);
-				continue;
-			}
-			else if(!ft_strcmp(args[0], "cd" ) && !args[1] && chdir(ft_get_env("HOME", env, head_env)) == 0)
-			{
-				all_free_1(test, input);
-				freeStringArray(args);
-				continue;
-			}
-			else if(!ft_strcmp(args[0], "unset"))
-			{
+			else if(args && !ft_strcmp(args[0], "cd" ) && chdir(args[1]) == 0)
+				;
+			else if(args && !ft_strcmp(args[0], "cd" ) && !args[1] && chdir(ft_get_env("HOME", env, head_env)) == 0)
+				;
+			else if(args && !ft_strcmp(args[0], "unset"))
 				ft_unset(env, head_env, input);
-				all_free_1(test, input);
-				freeStringArray(args);
-				continue;
-			}
-			else if(!ft_strcmp(args[0], "export"))
-			{
+			else if(args && !ft_strcmp(args[0], "export"))
 				ft_export(env, head_env, envs, input);
-				all_free_1(test, input);
-				freeStringArray(args);
-				continue;
-			}
-			else if(!ft_strcmp(args[0], "pwd"))
-			{
-				printf("pppp\n");
+			else if(args && !ft_strcmp(args[0], "pwd"))
 				ft_pwd(input);
-				// all_free_1(test, input);
-				// freeStringArray(args);
-				// continue;
-			}
-			else if(!ft_strcmp(args[0], "echo"))
-			{
-				printf("eeee\n");
-				ft_echo(env, head_env, input, test);
-				// all_free_1(test, input);
-				// freeStringArray(args);
-				// continue;
-			}
-			else if(!ft_strcmp(args[0], "env"))
-			{
+			else if(args && !ft_strcmp(args[0], "echo"))
+				ft_echo(test);
+			else if(args && !ft_strcmp(args[0], "env"))
 				ft_env(env, head_env, input);
-				all_free_1(test, input);
-				freeStringArray(args);
-				continue;
-			}
 			else if ((pid = fork()) < 0) 
 			{
 				printf("fork\n");
@@ -576,12 +550,8 @@ int	main(int argc, char **argv, char *envp[])
 			{
 				if(execve(args[0], args, envs) == -1)
 				{
-					printf("1\n");
 					if(args[0])
-					{
 						printf("%s: command not found\n", args[0]);
-						printf("2\n");
-					}
 					if(envs)
 						freeStringArray(envs);
 					if(args)
@@ -590,7 +560,6 @@ int	main(int argc, char **argv, char *envp[])
 					all_free_1(test, input);
 					if(env)
 						free_env(env, head_env);
-					printf("3\n");
 					exit(127);
 				}
 				if(envs)
@@ -601,25 +570,15 @@ int	main(int argc, char **argv, char *envp[])
 		}
 		else
 		{
+			//ICI
 			printf(BACK_GREEN"alone"RST"\n");
 			char *str;
 			str = NULL;
-			apply_redirections_to_command_line(test, env, head_env);
+			apply_redirections_to_command_line(test, env, head_env, saved_stdin);
 			if (args[0] == NULL)
-				;
+				{}
 			else if((str = verif_cmd(args, envs)) == NULL)
-			{
-				all_free_1(test, input);
-				if(args)
-					freeStringArray(args);
-				if(envs)
-					freeStringArray(envs);
-				if(str)
-					free(str);
-				if(env)
-					free_env(env, head_env);
-				exit(127);
-			}
+				{}
 			if(str)
 			{
 				args[0] = ft_strdup(str);
@@ -627,71 +586,32 @@ int	main(int argc, char **argv, char *envp[])
 			}
 			if(!ft_strcmp(args[0], "exit" ))
 			{
-				dprintf(2, "exit builtin: \n");
+				dprintf(2, "@exit\n");
 				eof(input, envs, env, head_env);
 			}
 			else if(!ft_strcmp(args[0], "cd" ) && chdir(args[1]) == 0)
-			{
-				all_free_1(test, input);
-				freeStringArray(args);
-				continue;
-			}
+				;
 			else if(!ft_strcmp(args[0], "cd" ) && !args[1] && chdir(ft_get_env("HOME", env, head_env)) == 0)
-			{
-				all_free_1(test, input);
-				freeStringArray(args);
-				continue;
-			}
+				;
 			else if(!ft_strcmp(args[0], "unset"))
-			{
 				ft_unset(env, head_env, input);
-				all_free_1(test, input);
-				freeStringArray(args);
-				continue;
-			}
 			else if(!ft_strcmp(args[0], "export"))
-			{
 				ft_export(env, head_env, envs, input);
-				all_free_1(test, input);
-				freeStringArray(args);
-				continue;
-			}
 			else if(!ft_strcmp(args[0], "pwd"))
-			{
-				printf("pppp\n");
 				ft_pwd(input);
-				// all_free_1(test, input);
-				// freeStringArray(args);
-				// continue;
-			}
 			else if(!ft_strcmp(args[0], "echo"))
-			{
-				printf("eeee\n");
-				ft_echo(env, head_env, input, test);
-				// all_free_1(test, input);
-				// freeStringArray(args);
-				// continue;
-			}
+				ft_echo(test);
 			else if(!ft_strcmp(args[0], "env"))
-			{
 				ft_env(env, head_env, input);
-				all_free_1(test, input);
-				freeStringArray(args);
-				continue;
-			}
 			else if ((pid = fork()) < 0) 
 			{
 				printf("fork\n");
 				exit(EXIT_FAILURE);
 			}
-			if (pid == 0 && execve(args[0], args, envs) == -1)
+			if (pid == 0 && !is_bultin(args[0]) && execve(args[0], args, envs) == -1)
 			{
-				printf("1\n");
-				if(args[0])
-				{
+				if(args[0] && test->cmd)
 					printf("%s: command not found\n", args[0]);
-					printf("2\n");
-				}
 				if(envs)
 					freeStringArray(envs);
 				if(args)
@@ -699,20 +619,18 @@ int	main(int argc, char **argv, char *envp[])
 				all_free_1(test, input);
 				if(env)
 					free_env(env, head_env);
-				printf("3\n");
 				exit(127);
 			}
 			if(envs)
 				freeStringArray(envs);
 		}
-		// int ite = -1;
-		// while (args[++ite])
-		// 	printf("args[ite]: %s\n", args[ite]);
-		
+		unlink("heredoc_temp_file.txt");
+		dup2(saved_stdin ,STDIN_FILENO);
+		dup2(saved_stdout ,STDOUT_FILENO);
+		close(saved_stdin);
+		close(saved_stdout);
 		// ---------------- end gael --------------------
-		
-		// if(envs)
-		// 	freeStringArray(envs);
+
 		signal(SIGINT, SIG_IGN);
 		int status;	
 		waitpid(-1, &status, 0);
@@ -740,7 +658,7 @@ int	main(int argc, char **argv, char *envp[])
 
 /*
 	A FAIRE ;
-		HIR-DOC a faire vraiment // gerer les signaux dans le HERE-DOC(free)
+		gerer les espace (exemple : cat<file)
 		pipe a gerer
 		leaks a gerer
 		$? valeur de retour a gerer

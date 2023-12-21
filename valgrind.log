@@ -1,112 +1,96 @@
-==3820356== Memcheck, a memory error detector
-==3820356== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
-==3820356== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
-==3820356== Command: ./minishell
-==3820356== Parent PID: 3820299
-==3820356== 
-==3820356== Use of uninitialised value of size 8
-==3820356==    at 0x10A3F6: main (minishell.c:462)
-==3820356==  Uninitialised value was created by a stack allocation
-==3820356==    at 0x10A17C: main (minishell.c:401)
-==3820356== 
-==3820356== Invalid read of size 8
-==3820356==    at 0x10A3F6: main (minishell.c:462)
-==3820356==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
-==3820356== 
-==3820356== 
-==3820356== Process terminating with default action of signal 11 (SIGSEGV)
-==3820356==  Access not within mapped region at address 0x0
-==3820356==    at 0x10A3F6: main (minishell.c:462)
-==3820356==  If you believe this happened as a result of a stack
-==3820356==  overflow in your program's main thread (unlikely but
-==3820356==  possible), you can try to increase the size of the
-==3820356==  main thread stack using the --main-stacksize= flag.
-==3820356==  The main thread stack size used in this run was 8388608.
-==3820356== 
-==3820356== HEAP SUMMARY:
-==3820356==     in use at exit: 231,648 bytes in 666 blocks
-==3820356==   total heap usage: 928 allocs, 262 frees, 247,290 bytes allocated
-==3820356== 
-==3820356== 4 bytes in 1 blocks are still reachable in loss record 1 of 94
-==3820356==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3820356==    by 0x10DF0E: ft_strdup (lib_mini.c:143)
-==3820356==    by 0x10EB17: treat_token (tokenization.c:48)
-==3820356==    by 0x10EDF1: treat_cmd_line (tokenization.c:107)
-==3820356==    by 0x10EF4F: tokenization (tokenization.c:143)
-==3820356==    by 0x10A380: main (minishell.c:455)
-==3820356== 
-==3820356== 5 bytes in 2 blocks are still reachable in loss record 2 of 94
-==3820356==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3820356==    by 0x10DF0E: ft_strdup (lib_mini.c:143)
-==3820356==    by 0x10ECF1: treat_token (tokenization.c:81)
-==3820356==    by 0x10EDF1: treat_cmd_line (tokenization.c:107)
-==3820356==    by 0x10EF4F: tokenization (tokenization.c:143)
-==3820356==    by 0x10A380: main (minishell.c:455)
-==3820356== 
-==3820356== 8 bytes in 1 blocks are still reachable in loss record 3 of 94
-==3820356==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3820356==    by 0x10DBE3: ft_strjoin (lib_mini.c:26)
-==3820356==    by 0x1095D4: ft_lstsplit (minishell.c:62)
-==3820356==    by 0x10A229: main (minishell.c:424)
-==3820356== 
-==3820356== 24 bytes in 1 blocks are still reachable in loss record 18 of 94
-==3820356==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3820356==    by 0x10F1E6: init_env (env.c:68)
-==3820356==    by 0x10A1EA: main (minishell.c:417)
-==3820356== 
-==3820356== 24 bytes in 1 blocks are still reachable in loss record 24 of 94
-==3820356==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3820356==    by 0x10EB80: treat_token (tokenization.c:57)
-==3820356==    by 0x10EDF1: treat_cmd_line (tokenization.c:107)
-==3820356==    by 0x10EF4F: tokenization (tokenization.c:143)
-==3820356==    by 0x10A380: main (minishell.c:455)
-==3820356== 
-==3820356== 32 bytes in 1 blocks are still reachable in loss record 26 of 94
-==3820356==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3820356==    by 0x10BDDB: new_block (malloc.c:17)
-==3820356==    by 0x10EF06: tokenization (tokenization.c:138)
-==3820356==    by 0x10A380: main (minishell.c:455)
-==3820356== 
-==3820356== 600 bytes in 1 blocks are still reachable in loss record 44 of 94
-==3820356==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3820356==    by 0x109525: ft_lstsplit (minishell.c:49)
-==3820356==    by 0x10A229: main (minishell.c:424)
-==3820356== 
-==3820356== 1,020 bytes in 74 blocks are still reachable in loss record 50 of 94
-==3820356==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3820356==    by 0x10F268: copy_string (env.c:79)
-==3820356==    by 0x10F319: build_env (env.c:95)
-==3820356==    by 0x10F1B2: get_env (env.c:60)
-==3820356==    by 0x10F20F: init_env (env.c:71)
-==3820356==    by 0x10A1EA: main (minishell.c:417)
-==3820356== 
-==3820356== 1,752 bytes in 73 blocks are still reachable in loss record 63 of 94
-==3820356==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3820356==    by 0x10F3CA: build_env (env.c:105)
-==3820356==    by 0x10F1B2: get_env (env.c:60)
-==3820356==    by 0x10F20F: init_env (env.c:71)
-==3820356==    by 0x10A1EA: main (minishell.c:417)
-==3820356== 
-==3820356== 3,335 bytes in 74 blocks are still reachable in loss record 66 of 94
-==3820356==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3820356==    by 0x10F268: copy_string (env.c:79)
-==3820356==    by 0x10F367: build_env (env.c:96)
-==3820356==    by 0x10F1B2: get_env (env.c:60)
-==3820356==    by 0x10F20F: init_env (env.c:71)
-==3820356==    by 0x10A1EA: main (minishell.c:417)
-==3820356== 
-==3820356== 4,347 bytes in 73 blocks are still reachable in loss record 79 of 94
-==3820356==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3820356==    by 0x10DBE3: ft_strjoin (lib_mini.c:26)
-==3820356==    by 0x109673: ft_lstsplit (minishell.c:72)
-==3820356==    by 0x10A229: main (minishell.c:424)
-==3820356== 
-==3820356== LEAK SUMMARY:
-==3820356==    definitely lost: 0 bytes in 0 blocks
-==3820356==    indirectly lost: 0 bytes in 0 blocks
-==3820356==      possibly lost: 0 bytes in 0 blocks
-==3820356==    still reachable: 11,151 bytes in 302 blocks
-==3820356==         suppressed: 220,497 bytes in 364 blocks
-==3820356== 
-==3820356== For lists of detected and suppressed errors, rerun with: -s
-==3820356== ERROR SUMMARY: 2 errors from 2 contexts (suppressed: 0 from 0)
+==2296649== Memcheck, a memory error detector
+==2296649== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==2296649== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==2296649== Command: ./minishell
+==2296649== Parent PID: 2296587
+==2296649== 
+==2296649== 
+==2296649== HEAP SUMMARY:
+==2296649==     in use at exit: 225,883 bytes in 653 blocks
+==2296649==   total heap usage: 969 allocs, 316 frees, 248,301 bytes allocated
+==2296649== 
+==2296649== 4 bytes in 1 blocks are still reachable in loss record 3 of 81
+==2296649==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2296649==    by 0x10E66B: ft_strdup (lib_mini.c:143)
+==2296649==    by 0x10F273: treat_token (tokenization.c:48)
+==2296649==    by 0x10F54C: treat_cmd_line (tokenization.c:107)
+==2296649==    by 0x10F6D7: tokenization (tokenization.c:147)
+==2296649==    by 0x10A33F: main (minishell.c:450)
+==2296649== 
+==2296649== 4 bytes in 1 blocks are still reachable in loss record 4 of 81
+==2296649==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2296649==    by 0x10E66B: ft_strdup (lib_mini.c:143)
+==2296649==    by 0x109A20: verif_cmd (minishell.c:144)
+==2296649==    by 0x10A9DD: main (minishell.c:604)
+==2296649== 
+==2296649== 8 bytes in 1 blocks are still reachable in loss record 5 of 81
+==2296649==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2296649==    by 0x10E340: ft_strjoin (lib_mini.c:26)
+==2296649==    by 0x109614: ft_lstsplit (minishell.c:62)
+==2296649==    by 0x10A1A8: main (minishell.c:406)
+==2296649== 
+==2296649== 16 bytes in 1 blocks are still reachable in loss record 13 of 81
+==2296649==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2296649==    by 0x10A37F: main (minishell.c:456)
+==2296649== 
+==2296649== 24 bytes in 1 blocks are still reachable in loss record 15 of 81
+==2296649==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2296649==    by 0x10F96E: init_env (env.c:68)
+==2296649==    by 0x10A162: main (minishell.c:398)
+==2296649== 
+==2296649== 24 bytes in 1 blocks are still reachable in loss record 19 of 81
+==2296649==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2296649==    by 0x10F0C6: create_new_dir (tokenization.c:18)
+==2296649==    by 0x10F507: treat_cmd_line (tokenization.c:102)
+==2296649==    by 0x10F6D7: tokenization (tokenization.c:147)
+==2296649==    by 0x10A33F: main (minishell.c:450)
+==2296649== 
+==2296649== 32 bytes in 1 blocks are still reachable in loss record 20 of 81
+==2296649==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2296649==    by 0x10C5AE: new_block (malloc.c:17)
+==2296649==    by 0x10F65C: tokenization (tokenization.c:138)
+==2296649==    by 0x10A33F: main (minishell.c:450)
+==2296649== 
+==2296649== 624 bytes in 1 blocks are still reachable in loss record 36 of 81
+==2296649==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2296649==    by 0x109565: ft_lstsplit (minishell.c:49)
+==2296649==    by 0x10A1A8: main (minishell.c:406)
+==2296649== 
+==2296649== 1,076 bytes in 77 blocks are still reachable in loss record 47 of 81
+==2296649==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2296649==    by 0x10F9F0: copy_string (env.c:79)
+==2296649==    by 0x10FAA1: build_env (env.c:95)
+==2296649==    by 0x10F93A: get_env (env.c:60)
+==2296649==    by 0x10F997: init_env (env.c:71)
+==2296649==    by 0x10A162: main (minishell.c:398)
+==2296649== 
+==2296649== 1,824 bytes in 76 blocks are still reachable in loss record 51 of 81
+==2296649==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2296649==    by 0x10FB52: build_env (env.c:105)
+==2296649==    by 0x10F93A: get_env (env.c:60)
+==2296649==    by 0x10F997: init_env (env.c:71)
+==2296649==    by 0x10A162: main (minishell.c:398)
+==2296649== 
+==2296649== 3,447 bytes in 77 blocks are still reachable in loss record 54 of 81
+==2296649==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2296649==    by 0x10F9F0: copy_string (env.c:79)
+==2296649==    by 0x10FAEF: build_env (env.c:96)
+==2296649==    by 0x10F93A: get_env (env.c:60)
+==2296649==    by 0x10F997: init_env (env.c:71)
+==2296649==    by 0x10A162: main (minishell.c:398)
+==2296649== 
+==2296649== 4,515 bytes in 76 blocks are still reachable in loss record 67 of 81
+==2296649==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2296649==    by 0x10E340: ft_strjoin (lib_mini.c:26)
+==2296649==    by 0x1096B3: ft_lstsplit (minishell.c:72)
+==2296649==    by 0x10A1A8: main (minishell.c:406)
+==2296649== 
+==2296649== LEAK SUMMARY:
+==2296649==    definitely lost: 0 bytes in 0 blocks
+==2296649==    indirectly lost: 0 bytes in 0 blocks
+==2296649==      possibly lost: 0 bytes in 0 blocks
+==2296649==    still reachable: 11,598 bytes in 314 blocks
+==2296649==         suppressed: 214,285 bytes in 339 blocks
+==2296649== 
+==2296649== For lists of detected and suppressed errors, rerun with: -s
+==2296649== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
