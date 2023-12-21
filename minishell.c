@@ -6,11 +6,24 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 00:52:02 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/21 20:20:18 by myassine         ###   ########.fr       */
+/*   Updated: 2023/12/21 23:22:26 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+/*
+/mnt/nfs/homes/myassine/Desktop/gv/MinShell$> << a
+> a
+exit        why print exit?
+
+/mnt/nfs/homes/myassine/Desktop/gv/MinShell$> echo $?
+$?
+
+/mnt/nfs/homes/myassine/Desktop/gv/MinShell$> unset PATH
+/mnt/nfs/homes/myassine/Desktop/gv/MinShell$> export PATH=/usr/bin
+/mnt/nfs/homes/myassine/Desktop/gv/MinShell$> ls
+ls: command not found
+*/
 
 
 void	eof(char *input, char **envs, t_env *env, t_env *head_env)
@@ -384,19 +397,69 @@ int is_bultin(char *args)
 	return (0);
 }
 
-/*
-/mnt/nfs/homes/myassine/Desktop/gv/MinShell$> << a
-> a
-exit        why print exit?
+void execute_pipeline(t_block *pipeline) {
+    t_block *current_block = pipeline;
+    int prev_pipe[2];
+    int new_pipe[2];
 
-/mnt/nfs/homes/myassine/Desktop/gv/MinShell$> echo $?
-$?
+    while (current_block != NULL) {
+        // Create a new pipe for each command (except the last one)
+        if (current_block->next != NULL) {
+            if (pipe(new_pipe) == -1) {
+                perror("pipe");
+                exit(EXIT_FAILURE);
+            }
+        }
 
-/mnt/nfs/homes/myassine/Desktop/gv/MinShell$> unset PATH
-/mnt/nfs/homes/myassine/Desktop/gv/MinShell$> export PATH=/usr/bin
-/mnt/nfs/homes/myassine/Desktop/gv/MinShell$> ls
-ls: command not found
-*/
+        pid_t pid = fork();
+
+        if (pid == -1) {
+            perror("fork");
+            exit(EXIT_FAILURE);
+        }
+
+        if (pid == 0) { // Child process
+            // Set up redirection for input
+            if (current_block != pipeline) {
+                dup2(prev_pipe[0], STDIN_FILENO);
+                close(prev_pipe[0]);
+                close(prev_pipe[1]);
+            }
+
+            // Set up redirection for output
+            if (current_block->next != NULL) {
+                close(new_pipe[0]);
+                dup2(new_pipe[1], STDOUT_FILENO);
+                close(new_pipe[1]);
+            }
+
+            // Execute the command
+            execvp(current_block->cmd, current_block->arg);
+
+            // If execvp fails
+            perror("execvp");
+            exit(EXIT_FAILURE);
+        } else { // Parent process
+            // Close previous pipe (no longer needed in the parent)
+            if (current_block != pipeline) {
+                close(prev_pipe[0]);
+                close(prev_pipe[1]);
+            }
+
+            // Save the current pipe for the next iteration
+            if (current_block->next != NULL) {
+                prev_pipe[0] = new_pipe[0];
+                prev_pipe[1] = new_pipe[1];
+            }
+
+            current_block = current_block->next;
+        }
+    }
+
+    // Wait for all child processes to finish
+    while (wait(NULL) > 0);
+}
+
 int	main(int argc, char **argv, char *envp[])
 {
 	if(argc > 1)
@@ -510,67 +573,69 @@ int	main(int argc, char **argv, char *envp[])
 		{
 			printf(BACK_RED"multi"RST"\n");
 			// [START OF CHILDREN'S JOURNEY TO EXEC]
-			char *str;
-			str = NULL;
-			apply_redirections_to_command_line(test, env, head_env, saved_stdin);
-			if (args[0] == NULL)
-				;
-			else if((str = verif_cmd(args, envs)) == NULL)
-				{}
-			if(str)
+			while(test)//Gere les pipeline ICI
 			{
-				args[0] = ft_strdup(str);
-				free(str);
-			}
-			if(args && !ft_strcmp(args[0], "exit" ))
-			{
-				dprintf(2, "exit\n");
-				eof(input, envs, env, head_env);
-			}
-			else if(args && !ft_strcmp(args[0], "cd" ) && chdir(args[1]) == 0)
-				;
-			else if(args && !ft_strcmp(args[0], "cd" ) && !args[1] && chdir(ft_get_env("HOME", env, head_env)) == 0)
-				;
-			else if(args && !ft_strcmp(args[0], "unset"))
-				ft_unset(env, head_env, input);
-			else if(args && !ft_strcmp(args[0], "export"))
-				ft_export(env, head_env, envs, input);
-			else if(args && !ft_strcmp(args[0], "pwd"))
-				ft_pwd(input);
-			else if(args && !ft_strcmp(args[0], "echo"))
-				ft_echo(test);
-			else if(args && !ft_strcmp(args[0], "env"))
-				ft_env(env, head_env, input);
-			else if ((pid = fork()) < 0) 
-			{
-				printf("fork\n");
-				exit(EXIT_FAILURE);
-			}
-			if (pid == 0)
-			{
-				if(execve(args[0], args, envs) == -1)
+				char *str;
+				str = NULL;
+				apply_redirections_to_command_line(test, env, head_env, saved_stdin);
+				if (args[0] == NULL)
+					;
+				else if((str = verif_cmd(args, envs)) == NULL)
+					{}
+				if(str)
 				{
-					if(args[0])
-						printf("%s: command not found\n", args[0]);
+					args[0] = ft_strdup(str);
+					free(str);
+				}
+				if(args && !ft_strcmp(test->cmd, "exit" ))
+				{
+					dprintf(2, "exit\n");
+					eof(input, envs, env, head_env);
+				}
+				else if(args && !ft_strcmp(test->cmd, "cd" ) && chdir(args[1]) == 0)
+					;
+				else if(args && !ft_strcmp(test->cmd, "cd" ) && !args[1] && chdir(ft_get_env("HOME", env, head_env)) == 0)
+					;
+				else if(args && !ft_strcmp(test->cmd, "unset"))
+					ft_unset(env, head_env, input);
+				else if(args && !ft_strcmp(test->cmd, "export"))
+					ft_export(env, head_env, envs, input);
+				else if(args && !ft_strcmp(test->cmd, "pwd"))
+					ft_pwd(input);
+				else if(args && !ft_strcmp(test->cmd, "echo"))
+					ft_echo(test);
+				else if(args && !ft_strcmp(test->cmd, "env"))
+					ft_env(env, head_env, input);
+				else if ((pid = fork()) < 0) 
+				{
+					printf("fork\n");
+					exit(EXIT_FAILURE);
+				}
+				if (pid == 0)
+				{
+					if(execve(args[0], args, envs) == -1)
+					{
+						if(test->cmd)
+							printf("%s: command not found\n", test->cmd);
+						if(envs)
+							freeStringArray(envs);
+						if(args)
+							freeStringArray(args);
+						free(args);
+						all_free_1(test, input);
+						if(env)
+							free_env(env, head_env);
+						exit(127);
+					}
 					if(envs)
 						freeStringArray(envs);
-					if(args)
-						freeStringArray(args);
-					free(args);
-					all_free_1(test, input);
-					if(env)
-						free_env(env, head_env);
-					exit(127);
+					// [END OF CHILDREN'S JOURNEY TO EXEC]
 				}
-				if(envs)
-					freeStringArray(envs);
-				// [END OF CHILDREN'S JOURNEY TO EXEC]
+				test = test->next;
 			}
-
 		}
 		else
 		{
-			//ICI
 			printf(BACK_GREEN"alone"RST"\n");
 			char *str;
 			str = NULL;
@@ -659,6 +724,10 @@ int	main(int argc, char **argv, char *envp[])
 /*
 	A FAIRE ;
 		pipe a gerer
+			; 
+				rediriger a l aide des nvx int de t_token;
+				savoir ou enlever les free;
+		savoir p je doit quit 2x
 		leaks a gerer
 		$? valeur de retour a gerer
 		verifier si command interdite

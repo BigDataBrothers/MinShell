@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 21:39:12 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/21 20:04:35 by myassine         ###   ########.fr       */
+/*   Updated: 2023/12/21 23:11:42 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -197,6 +197,8 @@ t_block *tokenization(char *input)
 		tmp->arg = NULL;
 		tmp->next = NULL;
 		tmp->dir = NULL;
+		tmp->pipe_out = STDOUT_FILENO;
+		tmp->pipe_in = STDIN_FILENO;
 		if (treat_cmd_line(split_input[i], tmp)) // PIPELINE
 			return (NULL);
 		if (split_input[i + 1])

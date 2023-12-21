@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 00:51:05 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/20 19:08:34 by myassine         ###   ########.fr       */
+/*   Updated: 2023/12/21 23:11:57 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,13 +133,9 @@ typedef	struct s_env
 
 typedef struct s_dir
 {
-	// char	***app_redir_doc;
-
 	char 	*file;
 	int 	fd;
-	int		type;
-
-	// void	*next;
+	int		type;	// void	*next;
 	struct s_dir *next;
 }				t_dir;
 
@@ -147,6 +143,8 @@ typedef struct s_block
 {
 	char	*cmd; //commande
 	char	**arg; //argument ou option
+	int		pipe_out;
+	int		pipe_in;
 	void	*next;
 	t_dir	*dir;
 }	t_block;
