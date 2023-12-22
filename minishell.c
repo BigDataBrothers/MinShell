@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 00:52:02 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/21 23:22:26 by myassine         ###   ########.fr       */
+/*   Updated: 2023/12/22 17:36:09 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -513,8 +513,6 @@ int	main(int argc, char **argv, char *envp[])
 			print_error(error);
 			continue;
 		}
-		
-		// ------------------------ start gael -------------------------
 		int	i_alone = 0;
 		int command_alone = 0;
 		while (input[i_alone])
@@ -523,58 +521,50 @@ int	main(int argc, char **argv, char *envp[])
 				command_alone++;
 			i_alone++;
 		}
-		// ------------------------ end gael -------------------------
-		
-		
 		in_quote(input);
 		input = expa_chang(input, env, head_env);
 		test = NULL;
 		test = tokenization(input);//chaque t_block et 1 cmd + args
-		return_neg(test->cmd);
-		test->cmd = if_quote(test->cmd);
-
-			
-		if (!test->arg)
-			args = malloc(sizeof(char *) * 2);
-		else
-			args = malloc(sizeof(char *) * (len_tab(test->arg) + 2));
-		if(!args)
-			return (0);
-		int i = 0;
-		int j = 0;
-
-		args[i] = ft_strdup(test->cmd);
-		i++;
-		args[i] = NULL;
-		if(test->arg)
-		{
-			while(test->arg[j])
-			{
-				return_neg(test->arg[j]);
-				test->arg[j] = if_quote(test->arg[j]);
-				args[i] = ft_strdup(test->arg[j]);
-				i++;
-				j++;
-			}
-			args[i] = NULL;
-		}
-		int a = 0;
-		while(args[a])
-		{
-			return_neg(args[a]);
-			a++;
-		}
-
-		// --------------------- start gael ----------------------
 		(void)pid;
 		int saved_stdout = dup(STDOUT_FILENO);
     	int saved_stdin = dup(STDIN_FILENO);
-		if (command_alone > 0)
+		if (command_alone > 0)//Gere les pipeline ICI
 		{
 			printf(BACK_RED"multi"RST"\n");
-			// [START OF CHILDREN'S JOURNEY TO EXEC]
-			while(test)//Gere les pipeline ICI
+			while(test)
 			{
+				return_neg(test->cmd);
+				test->cmd = if_quote(test->cmd);
+				if (!test->arg)
+					args = malloc(sizeof(char *) * 2);
+				else
+					args = malloc(sizeof(char *) * (len_tab(test->arg) + 2));
+				if(!args)
+					return (0);
+				int i = 0;
+				int j = 0;
+
+				args[i] = ft_strdup(test->cmd);
+				i++;
+				args[i] = NULL;
+				if(test->arg)
+				{
+					while(test->arg[j])
+					{
+						return_neg(test->arg[j]);
+						test->arg[j] = if_quote(test->arg[j]);
+						args[i] = ft_strdup(test->arg[j]);
+						i++;
+						j++;
+					}
+					args[i] = NULL;
+				}
+				int a = 0;
+				while(args[a])
+				{
+					return_neg(args[a]);
+					a++;
+				}
 				char *str;
 				str = NULL;
 				apply_redirections_to_command_line(test, env, head_env, saved_stdin);
@@ -611,6 +601,7 @@ int	main(int argc, char **argv, char *envp[])
 					printf("fork\n");
 					exit(EXIT_FAILURE);
 				}
+				// [START OF CHILDREN'S JOURNEY TO EXEC]
 				if (pid == 0)
 				{
 					if(execve(args[0], args, envs) == -1)
@@ -627,8 +618,6 @@ int	main(int argc, char **argv, char *envp[])
 							free_env(env, head_env);
 						exit(127);
 					}
-					if(envs)
-						freeStringArray(envs);
 					// [END OF CHILDREN'S JOURNEY TO EXEC]
 				}
 				test = test->next;
@@ -637,6 +626,37 @@ int	main(int argc, char **argv, char *envp[])
 		else
 		{
 			printf(BACK_GREEN"alone"RST"\n");
+			return_neg(test->cmd);
+			test->cmd = if_quote(test->cmd);
+			if (!test->arg)
+				args = malloc(sizeof(char *) * 2);
+			else
+				args = malloc(sizeof(char *) * (len_tab(test->arg) + 2));
+			if(!args)
+				return (0);
+			int i = 0;
+			int j = 0;
+			args[i] = ft_strdup(test->cmd);
+			i++;
+			args[i] = NULL;
+			if(test->arg)
+			{
+				while(test->arg[j])
+				{
+					return_neg(test->arg[j]);
+					test->arg[j] = if_quote(test->arg[j]);
+					args[i] = ft_strdup(test->arg[j]);
+					i++;
+					j++;
+				}
+				args[i] = NULL;
+			}
+			int a = 0;
+			while(args[a])
+			{
+				return_neg(args[a]);
+				a++;
+			}
 			char *str;
 			str = NULL;
 			apply_redirections_to_command_line(test, env, head_env, saved_stdin);
@@ -694,8 +714,6 @@ int	main(int argc, char **argv, char *envp[])
 		dup2(saved_stdout ,STDOUT_FILENO);
 		close(saved_stdin);
 		close(saved_stdout);
-		// ---------------- end gael --------------------
-
 		signal(SIGINT, SIG_IGN);
 		int status;	
 		waitpid(-1, &status, 0);
