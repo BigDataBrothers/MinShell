@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 21:39:12 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/22 17:46:48 by myassine         ###   ########.fr       */
+/*   Updated: 2023/12/22 21:08:38 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,7 @@ int	treat_cmd_line(char *cmd_line, t_block *tmp)
 	count = 0;
 	
 	j = 0;
+	printf(PURPLE"cmd_line: %s"RESET"\n", cmd_line);
 	token = ft_split_path(cmd_line, ' ');
 	tmp->dir = create_new_dir();
 	if (!tmp->dir)
@@ -172,7 +173,6 @@ t_block *tokenization(char *input)
 	original = new_block();
 	tmp = original;
 	char *tmp_input = ft_strdup(input);
-	free(input);
 	input = NULL;
 	input = add_spaces(tmp_input);
 	free(tmp_input);

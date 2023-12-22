@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 20:54:16 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/20 20:09:49 by myassine         ###   ########.fr       */
+/*   Updated: 2023/12/22 19:47:33 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -440,6 +440,8 @@ void	ft_echo(t_block *block)
 	int x = 0;
 	int i;
 	int check_n = 0;
+	if(!block->arg)
+		return ;
 	while(block->arg[x])
 	{
 		i = 1;

@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 00:52:02 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/22 18:52:48 by myassine         ###   ########.fr       */
+/*   Updated: 2023/12/22 21:26:30 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,11 @@ ls: command not found
 */
 
 
-void	eof(char *input, char **envs, t_env *env, t_env *head_env)
+void	eof(char *input, char **envs, t_env *env, t_env *head_env, char status)
 {
 	// printf("&exit&\n");
 	terminat(input, envs, env, head_env);
-	exit(0);
+	exit(status);
 }
 
 char *get_current_directory_with_prompt()
@@ -217,8 +217,9 @@ void all_free_1(t_block *test, char *input)
 {
 	if(test)
 		free_block_list(test);
-	if(input)
-		free(input);
+	// if(input)
+	// 	free(input);
+	(void)input;
 }
 
 void printBlock(t_block *block)
@@ -462,6 +463,36 @@ void execute_pipeline(t_block *pipeline) {
     while (wait(NULL) > 0);
 }
 
+// char	*ft_strjoin(char *s1, char const *s2)
+// {
+// 	int		i;
+// 	int		j;
+// 	char	*s3;
+// 	int		len;
+
+// 	i = 0;
+// 	j = 0;
+// 	while (s1[i])
+// 		i++;
+// 	while (s2[j])
+// 		j++;
+// 	len = i + j;
+// 	s3 = malloc(sizeof(char) * (len + 1));
+// 	i = 0;
+// 	if (!s3)
+// 		return (NULL);
+// 	i = -1;
+// 	j = -1;
+// 	while (s1[++i])
+// 		s3[i] = s1[i];
+// 	while (s2[++j])
+// 		s3[i + j] = s2[j];
+// 	while (i + j < len + 1)
+// 		s3[i + j++] = '\0';
+// 	free(s1);
+// 	return (s3);
+// }
+
 // A REGLER
 //echo "Hello, World!" | tee output.txt
 
@@ -498,13 +529,15 @@ int	main(int argc, char **argv, char *envp[])
 		int u = 0;
 		while(path[u])
 			u++;
+		char *tmp_path;
 		if(path[--u] != ' ')
-			strcat(path, "$> ");//recoder
+			tmp_path = ft_strjoin(path, "$> ");//recoder;
+		path = tmp_path;
 		if(!path)
 			return (0);
 		input = readline(path);
 		if (!input)
-			eof(input, envs, env, head_env);
+			eof(input, envs, env, head_env, 0);
 		add_history(input);
 		if(!no_input(input))
 		{
@@ -574,7 +607,6 @@ int	main(int argc, char **argv, char *envp[])
 				}
 				char *str;
 				str = NULL;
-				apply_redirections_to_command_line(test, env, head_env, saved_stdin);
 				if (args[0] == NULL)
 					;
 				else if((str = verif_cmd(args, envs)) == NULL)
@@ -606,10 +638,12 @@ int	main(int argc, char **argv, char *envp[])
 							exit(EXIT_FAILURE);
 						close(pipe_fds[1]);
 					}
+					apply_redirections_to_command_line(test, env, head_env, saved_stdin);
 					if(args && !ft_strcmp(test->cmd, "exit" ))
 					{
+						
 						dprintf(2, "exit\n");
-						eof(input, envs, env, head_env);
+						eof(input, envs, env, head_env, 0);
 					}
 					else if(args && !ft_strcmp(test->cmd, "cd" ) && chdir(args[1]) == 0)
 						;
@@ -706,8 +740,8 @@ int	main(int argc, char **argv, char *envp[])
 			}
 			if(!ft_strcmp(args[0], "exit" ))
 			{
-				dprintf(2, "@exit\n");
-				eof(input, envs, env, head_env);
+				dprintf(2, "exit\n");
+				eof(input, envs, env, head_env, 0);
 			}
 			else if(!ft_strcmp(args[0], "cd" ) && chdir(args[1]) == 0)
 				;
@@ -750,7 +784,6 @@ int	main(int argc, char **argv, char *envp[])
 		close(saved_stdin);
 		close(saved_stdout);
 		signal(SIGINT, SIG_IGN);
-
 		int status;
 		while (1)
 		{
@@ -760,7 +793,6 @@ int	main(int argc, char **argv, char *envp[])
 		}
 		if(test)
 			free_block_list(test);
-		free(input);
 		if(args)
 			freeStringArray(args);
 	}
@@ -782,14 +814,10 @@ int	main(int argc, char **argv, char *envp[])
 
 /*
 	A FAIRE ;
-		pipe a gerer
-			; 
-				rediriger a l aide des nvx int de t_token;
-				savoir ou enlever les free;
 		savoir p je doit quit 2x
 		leaks a gerer
 		$? valeur de retour a gerer
 		verifier si command interdite
-		norm(appeler Gael)
+		norm
 
 */

@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 00:51:05 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/22 18:35:52 by myassine         ###   ########.fr       */
+/*   Updated: 2023/12/22 21:24:11 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,7 +164,7 @@ t_block		*tokenization(char *input);
 
 //Minishell
 char	*get_current_directory_with_prompt();
-void	eof(char *input, char **envs, t_env *env, t_env *head_env);
+void	eof(char *input, char **envs, t_env *env, t_env *head_env, char status);
 void	terminat(char *input,char **envs, t_env *env, t_env *head_env);
 
 //Print
