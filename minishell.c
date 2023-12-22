@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 00:52:02 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/22 18:07:59 by myassine         ###   ########.fr       */
+/*   Updated: 2023/12/22 18:52:48 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -370,6 +370,8 @@ void apply_redirections_to_command_line(t_block *test, t_env *env, t_env *head_e
 		test->dir = test->dir->next;
 	}
 }
+
+
 /*
 	consider les bulltin comme des command pour ne pas print que la cmd existe pas
 	gerer tout les cas avec des quot char negatif
@@ -460,6 +462,9 @@ void execute_pipeline(t_block *pipeline) {
     while (wait(NULL) > 0);
 }
 
+// A REGLER
+//echo "Hello, World!" | tee output.txt
+
 int	main(int argc, char **argv, char *envp[])
 {
 	if(argc > 1)
@@ -497,10 +502,7 @@ int	main(int argc, char **argv, char *envp[])
 			strcat(path, "$> ");//recoder
 		if(!path)
 			return (0);
-		printf(BACK_YELLOW"AVANT RD"RST"\n");
-		printf(GREEN"path: %s"RESET"\n", path);
 		input = readline(path);
-		printf(BACK_CYAN"APRES RD"RST"\n");
 		if (!input)
 			eof(input, envs, env, head_env);
 		add_history(input);
@@ -534,6 +536,8 @@ int	main(int argc, char **argv, char *envp[])
 		if (command_alone > 0)//Gere les pipeline ICI
 		{
 			printf(BACK_RED"multi"RST"\n");
+			int pipe_fds[2];
+			int prev_pipe_fd = -1;
 			while(test)
 			{
 				return_neg(test->cmd);
@@ -580,26 +584,9 @@ int	main(int argc, char **argv, char *envp[])
 					args[0] = ft_strdup(str);
 					free(str);
 				}
-				if(args && !ft_strcmp(test->cmd, "exit" ))
-				{
-					dprintf(2, "exit\n");
-					eof(input, envs, env, head_env);
-				}
-				else if(args && !ft_strcmp(test->cmd, "cd" ) && chdir(args[1]) == 0)
-					;
-				else if(args && !ft_strcmp(test->cmd, "cd" ) && !args[1] && chdir(ft_get_env("HOME", env, head_env)) == 0)
-					;
-				else if(args && !ft_strcmp(test->cmd, "unset"))
-					ft_unset(env, head_env, input);
-				else if(args && !ft_strcmp(test->cmd, "export"))
-					ft_export(env, head_env, envs, input);
-				else if(args && !ft_strcmp(test->cmd, "pwd"))
-					ft_pwd(input);
-				else if(args && !ft_strcmp(test->cmd, "echo"))
-					ft_echo(test);
-				else if(args && !ft_strcmp(test->cmd, "env"))
-					ft_env(env, head_env, input);
-				else if ((pid = fork()) < 0) 
+				if (pipe(pipe_fds) == -1)
+					exit(EXIT_FAILURE);
+				if ((pid = fork()) < 0) 
 				{
 					printf("fork\n");
 					exit(EXIT_FAILURE);
@@ -607,6 +594,39 @@ int	main(int argc, char **argv, char *envp[])
 				// [START OF CHILDREN'S JOURNEY TO EXEC]
 				if (pid == 0)
 				{
+					if (prev_pipe_fd != -1)
+					{
+						if (dup2(prev_pipe_fd, STDIN_FILENO) == -1)
+							exit(EXIT_FAILURE);
+						close(prev_pipe_fd);
+					}
+					if (test->next)
+					{
+						if (dup2(pipe_fds[1], STDOUT_FILENO) == -1)
+							exit(EXIT_FAILURE);
+						close(pipe_fds[1]);
+					}
+					if(args && !ft_strcmp(test->cmd, "exit" ))
+					{
+						dprintf(2, "exit\n");
+						eof(input, envs, env, head_env);
+					}
+					else if(args && !ft_strcmp(test->cmd, "cd" ) && chdir(args[1]) == 0)
+						;
+					else if(args && !ft_strcmp(test->cmd, "cd" ) && !args[1] && chdir(ft_get_env("HOME", env, head_env)) == 0)
+						;
+					else if(args && !ft_strcmp(test->cmd, "unset"))
+						ft_unset(env, head_env, input);
+					else if(args && !ft_strcmp(test->cmd, "export"))
+						ft_export(env, head_env, envs, input);
+					else if(args && !ft_strcmp(test->cmd, "pwd"))
+						ft_pwd(input);
+					else if(args && !ft_strcmp(test->cmd, "echo"))
+						ft_echo(test);
+					else if(args && !ft_strcmp(test->cmd, "env"))
+						ft_env(env, head_env, input);
+					if (is_bultin(args[0]))
+						exit(0);
 					if(execve(args[0], args, envs) == -1)
 					{
 						if(test->cmd)
@@ -621,9 +641,21 @@ int	main(int argc, char **argv, char *envp[])
 							free_env(env, head_env);
 						exit(127);
 					}
-					// [END OF CHILDREN'S JOURNEY TO EXEC]
 				}
-				test = test->next;
+				else
+				{
+ 					if (test->next)
+					{
+						close(pipe_fds[1]);
+						prev_pipe_fd = pipe_fds[0];
+					}
+					else
+					{
+						close(pipe_fds[0]);
+						close(pipe_fds[1]);					
+					}
+					test = test->next;
+				}		
 			}
 		}
 		else
@@ -712,7 +744,6 @@ int	main(int argc, char **argv, char *envp[])
 			if(envs)
 				freeStringArray(envs);
 		}
-		printf(BACK_PURPLE"ICI"RST"\n");
 		unlink("heredoc_temp_file.txt");
 		dup2(saved_stdin ,STDIN_FILENO);
 		dup2(saved_stdout ,STDOUT_FILENO);
@@ -727,7 +758,6 @@ int	main(int argc, char **argv, char *envp[])
 			if (pid < 0)
 				break;
 		}
-		printf(BACK_WHITE"LA"RST"\n");
 		if(test)
 			free_block_list(test);
 		free(input);
