@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 00:51:05 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/22 21:24:11 by myassine         ###   ########.fr       */
+/*   Updated: 2023/12/22 21:43:19 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -224,6 +224,7 @@ int		ft_lstsize(t_env *lst);
 int		len_tab(char **tab);
 void	return_neg(char *str);
 int		nbr_arg(char **token, int j, int *count);
+int	is_num(char c);
 
 //Check_char
 

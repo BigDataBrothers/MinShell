@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 00:52:02 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/22 21:26:30 by myassine         ###   ########.fr       */
+/*   Updated: 2023/12/22 22:10:38 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -496,6 +496,33 @@ void execute_pipeline(t_block *pipeline) {
 // A REGLER
 //echo "Hello, World!" | tee output.txt
 
+
+int	is_real_num(const char *num)
+{
+	int i = 0;
+	if(num && num[0] != '-' && !is_num(num[0]))
+		return (0);
+	if(num[0] == '-')
+		i++;
+	while(num[i])
+	{
+		if(!is_num(num[i]))
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
+
+int ft_exit_1(t_block *block)
+{
+	dprintf(2, "exit\n");
+	if(block->arg && len_tab(block->arg) > 1  && !is_real_num(block->arg[1]))
+		return(printf("exit doesn't have the right arguments\n"), 0);
+	return (1);
+}
+
+
 int	main(int argc, char **argv, char *envp[])
 {
 	if(argc > 1)
@@ -531,7 +558,7 @@ int	main(int argc, char **argv, char *envp[])
 			u++;
 		char *tmp_path;
 		if(path[--u] != ' ')
-			tmp_path = ft_strjoin(path, "$> ");//recoder;
+			tmp_path = ft_strjoin(path, "$> ");
 		path = tmp_path;
 		if(!path)
 			return (0);
@@ -641,9 +668,8 @@ int	main(int argc, char **argv, char *envp[])
 					apply_redirections_to_command_line(test, env, head_env, saved_stdin);
 					if(args && !ft_strcmp(test->cmd, "exit" ))
 					{
-						
-						dprintf(2, "exit\n");
-						eof(input, envs, env, head_env, 0);
+						if(ft_exit_1(test))
+							eof(input, envs, env, head_env, ft_atoi(test->arg[0]));
 					}
 					else if(args && !ft_strcmp(test->cmd, "cd" ) && chdir(args[1]) == 0)
 						;
@@ -738,24 +764,28 @@ int	main(int argc, char **argv, char *envp[])
 				args[0] = ft_strdup(str);
 				free(str);
 			}
-			if(!ft_strcmp(args[0], "exit" ))
+			if(!ft_strcmp(test->cmd, "exit" ))
 			{
-				dprintf(2, "exit\n");
-				eof(input, envs, env, head_env, 0);
+				if(ft_exit_1(test))
+				{
+					if(!test->arg)
+						eof(input, envs, env, head_env, 0);
+					eof(input, envs, env, head_env, (char)ft_atoi(test->arg[0]));
+				}
 			}
-			else if(!ft_strcmp(args[0], "cd" ) && chdir(args[1]) == 0)
+			else if(!ft_strcmp(test->cmd, "cd" ) && chdir(args[1]) == 0)
 				;
-			else if(!ft_strcmp(args[0], "cd" ) && !args[1] && chdir(ft_get_env("HOME", env, head_env)) == 0)
+			else if(!ft_strcmp(test->cmd, "cd" ) && !args[1] && chdir(ft_get_env("HOME", env, head_env)) == 0)
 				;
-			else if(!ft_strcmp(args[0], "unset"))
+			else if(!ft_strcmp(test->cmd, "unset"))
 				ft_unset(env, head_env, input);
-			else if(!ft_strcmp(args[0], "export"))
+			else if(!ft_strcmp(test->cmd, "export"))
 				ft_export(env, head_env, envs, input);
-			else if(!ft_strcmp(args[0], "pwd"))
+			else if(!ft_strcmp(test->cmd, "pwd"))
 				ft_pwd(input);
-			else if(!ft_strcmp(args[0], "echo"))
+			else if(!ft_strcmp(test->cmd, "echo"))
 				ft_echo(test);
-			else if(!ft_strcmp(args[0], "env"))
+			else if(!ft_strcmp(test->cmd, "env"))
 				ft_env(env, head_env, input);
 			else if ((pid = fork()) < 0) 
 			{
@@ -814,10 +844,8 @@ int	main(int argc, char **argv, char *envp[])
 
 /*
 	A FAIRE ;
-		savoir p je doit quit 2x
 		leaks a gerer
 		$? valeur de retour a gerer
-		verifier si command interdite
 		norm
 
 */
