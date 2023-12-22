@@ -6,13 +6,14 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 21:39:12 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/21 23:11:42 by myassine         ###   ########.fr       */
+/*   Updated: 2023/12/22 17:46:48 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_dir *create_new_dir()	{
+t_dir *create_new_dir()
+{
 	t_dir *new_dir;
 
 	new_dir = malloc(sizeof(t_dir));
@@ -61,7 +62,6 @@ int treat_token(char **token, int *j, t_block *tmp, int *count)
 		{
 			if(is_redir(token[*j]))
 			{
-				// si !token[j + 1] alors erreur pas de fichier apres
 				choose_type_redir(token, *j, tmp->dir);
 				(*j)++;
 				tmp->dir->file = ft_strdup(token[*j]);
@@ -126,20 +126,6 @@ int	treat_cmd_line(char *cmd_line, t_block *tmp)
 	freeStringArray(token);
 	return (0);
 }
-
-// char	*separt_peel_of(char *input)
-// {
-// 	int i = 0;
-// 	int spec = 0;
-// 	while(input[i])
-// 	{
-// 		if(input[i] == '>' && input[i + 1] && input[i + 1] == '>')
-// 		{
-// 			char *n_str = malloc(sizeof)
-// 		}
-// 		i++;
-// 	}
-// }
 
 char	*add_spaces(char *str)
 {

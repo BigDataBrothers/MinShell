@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 00:52:02 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/22 17:36:09 by myassine         ###   ########.fr       */
+/*   Updated: 2023/12/22 18:07:59 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -497,7 +497,10 @@ int	main(int argc, char **argv, char *envp[])
 			strcat(path, "$> ");//recoder
 		if(!path)
 			return (0);
+		printf(BACK_YELLOW"AVANT RD"RST"\n");
+		printf(GREEN"path: %s"RESET"\n", path);
 		input = readline(path);
+		printf(BACK_CYAN"APRES RD"RST"\n");
 		if (!input)
 			eof(input, envs, env, head_env);
 		add_history(input);
@@ -709,14 +712,22 @@ int	main(int argc, char **argv, char *envp[])
 			if(envs)
 				freeStringArray(envs);
 		}
+		printf(BACK_PURPLE"ICI"RST"\n");
 		unlink("heredoc_temp_file.txt");
 		dup2(saved_stdin ,STDIN_FILENO);
 		dup2(saved_stdout ,STDOUT_FILENO);
 		close(saved_stdin);
 		close(saved_stdout);
 		signal(SIGINT, SIG_IGN);
-		int status;	
-		waitpid(-1, &status, 0);
+
+		int status;
+		while (1)
+		{
+			pid = waitpid(-1, &status, WNOHANG);
+			if (pid < 0)
+				break;
+		}
+		printf(BACK_WHITE"LA"RST"\n");
 		if(test)
 			free_block_list(test);
 		free(input);
