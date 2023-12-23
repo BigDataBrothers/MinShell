@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 00:52:02 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/22 22:10:38 by myassine         ###   ########.fr       */
+/*   Updated: 2023/12/23 21:06:44 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ ls: command not found
 
 void	eof(char *input, char **envs, t_env *env, t_env *head_env, char status)
 {
-	// printf("&exit&\n");
 	terminat(input, envs, env, head_env);
 	exit(status);
 }
@@ -213,13 +212,14 @@ void    sigint_handler(int sig)
 
 //ls -l | grep .c | wc -l > file.txt < input.txt
 
-void all_free_1(t_block *test, char *input)
+void all_free_1(t_block *test, t_env *env, t_env *head_env, char **args)
 {
 	if(test)
 		free_block_list(test);
-	// if(input)
-	// 	free(input);
-	(void)input;
+	if(env)
+		free_env(env, head_env);
+	if(args)
+		freeStringArray(args);
 }
 
 void printBlock(t_block *block)
@@ -381,10 +381,8 @@ void apply_redirections_to_command_line(t_block *test, t_env *env, t_env *head_e
 
 int is_bultin(char *args)
 {
-	if(!ft_strcmp(args, "cd" ))// && chdir(args[1]) == 0)
+	if(!ft_strcmp(args, "cd" ))
 		return (1);
-	// else if(!ft_strcmp(args[0], "cd" ) && !args[1] && chdir(ft_get_env("HOME", env, head_env)) == 0)
-		// return (1);
 	else if(!ft_strcmp(args, "exit"))
 		return (1);
 	else if(!ft_strcmp(args, "pwd"))
@@ -399,103 +397,6 @@ int is_bultin(char *args)
 		return (1);
 	return (0);
 }
-
-void execute_pipeline(t_block *pipeline) {
-    t_block *current_block = pipeline;
-    int prev_pipe[2];
-    int new_pipe[2];
-
-    while (current_block != NULL) {
-        // Create a new pipe for each command (except the last one)
-        if (current_block->next != NULL) {
-            if (pipe(new_pipe) == -1) {
-                perror("pipe");
-                exit(EXIT_FAILURE);
-            }
-        }
-
-        pid_t pid = fork();
-
-        if (pid == -1) {
-            perror("fork");
-            exit(EXIT_FAILURE);
-        }
-
-        if (pid == 0) { // Child process
-            // Set up redirection for input
-            if (current_block != pipeline) {
-                dup2(prev_pipe[0], STDIN_FILENO);
-                close(prev_pipe[0]);
-                close(prev_pipe[1]);
-            }
-
-            // Set up redirection for output
-            if (current_block->next != NULL) {
-                close(new_pipe[0]);
-                dup2(new_pipe[1], STDOUT_FILENO);
-                close(new_pipe[1]);
-            }
-
-            // Execute the command
-            execvp(current_block->cmd, current_block->arg);
-
-            // If execvp fails
-            perror("execvp");
-            exit(EXIT_FAILURE);
-        } else { // Parent process
-            // Close previous pipe (no longer needed in the parent)
-            if (current_block != pipeline) {
-                close(prev_pipe[0]);
-                close(prev_pipe[1]);
-            }
-
-            // Save the current pipe for the next iteration
-            if (current_block->next != NULL) {
-                prev_pipe[0] = new_pipe[0];
-                prev_pipe[1] = new_pipe[1];
-            }
-
-            current_block = current_block->next;
-        }
-    }
-
-    // Wait for all child processes to finish
-    while (wait(NULL) > 0);
-}
-
-// char	*ft_strjoin(char *s1, char const *s2)
-// {
-// 	int		i;
-// 	int		j;
-// 	char	*s3;
-// 	int		len;
-
-// 	i = 0;
-// 	j = 0;
-// 	while (s1[i])
-// 		i++;
-// 	while (s2[j])
-// 		j++;
-// 	len = i + j;
-// 	s3 = malloc(sizeof(char) * (len + 1));
-// 	i = 0;
-// 	if (!s3)
-// 		return (NULL);
-// 	i = -1;
-// 	j = -1;
-// 	while (s1[++i])
-// 		s3[i] = s1[i];
-// 	while (s2[++j])
-// 		s3[i + j] = s2[j];
-// 	while (i + j < len + 1)
-// 		s3[i + j++] = '\0';
-// 	free(s1);
-// 	return (s3);
-// }
-
-// A REGLER
-//echo "Hello, World!" | tee output.txt
-
 
 int	is_real_num(const char *num)
 {
@@ -522,6 +423,38 @@ int ft_exit_1(t_block *block)
 	return (1);
 }
 
+int	applic_bulltin(t_block *test, t_env *env, t_env *head_env, char **args)
+{
+	if(args && !ft_strcmp(test->cmd, "cd" ) && chdir(args[1]) == 0)
+		return (1);
+	else if(args && !ft_strcmp(test->cmd, "cd" ) && !args[1] && chdir(ft_get_env("HOME", env, head_env)) == 0)
+		return (1);
+	else if(args && !ft_strcmp(test->cmd, "unset"))
+		return(ft_unset(env, head_env, test), 1);
+	else if(args && !ft_strcmp(test->cmd, "export"))
+		return(ft_export(env, head_env, test), 1);
+	else if(args && !ft_strcmp(test->cmd, "pwd"))
+		return(ft_pwd(test), 1);
+	else if(args && !ft_strcmp(test->cmd, "echo"))
+		return(ft_echo(test), 1);
+	else if(args && !ft_strcmp(test->cmd, "env"))
+		return(ft_env(env, head_env, test), 1);
+	return (0);
+}
+
+/*myassine@made-f0Br1s4:~/MIN/MIN$ sdggdf | ls
+builtins.c	check_redir_a_pipe.c  lib_mini.c   print.c
+builtins.o	check_redir_a_pipe.o  lib_mini.o   print.o
+check_char_2.c	env.c		      Makefile	   skip_char.c
+check_char_2.o	env.o		      malloc.c	   skip_char.o
+check_char.c	expand.c	      malloc.o	   tokenization.c
+check_char.o	expand.o	      minishell    tokenization.o
+check_error.c	free.c		      minishell.c  valgrind_BU.log
+check_error.o	free.o		      minishell.h  valgrind_leaks_ignore.txt
+check_quote.c	ft_split_path.c       minishell.o  valgrind.log
+check_quote.o	ft_split_path.o       output.txt
+sdggdf: command not found
+*/
 
 int	main(int argc, char **argv, char *envp[])
 {
@@ -535,13 +468,11 @@ int	main(int argc, char **argv, char *envp[])
 	char	*path;
 	char	**envs;
 	char	**args;
-	int		error;
 
 	env = NULL;
 	envs = NULL;
 	head_env = NULL;
 	env = init_env(env, head_env, envp);
-	error = 0;
 	pid = -1;
 	path = NULL;
 	while(1)
@@ -572,10 +503,9 @@ int	main(int argc, char **argv, char *envp[])
 				free(input);
 			continue;
 		}
-		error = check_error(input);
-		if(error)
+		if(check_error(input))
 		{
-			print_error(error);
+			print_error(check_error(input));
 			continue;
 		}
 		int	i_alone = 0;
@@ -608,11 +538,10 @@ int	main(int argc, char **argv, char *envp[])
 					args = malloc(sizeof(char *) * (len_tab(test->arg) + 2));
 				if(!args)
 					return (0);
-				int i = 0;
+				int i = 1;
 				int j = 0;
 
-				args[i] = ft_strdup(test->cmd);
-				i++;
+				args[0] = ft_strdup(test->cmd);
 				args[i] = NULL;
 				if(test->arg)
 				{
@@ -671,34 +600,13 @@ int	main(int argc, char **argv, char *envp[])
 						if(ft_exit_1(test))
 							eof(input, envs, env, head_env, ft_atoi(test->arg[0]));
 					}
-					else if(args && !ft_strcmp(test->cmd, "cd" ) && chdir(args[1]) == 0)
-						;
-					else if(args && !ft_strcmp(test->cmd, "cd" ) && !args[1] && chdir(ft_get_env("HOME", env, head_env)) == 0)
-						;
-					else if(args && !ft_strcmp(test->cmd, "unset"))
-						ft_unset(env, head_env, input);
-					else if(args && !ft_strcmp(test->cmd, "export"))
-						ft_export(env, head_env, envs, input);
-					else if(args && !ft_strcmp(test->cmd, "pwd"))
-						ft_pwd(input);
-					else if(args && !ft_strcmp(test->cmd, "echo"))
-						ft_echo(test);
-					else if(args && !ft_strcmp(test->cmd, "env"))
-						ft_env(env, head_env, input);
-					if (is_bultin(args[0]))
+					if(applic_bulltin(test, env, head_env, args))
 						exit(0);
-					if(execve(args[0], args, envs) == -1)
+					else if(execve(args[0], args, envs) == -1)
 					{
 						if(test->cmd)
 							printf("%s: command not found\n", test->cmd);
-						if(envs)
-							freeStringArray(envs);
-						if(args)
-							freeStringArray(args);
-						free(args);
-						all_free_1(test, input);
-						if(env)
-							free_env(env, head_env);
+						all_free_1(test, env, head_env, args);
 						exit(127);
 					}
 				}
@@ -729,10 +637,9 @@ int	main(int argc, char **argv, char *envp[])
 				args = malloc(sizeof(char *) * (len_tab(test->arg) + 2));
 			if(!args)
 				return (0);
-			int i = 0;
+			int i = 1;
 			int j = 0;
-			args[i] = ft_strdup(test->cmd);
-			i++;
+			args[0] = ft_strdup(test->cmd);
 			args[i] = NULL;
 			if(test->arg)
 			{
@@ -773,36 +680,18 @@ int	main(int argc, char **argv, char *envp[])
 					eof(input, envs, env, head_env, (char)ft_atoi(test->arg[0]));
 				}
 			}
-			else if(!ft_strcmp(test->cmd, "cd" ) && chdir(args[1]) == 0)
+			if(applic_bulltin(test, env, head_env, args))
 				;
-			else if(!ft_strcmp(test->cmd, "cd" ) && !args[1] && chdir(ft_get_env("HOME", env, head_env)) == 0)
-				;
-			else if(!ft_strcmp(test->cmd, "unset"))
-				ft_unset(env, head_env, input);
-			else if(!ft_strcmp(test->cmd, "export"))
-				ft_export(env, head_env, envs, input);
-			else if(!ft_strcmp(test->cmd, "pwd"))
-				ft_pwd(input);
-			else if(!ft_strcmp(test->cmd, "echo"))
-				ft_echo(test);
-			else if(!ft_strcmp(test->cmd, "env"))
-				ft_env(env, head_env, input);
 			else if ((pid = fork()) < 0) 
 			{
 				printf("fork\n");
 				exit(EXIT_FAILURE);
 			}
-			if (pid == 0 && !is_bultin(args[0]) && execve(args[0], args, envs) == -1)
+			else if (pid == 0 && !is_bultin(args[0]) && execve(args[0], args, envs) == -1)
 			{
 				if(args[0] && test->cmd)
 					printf("%s: command not found\n", args[0]);
-				if(envs)
-					freeStringArray(envs);
-				if(args)
-					freeStringArray(args);
-				all_free_1(test, input);
-				if(env)
-					free_env(env, head_env);
+				all_free_1(test, env, head_env, args);
 				exit(127);
 			}
 			if(envs)
@@ -834,10 +723,9 @@ int	main(int argc, char **argv, char *envp[])
 		args[i_free_args] = NULL;
 	}
 	free(args);
-	all_free_1(test, input);
+	all_free_1(test, env, head_env, args);
 	argc = argc;
 	argv = argv;
-	envp = envp;
 	return (SUCCESS);
 }
 

@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 19:46:28 by myassine          #+#    #+#             */
-/*   Updated: 2023/11/16 21:37:16 by myassine         ###   ########.fr       */
+/*   Updated: 2023/12/23 20:15:53 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,8 +80,8 @@ int check_pipe(char *input)//refaire mon check pipe
 			if(!input[i])
 				return (4);
 			skip_whitespace(input, &i);
-			if(is_spec_char(input[i]))
-				return (4);
+			// if(is_spec_char(input[i])) A VOIR
+			// 	return (4);
 		}
 		if(input[i])
 			i++;

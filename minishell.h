@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 00:51:05 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/22 21:43:19 by myassine         ###   ########.fr       */
+/*   Updated: 2023/12/23 20:24:46 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -191,15 +191,14 @@ char	*exp_var(char *input, int *i);
 int 	len_word_exp(const char *str, int i);
 
 //Bultins
-void	ft_export(t_env *env, t_env *head_env, char **envs, char *input);
-void	ft_env(t_env *env, t_env *head_env, char *input);
-void	ft_unset(t_env *env, t_env *head_env, char *input);
+void	ft_export(t_env *env, t_env *head_env, t_block *block);
+void	ft_env(t_env *env, t_env *head_env, t_block *block);
+void	ft_unset(t_env *env, t_env *head_env, t_block *block);
 void	ft_echo(t_block *block);
-void	ft_pwd(char *input);
+void	ft_pwd(t_block *block);
 void	ft_cd(char *input);
-
 void	ft_exp(t_env *env, t_env *head_env, char **envs, t_block *block);
-int is_bultin(char *args);
+int		is_bultin(char *args);
 
 //Lib_mini
 char 	*removeCharAtIndex(char *str, int i);
@@ -217,14 +216,13 @@ char    *ft_substr(char *s, int start, int len);
 void	return_neg(char *str);
 char 	*if_quote(char *input);
 char	*ft_itoa(int n);
-//static size_t	ft_num_len(long n);
 int		ft_atoi(const char *nptr);
 char	*ft_strstr(const char *big, const char *little);
 int		ft_lstsize(t_env *lst);
 int		len_tab(char **tab);
 void	return_neg(char *str);
 int		nbr_arg(char **token, int j, int *count);
-int	is_num(char c);
+int		is_num(char c);
 
 //Check_char
 
@@ -263,9 +261,9 @@ int		str_void(char *input);
 
 //Skip_char
 
-void    skip_whitespace(char *str, int *i);
+void	skip_whitespace(char *str, int *i);
 int 	skip_alnum(char *str, int *i);
-int    skip_neg_char(char *str, int *i);
+int		skip_neg_char(char *str, int *i);
 void	skip_word_exp(char *str, int *i);
 void	skip_alpha(char *str, int *i);
 
@@ -285,3 +283,5 @@ char 	**add_new_block_tab(char ***tab, char *str);
 // char	**tab_arg(t_block *block, char **token, int j);
 
 #endif
+
+// $OKO>$Okok 2 variable inexistante marche pas avec pipe aussi

@@ -6,20 +6,13 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 20:54:16 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/22 19:47:33 by myassine         ###   ########.fr       */
+/*   Updated: 2023/12/23 19:18:00 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 //si j ai le tps tri l env de export par ordre alpha
-
-
-//test
-// myassine@made-f0Cr2s1:~$ < file cat >> file
-//cat: -: input file is output file
-//ls > file
-//< file >> file
 
 int	is_plus(char c)
 {
@@ -66,14 +59,6 @@ int	check_export(char *str)
 		i++;
 		sig_egal++;
 	}
-	// if(str[i] && !is_alnum(str[i]) && !is_egal(str[i]) && !is_double_quote(str[i]) && !is_simple_quote(str[i]))
-	// 	return (0);
-	// while(str[i])
-	// {
-	// 	if(!is_alnum(str[i]) && !is_egal(str[i]) && !is_double_quote(str[i]) && !is_simple_quote(str[i]) && !is_space(str[i]))
-	// 		return (0);
-	// 	i++;
-	// }
 	if(sig_egal)
 		return (2);
 	return (1);
@@ -186,11 +171,9 @@ t_env	*export_env_2(t_env *env, t_env *head_env, char *str)
 	if(!new_block_env)
 		return NULL;
 	new_block_env->str[0] = pre_egal(str);
-	// 
 	if(!new_block_env->str[0])
 		return NULL;
 	new_block_env->str[1] = post_egal(str);
-	//printf("we\n");
 	new_block_env->next = NULL;
 	if (env)
 	{
@@ -227,7 +210,6 @@ t_env	*rpl_env_var(t_env *env, t_env *head_env, char *str)
 				if(!tmp->str[1])
 					return (NULL);
 			}
-			//env = export_env_2(env, head_env, str);
 			return (env);
 		}
 		free(p_e);
@@ -253,7 +235,6 @@ t_env	*sup_env_var(t_env *env, t_env *head_env, char *str)
 			free(tmp->str[1]);
 			free(tmp);
 			free(str2);
-			// free(pre_egal(str));
 			return head_env; // Retourne la tête de la liste mise à jour
 		}
 		env = env->next;
@@ -262,16 +243,10 @@ t_env	*sup_env_var(t_env *env, t_env *head_env, char *str)
 	return head_env; // Si la variable n'est pas trouvée, retourne la tête de la liste inchangée
 }
 
-void	ft_env(t_env *env, t_env *head_env, char *input)
+void	ft_env(t_env *env, t_env *head_env, t_block *block)
 {
-	char **tab;
-
-	tab = ft_split_path(input, ' ');
-	if(!tab)
-		return ;
-	if(!ft_strcmp(tab[0], "env") && !tab[1])
+	if(!ft_strcmp(block->cmd, "env") && !block->arg)
 		print_env(env, head_env);
-	freeStringArray(tab);
 }
 
 int cut_export_argument(char* arg_export)
@@ -287,87 +262,47 @@ int cut_export_argument(char* arg_export)
 	return (SUCCESS);
 }
 
-// void	ft_exp(t_env *env, t_env *head_env, char **envs, t_block *block)
-// {
-// 	(void)envs;
-// 	//printf("arg = %s\n", block->arg[0]);
-// 	if (!block->arg)
-// 	{
-// 		print_exp(env, head_env);
-// 		return;
-// 	}
-// 	if(!ft_strcmp(block->cmd, "export") && block->arg[0] == NULL)
-// 	{
-// 		print_exp(env, head_env);
-// 		return;
-// 	}
-// 	if(!ft_strcmp(block->cmd, "export"))
-// 	{
-// 		int i = 0;
-// 		while (block->arg[i])
-// 		{
-// 			if (!cut_export_argument(block->arg[i]))
-// 				return;// (FAILURE); // free dans le cas ou probleme
-// 			i++;
-// 		}
-// 	}
-// }
-
-void	ft_export(t_env *env, t_env *head_env, char **envs, char *input)
+void	ft_export(t_env *env, t_env *head_env, t_block *block)
 {
-	char **tab;
-	int		i = 0;
-//GERER LE MOMENT OU L EXPART A LIEUX
-	tab = ft_split_path(input, ' ');
-	if(!tab)
-		return ;
-	if(!ft_strcmp(tab[0], "export") && !tab[1])
+	int		i;
+	
+	i = 0;
+	if(!ft_strcmp(block->cmd, "export") && block->arg == NULL)
 	{
 			print_exp(env, head_env);
-			freeStringArray(tab);
 			return;
 	}
-	if((!ft_strcmp(tab[0], "export")))
+	if((!ft_strcmp(block->cmd, "export")))
 	{
-		i++;
-		while(tab[i])
+		while(block->arg[i])
 		{
-				if(!check_export(tab[i]))
-					printf("export: `%s': not a valid identifier\n", tab[i]);
-				else if(check_export(tab[i]) == 1 
-					&& !check_export_exist(env, head_env, tab[i]))
-					env = export_env_1(env, head_env, tab[i]);
-				else if(check_export(tab[i]) == 1 
-					&& check_export_exist(env, head_env, tab[i]))
-					i = i;
-				else if(check_export(tab[i]) == 2
-					&& !check_export_exist(env, head_env, tab[i]))
-					env = export_env_2(env, head_env, tab[i]);
-				else if(check_export(tab[i]) == 2
-					&& check_export_exist(env, head_env, tab[i]))
-					env = rpl_env_var(env, head_env, tab[i]);
-				i++;
+			if(!check_export(block->arg[i]))
+				printf("export: `%s': not a valid identifier\n", block->arg[i]);
+			else if(check_export(block->arg[i]) == 1 
+				&& !check_export_exist(env, head_env, block->arg[i]))
+				env = export_env_1(env, head_env, block->arg[i]);
+			else if(check_export(block->arg[i]) == 1 
+				&& check_export_exist(env, head_env, block->arg[i]))
+				i = i;
+			else if(check_export(block->arg[i]) == 2
+				&& !check_export_exist(env, head_env, block->arg[i]))
+				env = export_env_2(env, head_env, block->arg[i]);
+			else if(check_export(block->arg[i]) == 2
+				&& check_export_exist(env, head_env, block->arg[i]))
+				env = rpl_env_var(env, head_env, block->arg[i]);
+			i++;
 		}
 	}
-	freeStringArray(tab);
-	(void)envs;
 }
 
-void	ft_unset(t_env *env, t_env *head_env, char *input)
+void	ft_unset(t_env *env, t_env *head_env, t_block *block)
 {
-	char 	**tab;
-	
-	tab = ft_split_path(input, ' ');
-	if(!tab)
-		return ;
-	if((!ft_strcmp(tab[0], "unset")) && (tab[1])
-		&& (check_export_exist(env, head_env, tab[1])))
+	if((!ft_strcmp(block->cmd, "unset")) && (block->arg[0])
+		&& (check_export_exist(env, head_env, block->arg[0])))
 	{
-			sup_env_var(env, head_env, tab[1]);
-			freeStringArray(tab);
+			sup_env_var(env, head_env, block->arg[0]);
 			return;
 	}
-	freeStringArray(tab);
 }
 
 int		is_quote(char *str)
@@ -430,11 +365,7 @@ int check_n(char **tab)
 		return (2);
 	return (0);
 }
-// myassine@made-f0Dr11s4:~/Desktop/gv/MinShell$ echo bb vv aa ok << test
-// > bb
-// > ff
-// > test
-// bb vv aa ok
+
 void	ft_echo(t_block *block)
 {
 	int x = 0;
@@ -476,20 +407,14 @@ void	ft_putstr_fd(char *s, int fd)
 		write(fd, s, ft_strlen(s));
 }
 
-void	ft_pwd(char *input)
+void	ft_pwd(t_block *block)
 {
-	char **tab;
-
-	tab = ft_split_path(input, ' ');
-	if(!tab)
-		return ;
-	if(!ft_strcmp(tab[0], "pwd"))
+	if(!ft_strcmp(block->cmd, "pwd"))
 	{
 		char *path;
 		path = get_current_directory_with_prompt();
 		printf("%s\n", path);
 	}
-	freeStringArray(tab);
 }
 
 
