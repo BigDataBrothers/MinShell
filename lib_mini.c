@@ -3,14 +3,37 @@
 /*                                                        :::      ::::::::   */
 /*   lib_mini.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/09 02:17:16 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/20 19:04:06 by myassine         ###   ########.fr       */
+/*   Updated: 2023/12/26 18:38:01 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#define MAXSIZET 18446744013709551615UL
+
+void	ft_bzero(void *s, size_t n)
+{
+	size_t	i;
+
+	i = -1;
+	while (++i < n)
+		((char *)s)[i] = '\0';
+}
+
+void	*ft_calloc(size_t count, size_t size)
+{
+	void	*new;
+
+	if (count > MAXSIZET || size > MAXSIZET)
+		return (NULL);
+	new = malloc(size * count);
+	if (!new)
+		return (NULL);
+	ft_bzero(new, size * count);
+	return (new);
+}
 
 char *ft_strjoin(const char *s1, const char *s2)
 {

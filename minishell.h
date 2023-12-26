@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 00:51:05 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/23 20:24:46 by myassine         ###   ########.fr       */
+/*   Updated: 2023/12/26 19:01:27 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -201,6 +201,8 @@ void	ft_exp(t_env *env, t_env *head_env, char **envs, t_block *block);
 int		is_bultin(char *args);
 
 //Lib_mini
+void	ft_bzero(void *s, size_t n);
+void	*ft_calloc(size_t count, size_t size);
 char 	*removeCharAtIndex(char *str, int i);
 char	*ft_strchr(char *str, int character);
 void    ft_strcpy_len(char **dest, char *src, int start, int end);
@@ -281,6 +283,36 @@ t_dir 	*malloc_dir();
 t_block *new_block(void);
 char 	**add_new_block_tab(char ***tab, char *str);
 // char	**tab_arg(t_block *block, char **token, int j);
+
+
+//norm
+//mini1.c
+char *get_current_directory_with_prompt();
+void	eof(char *input, char **envs, t_env *env, t_env *head_env, char status);
+char **getPath(char **env);
+int	no_input(char *input);
+//mini2.c
+void    sigint_handler(int sig);
+void all_free_1(t_block *test, t_env *env, t_env *head_env, char **args);
+int	ft_strncmp(const char *s1, const char *s2, size_t n);
+void redirect_output(char *filename);
+void append_output(char *filename);
+//mini3.c
+void redirect_input(char *filename);
+void apply_redirections_to_command_line(t_block *test, t_env *env, t_env *head_env, int saved_stdin);
+int is_bultin(char *args);
+int	is_real_num(const char *num);
+int ft_exit_1(t_block *block);
+//mini4.c
+int	applic_bulltin(t_block *test, t_env *env, t_env *head_env, char **args);
+//minishell.c
+void redirect_heredoc(char *delimiter, t_env *env, t_env *head_env, int saved_stdin);
+//lstsplit.c
+char	**ft_lstsplit(t_env **lst);
+char	*verif_cmd(char **args, char **env);
+
+
+
 
 #endif
 

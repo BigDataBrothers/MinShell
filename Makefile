@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: myassine <myassine@student.42.fr>          +#+  +:+       +#+         #
+#    By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/10/06 02:16:52 by myassine          #+#    #+#              #
-#    Updated: 2023/12/22 21:12:08 by myassine         ###   ########.fr        #
+#    Updated: 2023/12/26 19:01:42 by mgamil           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,6 +25,12 @@ SRCS			= 	minishell.c \
 					lib_mini.c \
 					ft_split_path.c \
 					tokenization.c \
+					norm/mini1.c \
+					norm/mini2.c \
+					norm/mini3.c \
+					norm/mini4.c \
+					norm/lstsplit.c \
+					norm/verifcmd.c \
 					env.c
 
 OBJS			= $(SRCS:.c=.o)

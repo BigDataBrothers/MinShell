@@ -3,224 +3,85 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 00:52:02 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/23 21:06:44 by myassine         ###   ########.fr       */
+/*   Updated: 2023/12/26 18:51:06 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-/*
-/mnt/nfs/homes/myassine/Desktop/gv/MinShell$> << a
-> a
-exit        why print exit?
 
-/mnt/nfs/homes/myassine/Desktop/gv/MinShell$> echo $?
-$?
+// char	**ft_lstsplit(t_env **lst)
+// {
+// 	char	**res;
+// 	t_env	*ptr;
+// 	int		size;
+// 	int		i;
+// 	int		h;
+// 	char *tmp;
 
-/mnt/nfs/homes/myassine/Desktop/gv/MinShell$> unset PATH
-/mnt/nfs/homes/myassine/Desktop/gv/MinShell$> export PATH=/usr/bin
-/mnt/nfs/homes/myassine/Desktop/gv/MinShell$> ls
-ls: command not found
-*/
-
-
-void	eof(char *input, char **envs, t_env *env, t_env *head_env, char status)
-{
-	terminat(input, envs, env, head_env);
-	exit(status);
-}
-
-char *get_current_directory_with_prompt()
-{
-	static char	cwd[PATH_MAX];
-
-	getcwd(cwd, sizeof(cwd));
-	return (cwd);
-}
-//ls -l | grep .c | wc -l > file.txt < input.txt
-
-void fait_rien()
-{
-	return ;
-}
-
-char	**ft_lstsplit(t_env **lst)
-{
-	char	**res;
-	t_env	*ptr;
-	int		size;
-	int		i;
-	int		h;
-	char *tmp;
-
-	ptr = *lst;
-	i = -1;
-	size = ft_lstsize(ptr);
-	res = (char **)malloc(sizeof(char *) * (size + 1));
-	if (!res)
-		return (NULL);
-	while (++i < size)
-	{
-		if(!ft_strcmp("SHLVL", ptr->str[0]))
-		{
-			h = ft_atoi(ptr->str[1]);
-			h++;
-			tmp = ft_strjoin(ptr->str[0], "=");
-			char *itoa = ft_itoa(h);
-			if(!itoa)
-				return NULL;
-			res[i] = ft_strjoin(tmp, itoa);
-			free(itoa);
-			if (tmp)
-			free(tmp);
-			if (!res[i])
-				return (NULL);
-			ptr = ptr->next;
-			continue;
-		}
-		tmp = ft_strjoin(ptr->str[0], "=");
-		res[i] = ft_strjoin(tmp, ptr->str[1]);
-		if (tmp)
-			free(tmp);
-		if (!res[i])
-			return (NULL);
-		ptr = ptr->next;
-	}
-	res[i] = NULL;
-	return (res);
-}
+// 	ptr = *lst;
+// 	i = -1;
+// 	size = ft_lstsize(ptr);
+// 	res = (char **)ft_calloc(sizeof(char *) * (size + 1));
+// 	if (!res)
+// 		return (NULL);
+// 	while (++i < size)
+// 	{
+// 		if(!ft_strcmp("SHLVL", ptr->str[0]))
+// 		{
+// 			h = ft_atoi(ptr->str[1])++;
+// 			tmp = ft_strjoin(ptr->str[0], "=");
+// 			char *itoa = ft_itoa(h);
+// 			if (!itoa)
+// 				return NULL;
+// 			res[i] = ft_strjoin(tmp, itoa);
+// 			free(itoa);
+// 			if (tmp)
+// 			free(tmp);
+// 			if (!res[i])
+// 				return (NULL);
+// 			ptr = ptr->next;
+// 			continue;
+// 		}
+// 		tmp = ft_strjoin(ptr->str[0], "=");
+// 		res[i] = ft_strjoin(tmp, ptr->str[1]);
+// 		if (tmp)
+// 			free(tmp);
+// 		if (!res[i])
+// 			return (NULL);
+// 		ptr = ptr->next;
+// 	}
+// 	return (res);
+// }
 
 
-char **getPath(char **env)
-{
-	int i = 0;
-	char **path = NULL;
-	while(env[i])
-	{
-		if(ft_strstr(env[i], "PATH=/mnt/nfs/homes/myassine/bin:"))	
-			{
-				path = ft_split_path(env[i], ':');
-				break;
-			}
-		i++;
-	}
-	return (path);
-}
-
-char	*verif_cmd(char **args, char **env)
-{
-	if(args[0] == NULL)
-	 	return (NULL);
-	if(is_bultin(args[0]))
-		return (args[0]);
-	if(access(args[0], F_OK) == 0)
-		return (args[0]);
-	char *tmp = NULL;
-	char **path = NULL;
-	path = getPath(env);
-	if(path && path[0])
-	{
-		tmp = ft_substr(path[0], 5, ft_strlen(path[0]));
-		free(path[0]);
-		path[0] = strdup(tmp);
-		free(tmp);
-	}
-	int i = 0;
-	char *str = NULL;
-	tmp = ft_strdup(args[0]);
-	free(args[0]);
-	args[0] = ft_strjoin("/", tmp);
-	free(tmp);
-	if(path)
-	{
-		while(path[i])
-		{
-			str = ft_strjoin(path[i], args[0]);
-			if(access(str, F_OK) == 0)
-			{
-				freeStringArray(path);
-				free(args[0]);
-				return (str);
-			}
-			free(str);
-			str = NULL;
-			i++;
-		}
-	}
-	freeStringArray(path);	
-	tmp = ft_substr(args[0], 1, ft_strlen(args[0])); 
-	free(args[0]);
-	args[0] = NULL;
-	args[0] = ft_strdup(tmp);
-	if (tmp)
-		free(tmp);
-	return (NULL);
-}
-
-int	no_input(char *input)
-{
-	int i = 0;
-	if(!input || input[i] == '\0')
-		return (0);
-	skip_whitespace(input, &i);
-	if(!input || input[i] == '\0')
-		return (0);
-	return (1);
-}
 
 
 char *removeCharAtIndex(char *str, int i)
 {
+    int j;
+    int k;
+	
+	j = 0;
+	k = 0;
     if (str == NULL || i < 0)
         return NULL;
-    char *newStr = (char *)malloc(ft_strlen(str));
+    char *newStr = (char *)ft_calloc(ft_strlen(str), 1);
     if (newStr == NULL)
         return NULL;
-    int j = 0;
-    int k = 0;
     while (str[k] != '\0')
 	{
         if (k != i)
-		{
-            newStr[j] = str[k];
-            j++;
-        }
+            newStr[j++] = str[k];
         k++;
     }
-    newStr[j] = '\0';
     return (newStr);
 }
 
-void handleCtrlC()
-{
-    write(STDOUT_FILENO, "\n", 1);
-}
-
-void    sigint_handler(int sig)
-{
-    if (sig == SIGINT)
-    {
-        write(2, "\n", 1);
-        rl_on_new_line();
-		rl_clear_history();
-        rl_replace_line("", 0);
-        rl_redisplay();
-    }
-}
 
 //ls -l | grep .c | wc -l > file.txt < input.txt
-
-void all_free_1(t_block *test, t_env *env, t_env *head_env, char **args)
-{
-	if(test)
-		free_block_list(test);
-	if(env)
-		free_env(env, head_env);
-	if(args)
-		freeStringArray(args);
-}
 
 void printBlock(t_block *block)
 {
@@ -229,9 +90,6 @@ void printBlock(t_block *block)
         printf("Block is NULL\n");
         return;
     }
-
-    printf("Command: %s\n", block->cmd);
-
     if (block->arg != NULL)
 	{
         printf("Arguments/Options:\n");
@@ -252,92 +110,22 @@ void printBlock(t_block *block)
 	}
 }
 
-int	ft_strncmp(const char *s1, const char *s2, size_t n)
-{
-	size_t	i;
-
-	i = 0;
-	while ((s1[i] || s2[i]) && i < n)
-	{
-		if (s1[i] != s2[i])
-			return ((unsigned char)s1[i] - (unsigned char)s2[i]);
-		i++;
-	}
-	return (0);
-}
-
 //Un pipe est egal a une redirection in et out
-
-
-void redirect_output(char *filename)
-{
-    int file = open(filename, O_CREAT | O_TRUNC | O_WRONLY, 0644);
-
-    if (file == -1)
-    {
-        perror("Erreur lors de l'ouverture du fichier");
-        exit(EXIT_FAILURE);
-    }
-
-
-    if (dup2(file, STDOUT_FILENO) == -1)
-    {
-        perror("Erreur lors de la redirection de la sortie standard");
-        close(file);
-        exit(EXIT_FAILURE);
-    }
-    close(file);
-}
-
-void append_output(char *filename)
-{
-    int file = open(filename, O_CREAT | O_APPEND | O_WRONLY, 0644);
-
-    if (file == -1)
-    {
-        perror("Erreur lors de l'ouverture du fichier en mode ajout");
-        exit(EXIT_FAILURE);
-    }
-    if (dup2(file, STDOUT_FILENO) == -1)
-    {
-        perror("Erreur lors de la redirection de la sortie standard");
-        close(file);
-        exit(EXIT_FAILURE);
-    }
-    close(file);
-}
-
-void redirect_input(char *filename)
-{
-    int file = open(filename, O_RDONLY);
-
-    if (file == -1) 
-	{
-        printf("minishell: %s: No such file or directory\n", filename);
-		exit(EXIT_FAILURE);
-    }
-
-    dup2(file, STDIN_FILENO);
-    close(file);
-}
 
 
 void redirect_heredoc(char *delimiter, t_env *env, t_env *head_env, int saved_stdin)
 {
-    char *filename = "heredoc_temp_file.txt";
-    int heredoc_file = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+    int heredoc_file = open("heredoc_temp_file.txt", O_WRONLY | O_CREAT | O_TRUNC, 0644);
     if (heredoc_file == -1) {
         perror("Erreur lors de la création du fichier heredoc");
         exit(EXIT_FAILURE);
     }
     char *input;
-    // size_t delimiter_len = ft_strlen(delimiter);
     size_t input_len;
 	dup2(saved_stdin, STDIN_FILENO);
 	while (1)
 	{
-		char *prompt = "> ";
-        input = readline(prompt);
+        input = readline("> ");
         if (!input || ft_strcmp(input, delimiter) == 0)
 		{
             free(input);
@@ -356,91 +144,12 @@ void redirect_heredoc(char *delimiter, t_env *env, t_env *head_env, int saved_st
     close(heredoc_file);
 }
 
-void apply_redirections_to_command_line(t_block *test, t_env *env, t_env *head_env, int saved_stdin)
-{	
-	while (test && test->dir && test->dir->file)
-	{
-		if (test->dir->type == APPEND)
-			append_output(test->dir->file);
-		else if (test->dir->type ==  IN)
-			redirect_input(test->dir->file);
-		else if (test->dir->type ==  OUT)
-			redirect_output(test->dir->file);
-		else if(test->dir->type == HEREDOC)
-			redirect_heredoc(test->dir->file, env, head_env, saved_stdin);
-		test->dir = test->dir->next;
-	}
-}
-
-
 /*
 	consider les bulltin comme des command pour ne pas print que la cmd existe pas
 	gerer tout les cas avec des quot char negatif
 	si command ecrit avec chemin absolut l executer
 */
 
-int is_bultin(char *args)
-{
-	if(!ft_strcmp(args, "cd" ))
-		return (1);
-	else if(!ft_strcmp(args, "exit"))
-		return (1);
-	else if(!ft_strcmp(args, "pwd"))
-		return (1);
-	else if(!ft_strcmp(args, "echo"))
-		return (1);
-	else if(!ft_strcmp(args, "unset"))
-		return (1);
-	else if(!ft_strcmp(args, "env"))
-		return (1);
-	else if(!ft_strcmp(args, "export"))
-		return (1);
-	return (0);
-}
-
-int	is_real_num(const char *num)
-{
-	int i = 0;
-	if(num && num[0] != '-' && !is_num(num[0]))
-		return (0);
-	if(num[0] == '-')
-		i++;
-	while(num[i])
-	{
-		if(!is_num(num[i]))
-			return (0);
-		i++;
-	}
-	return (1);
-}
-
-
-int ft_exit_1(t_block *block)
-{
-	dprintf(2, "exit\n");
-	if(block->arg && len_tab(block->arg) > 1  && !is_real_num(block->arg[1]))
-		return(printf("exit doesn't have the right arguments\n"), 0);
-	return (1);
-}
-
-int	applic_bulltin(t_block *test, t_env *env, t_env *head_env, char **args)
-{
-	if(args && !ft_strcmp(test->cmd, "cd" ) && chdir(args[1]) == 0)
-		return (1);
-	else if(args && !ft_strcmp(test->cmd, "cd" ) && !args[1] && chdir(ft_get_env("HOME", env, head_env)) == 0)
-		return (1);
-	else if(args && !ft_strcmp(test->cmd, "unset"))
-		return(ft_unset(env, head_env, test), 1);
-	else if(args && !ft_strcmp(test->cmd, "export"))
-		return(ft_export(env, head_env, test), 1);
-	else if(args && !ft_strcmp(test->cmd, "pwd"))
-		return(ft_pwd(test), 1);
-	else if(args && !ft_strcmp(test->cmd, "echo"))
-		return(ft_echo(test), 1);
-	else if(args && !ft_strcmp(test->cmd, "env"))
-		return(ft_env(env, head_env, test), 1);
-	return (0);
-}
 
 /*myassine@made-f0Br1s4:~/MIN/MIN$ sdggdf | ls
 builtins.c	check_redir_a_pipe.c  lib_mini.c   print.c
@@ -510,7 +219,7 @@ int	main(int argc, char **argv, char *envp[])
 		}
 		int	i_alone = 0;
 		int command_alone = 0;
-		while (input[i_alone])
+		while (input && input[i_alone])
 		{
 			if (input[i_alone] == '|')
 				command_alone++;
@@ -566,7 +275,9 @@ int	main(int argc, char **argv, char *envp[])
 				if (args[0] == NULL)
 					;
 				else if((str = verif_cmd(args, envs)) == NULL)
-					{}
+					{
+
+					}
 				if(str)
 				{
 					args[0] = ft_strdup(str);
@@ -665,7 +376,8 @@ int	main(int argc, char **argv, char *envp[])
 			if (args[0] == NULL)
 				{}
 			else if((str = verif_cmd(args, envs)) == NULL)
-				{}
+				{
+				}
 			if(str)
 			{
 				args[0] = ft_strdup(str);
