@@ -6,26 +6,11 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 19:44:09 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/12 18:01:04 by myassine         ###   ########.fr       */
+/*   Updated: 2023/12/26 20:55:02 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-// static size_t	ft_num_len(long n)
-// {
-// 	int	i;
-
-// 	i = 0;
-// 	if (n <= 0)
-// 		i++;
-// 	while (n != 0)
-// 	{
-// 		n = n / 10;
-// 		i++;
-// 	}
-// 	return (i);
-// }
 
 int	process_quotes(char *input, int i, int *s, int *d)
 {

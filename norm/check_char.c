@@ -6,11 +6,11 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 19:31:35 by myassine          #+#    #+#             */
-/*   Updated: 2023/10/11 01:18:47 by myassine         ###   ########.fr       */
+/*   Updated: 2023/12/26 21:02:49 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 int	is_re_right(char c)
 {

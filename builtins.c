@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 20:54:16 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/23 19:18:00 by myassine         ###   ########.fr       */
+/*   Updated: 2023/12/26 20:06:06 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,9 +144,6 @@ t_env	*export_env_1(t_env *env, t_env *head_env, char *str)
 {
 	t_env *new_block_env;
 
-	// printf("str = %s\n", str);
-	// str = if_quote(str);
-	// printf("str = %s\n", str);
 	new_block_env = malloc(sizeof(t_env));
 	if(!new_block_env)
 		return NULL;

@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 21:16:58 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/18 21:42:20 by myassine         ###   ########.fr       */
+/*   Updated: 2023/12/26 21:07:59 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,25 +14,25 @@
 
 t_block *new_block(void)
 {
-	t_block *new = (t_block *)malloc(sizeof(t_block));
-	if (!new) {
+	t_block *new;
+
+	new = (t_block *)malloc(sizeof(t_block));
+	if (!new)
 		return NULL;
-	}
-	
 	new->cmd = NULL;
 	new->arg = NULL;
 	new->next = NULL;
 	new->dir = NULL; 
-
-	return new;
+	return (new);
 }
 
 
 char **add_new_block_tab(char ***tab, char *str)
 {
-	int i = 0;
+	int i;
 	char **tmp;
 
+	i = 0;
 	tmp = NULL;
 	while (tab && (*tab) && (*tab)[i])
 		i++;
@@ -45,7 +45,6 @@ char **add_new_block_tab(char ***tab, char *str)
 	}
 	tmp[i++] = str;
 	tmp[i] = NULL;
-	//free(tab);
 	*tab = tmp;
 	return (*tab);
 }
@@ -58,10 +57,6 @@ t_dir *malloc_dir()
 	if (!dir)
 		return (NULL);
 	memset(dir, 0, sizeof(t_dir));
-	// dir->app_redir_doc = malloc(sizeof(char **) * 3);
-	// dir->app_redir_doc[FILES] = NULL;
-	// dir->app_redir_doc[REDIR] = NULL;
-	// dir->app_redir_doc[NONE] = NULL;
 	return(dir);
 }
 
@@ -71,15 +66,18 @@ t_dir *new_dir(char *redir, char *target, t_dir *dir)
 		dir = malloc_dir();
 	(void)redir;
 	(void)target;
-	// add_new_block_tab(dir->app_redir_doc + FILES, target);
-	// add_new_block_tab(dir->app_redir_doc + REDIR, redir);
 	return dir;
 }
 
-// char	**tab_arg(t_block *block, char **token, int j)
-// {
-// 	block->arg = malloc(sizeof(char *) * (nbr_arg(token, j) + 1));
-// 	if (!block->arg)
-// 		return (NULL);
-// 	return (block->arg);
-// }
+void	free_env(t_env *env, t_env *head_env)
+{
+	while (env)
+	{
+		head_env = env->next;
+		free(env->str[0]);
+		free(env->str[1]);
+		free(env);
+		env = head_env;
+	}
+	env = NULL;
+}

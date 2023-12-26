@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/09 02:19:09 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/15 18:01:56 by myassine         ###   ########.fr       */
+/*   Updated: 2023/12/26 20:59:56 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,8 +121,6 @@ char *process_exp_variable(char *input, int *i, t_env *env, t_env *head_env)
         free(post_input);
     if(abs)
         free(abs);
-    // if(tmp)
-        // free(tmp);
     if(post_exp)
         free(post_exp);
     if(exp)

@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/27 18:58:47 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/18 21:43:56 by myassine         ###   ########.fr       */
+/*   Updated: 2023/12/26 21:01:55 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,16 +26,17 @@ void free_dir(t_dir *dir)
     }
 }
 
-// Fonction pour libérer la mémoire associée à une structure t_block
 void free_block(t_block *block)
 {
-    if (block) {
-        if (block->cmd) {
+    if (block)
+    {
+        if (block->cmd)
             free(block->cmd);
-        }
-        if (block->arg) {
+        if (block->arg)
+        {
             char **arg = block->arg;
-            while (*arg) {
+            while (*arg)
+            {
                 free(*arg);
                 // arg = NULL;
                 arg++;
@@ -56,7 +57,8 @@ void free_block_list(t_block *head)
 {
     if (!head)
         return;
-    while (head) {
+    while (head)
+    {
         t_block *temp = head;
         head = head->next;
         free_block(temp);

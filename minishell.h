@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
+/*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 00:51:05 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/26 19:01:27 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/12/26 20:16:57 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,9 +114,6 @@
 //   STRUCTURES   //
 ////////////////////
 
-//export -> ajoute ou modifie une variable d'env
-
-//unset -> retire une variable d'env
 enum e_dir
 {
 	FILES,
@@ -141,8 +138,8 @@ typedef struct s_dir
 
 typedef struct s_block
 {
-	char	*cmd; //commande
-	char	**arg; //argument ou option
+	char	*cmd;
+	char	**arg;
 	int		pipe_out;
 	int		pipe_in;
 	void	*next;
@@ -282,8 +279,6 @@ t_dir	*new_dir(char *redir, char *target, t_dir *dir);
 t_dir 	*malloc_dir();
 t_block *new_block(void);
 char 	**add_new_block_tab(char ***tab, char *str);
-// char	**tab_arg(t_block *block, char **token, int j);
-
 
 //norm
 //mini1.c
@@ -310,8 +305,6 @@ void redirect_heredoc(char *delimiter, t_env *env, t_env *head_env, int saved_st
 //lstsplit.c
 char	**ft_lstsplit(t_env **lst);
 char	*verif_cmd(char **args, char **env);
-
-
 
 
 #endif

@@ -1,47 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   check_error.c                                      :+:      :+:    :+:   */
+/*   check_char_2.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/07 22:59:48 by myassine          #+#    #+#             */
-/*   Updated: 2023/10/11 05:25:21 by myassine         ###   ########.fr       */
+/*   Created: 2023/10/06 19:36:11 by myassine          #+#    #+#             */
+/*   Updated: 2023/12/26 21:03:05 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
-int	str_void(char *input)
+int	is_doll_sign(char c)
 {
-	int	i;
-
-	i = 0;
-	while (input[i])
-	{
-		skip_whitespace(input, &i);
-		if (input[i])
-			return (1);
-		i++;
-	}
-	return (0);
+	return (c == '$');
 }
 
-int	check_error(char *input)
+int	is_underscor(char c)
 {
-	int	error;
+	return (c == '_');
+}
 
-	if (!input)
-		return (0);
-	error = 0;
-	error = ft_quote(input);
-	if (error)
-		return (error);
-	error = check_redir(input);
-	if (error)
-		return (error);
-	error = check_pipe(input);
-	if (error)
-		return (error);
+int	is_simple_quote(char c)
+{
+	return (c == '\'');
+}
+
+int	is_double_quote(char c)
+{
+	return (c == '"');
+}
+
+int	is_num(char c)
+{
+	if (c >= '0' && c <= '9')
+		return (1);
 	return (0);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
+/*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 00:52:02 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/26 18:51:06 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/12/26 20:48:04 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,13 +115,16 @@ void printBlock(t_block *block)
 
 void redirect_heredoc(char *delimiter, t_env *env, t_env *head_env, int saved_stdin)
 {
-    int heredoc_file = open("heredoc_temp_file.txt", O_WRONLY | O_CREAT | O_TRUNC, 0644);
-    if (heredoc_file == -1) {
+    char	*input;
+    int		heredoc_file;
+    size_t	input_len;
+
+	heredoc_file = open("heredoc_temp_file.txt", O_WRONLY | O_CREAT | O_TRUNC, 0644);
+    if (heredoc_file == -1)
+	{
         perror("Erreur lors de la création du fichier heredoc");
         exit(EXIT_FAILURE);
     }
-    char *input;
-    size_t input_len;
 	dup2(saved_stdin, STDIN_FILENO);
 	while (1)
 	{

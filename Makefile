@@ -3,35 +3,36 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+         #
+#    By: myassine <myassine@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/10/06 02:16:52 by myassine          #+#    #+#              #
-#    Updated: 2023/12/26 19:01:42 by mgamil           ###   ########.fr        #
+#    Updated: 2023/12/26 21:14:10 by myassine         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 SRCS			= 	minishell.c \
-					check_char.c \
-					check_char_2.c \
 					check_quote.c \
-					check_error.c \
-					check_redir_a_pipe.c \
-					skip_char.c \
 					free.c \
-					print.c \
 					malloc.c \
 					expand.c \
 					builtins.c \
 					lib_mini.c \
 					ft_split_path.c \
 					tokenization.c \
-					norm/mini1.c \
+					mini1.c \
+					verifcmd.c \
+					norm/print.c \
 					norm/mini2.c \
 					norm/mini3.c \
 					norm/mini4.c \
 					norm/lstsplit.c \
-					norm/verifcmd.c \
-					env.c
+					norm/skip_char.c \
+					norm/check_error.c \
+					norm/check_char.c \
+					norm/check_char_2.c \
+					norm/check_char_3.c \
+					norm/check_redir_a_pipe.c \
+					norm/env.c
 
 OBJS			= $(SRCS:.c=.o)
 

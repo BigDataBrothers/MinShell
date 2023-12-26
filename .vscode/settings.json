@@ -3,6 +3,7 @@
         "fcntl.h": "c",
         "unistd.h": "c",
         "__stddef_max_align_t.h": "c",
-        "minishell.h": "c"
+        "minishell.h": "c",
+        "cstdlib": "c"
     }
 }

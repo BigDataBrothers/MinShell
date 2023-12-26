@@ -6,11 +6,11 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 19:46:28 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/23 20:15:53 by myassine         ###   ########.fr       */
+/*   Updated: 2023/12/26 21:02:55 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 int	check_redir_result(int tmp)
 {
@@ -18,7 +18,6 @@ int	check_redir_result(int tmp)
 		return (3);
 	return (0);
 }
-// int *i
 
 int	process_redir(char *input, int *i, int *tmp, int (*is_re_func)(char))
 {
@@ -65,25 +64,25 @@ int	check_redir(char *input)
 	return (check_redir_result(tmp));
 }
 
-int check_pipe(char *input)//refaire mon check pipe
+int	check_pipe(char *input)
 {
-	int i = 0;
-	if(is_space(input[i]))
+	int	i;
+
+	i = 0;
+	if (is_space(input[i]))
 		skip_whitespace(input, &i);
-	if(is_pipe(input[i]))
+	if (is_pipe(input[i]))
 		return (4);
-	while(input[i])
+	while (input[i])
 	{
-		if(is_pipe(input[i]))
+		if (is_pipe(input[i]))
 		{
 			i++;
-			if(!input[i])
+			if (!input[i])
 				return (4);
 			skip_whitespace(input, &i);
-			// if(is_spec_char(input[i])) A VOIR
-			// 	return (4);
 		}
-		if(input[i])
+		if (input[i])
 			i++;
 	}
 	return (0);
@@ -91,16 +90,17 @@ int check_pipe(char *input)//refaire mon check pipe
 
 int	count_redir(char **token, int j, char *redir)
 {
-	int count = 0;
+	int	count;
 
-	while(token[j])
+	count = 0;
+	while (token[j])
 	{
-		if(ft_strcmp(token[j], redir))
+		if (ft_strcmp(token[j], redir))
 		{
 			count++;
 			j++;
 		}
-		if(token[j])
+		if (token[j])
 			j++;
 	}
 	return (count);

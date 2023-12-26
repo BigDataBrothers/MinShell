@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/12 06:55:24 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/22 21:07:16 by myassine         ###   ########.fr       */
+/*   Updated: 2023/12/26 21:20:13 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ int w_count(char const *s, char c)
 
     while (s[i] != '\0')
 	{
-		// printf(GREEN"s[i]: %c"RESET"\n", s[i]);
         if (is_charset(s[i], c) == 0)
             if (i == 0 || is_charset(s[i - 1], c) == 1)
                 word++;
@@ -50,93 +49,30 @@ int w_count(char const *s, char c)
     return word;
 }
 
-
-// char	*get_string(char const *s, char c)
-// {
-// 	int		i;
-// 	int		size;
-// 	char	*tosplit;
-
-// 	i = 0;
-// 	size = 0;
-// 	while ((is_charset(s[i], c) == 0 && s[i]))
-// 	{
-// 		size++;
-// 		i++;
-// 	}
-// 	tosplit = malloc(sizeof(char) * (size + 1));
-// 	if (!tosplit)
-// 		return (NULL);
-// 	i = 0;
-// 	while (is_charset(s[i], c) == 0 && s[i])
-// 	{
-// 		tosplit[i] = s[i];
-// 		i++;
-// 	}
-// 	tosplit[i] = '\0';
-// 	return (tosplit);
-// }
-
-// char	**ft_split_path(char const *s, char c)
-// {
-// 	int		i;
-// 	int		j;
-// 	char	**split;
-
-// 	if (!s)
-// 		return (NULL);
-// 	i = 0;
-// 	j = 0;
-// 	split = malloc(sizeof(char *) * (w_count(s, c) + 1));
-// 	if (!split)
-// 		return (NULL);
-// 	split[w_count(s, c)] = NULL;
-// 	while (s[i])
-// 	{
-// 		if ((is_charset(s[i], c) == 0)
-// 			&& (i == 0 || is_charset(s[i - 1], c) == 1))
-// 			{
-// 			split[j] = get_string(&s[i], c);
-// 			j++;
-// 			}
-// 		if (!split)
-// 			return (freeStringArray(split), NULL);
-// 		i++;
-// 	}
-// 	return (split);
-// }
-
 char *get_string(char const *s, char c)
 {
-    int i = 0;
-    size_t size = 0;
+    int i;
+    size_t size;
     char *tosplit;
 
+	i = 0;
+	size = 0;
     while ((is_charset(s[i], c) == 0 && s[i]))
     {
         size++;
         i++;
     }
-
     tosplit = malloc(sizeof(char) * (size + 1));
-
     if (!tosplit)
-    {
-        // Gestion de l'échec de l'allocation
         return NULL;
-    }
-
     i = 0;
-
     while (is_charset(s[i], c) == 0 && s[i])
     {
         tosplit[i] = s[i];
         i++;
     }
-
     tosplit[i] = '\0';
-
-    return tosplit;
+    return (tosplit);
 }
 
 
@@ -180,11 +116,3 @@ char	**ft_split_path(char const *s, char c)
 
 	return (split);
 }
-
-/*
-//ls -la>eof|grep src
-int i = 0;
-
-
-
-*/
