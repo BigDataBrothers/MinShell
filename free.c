@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/27 18:58:47 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/26 21:01:55 by myassine         ###   ########.fr       */
+/*   Updated: 2023/12/26 21:31:36 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,6 @@ void free_block(t_block *block)
     }
 }
 
-// Fonction pour libérer la mémoire associée à une liste de structures t_block
 void free_block_list(t_block *head)
 {
     if (!head)

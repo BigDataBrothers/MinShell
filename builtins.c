@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 20:54:16 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/26 20:06:06 by myassine         ###   ########.fr       */
+/*   Updated: 2023/12/26 21:35:45 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -273,7 +273,7 @@ void	ft_export(t_env *env, t_env *head_env, t_block *block)
 	{
 		while(block->arg[i])
 		{
-			if(!check_export(block->arg[i]))
+			if(!check_export(block->arg[i]))// A VOIR (export a=)-->apparait d en l env ne devrais pas
 				printf("export: `%s': not a valid identifier\n", block->arg[i]);
 			else if(check_export(block->arg[i]) == 1 
 				&& !check_export_exist(env, head_env, block->arg[i]))
