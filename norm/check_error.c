@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/07 22:59:48 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/26 21:02:45 by myassine         ###   ########.fr       */
+/*   Updated: 2023/12/28 20:37:18 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,5 +43,18 @@ int	check_error(char *input)
 	error = check_pipe(input);
 	if (error)
 		return (error);
+	return (0);
+}
+
+int	check_error_1(char *input)
+{
+	int	error;
+
+	if (!input)
+		return (0);
+	error = 0;
+	error = check_redir(input);
+	if (error)
+		return (5);
 	return (0);
 }

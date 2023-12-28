@@ -6,25 +6,30 @@
 #    By: myassine <myassine@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/10/06 02:16:52 by myassine          #+#    #+#              #
-#    Updated: 2023/12/26 21:26:29 by myassine         ###   ########.fr        #
+#    Updated: 2023/12/28 21:56:41 by myassine         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 SRCS			= 	minishell.c \
-					check_quote.c \
-					free.c \
-					expand.c \
+					norm/check_quote.c \
+					norm/check_quote_2.c \
 					builtins.c \
-					lib_mini.c \
+					norm/lib_mini.c \
+					norm/lib_mini_2.c \
+					norm/lib_mini_3.c \
+					norm/lib_mini_4.c \
 					ft_split_path.c \
 					tokenization.c \
-					mini1.c \
-					verifcmd.c \
+					norm/verifcmd.c \
+					norm/free.c \
 					norm/print.c \
+					norm/mini1.c \
 					norm/mini2.c \
 					norm/mini3.c \
 					norm/mini4.c \
 					norm/malloc.c \
+					norm/expand.c \
+					norm/expand_2.c \
 					norm/lstsplit.c \
 					norm/skip_char.c \
 					norm/check_error.c \

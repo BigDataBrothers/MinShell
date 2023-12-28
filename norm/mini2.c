@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/26 20:07:13 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/26 20:07:13 by myassine         ###   ########.fr       */
+/*   Updated: 2023/12/27 19:42:41 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	all_free_1(t_block *test, t_env *env, t_env *head_env, char **args)
 	if (env)
 		free_env(env, head_env);
 	if (args)
-		freeStringArray(args);
+		free_string_array(args);
 }
 
 int	ft_strncmp(const char *s1, const char *s2, size_t n)

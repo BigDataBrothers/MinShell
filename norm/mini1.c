@@ -6,11 +6,11 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/26 20:07:15 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/26 21:03:29 by myassine         ###   ########.fr       */
+/*   Updated: 2023/12/27 20:00:00 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 char	*get_current_directory_with_prompt(void)
 {
@@ -20,13 +20,12 @@ char	*get_current_directory_with_prompt(void)
 	return (cwd);
 }
 
-void	eof(char *input, char **envs, t_env *env, t_env *headenv, char status)
+void	eof(char *input, char **envs, t_env *env, t_env *headenv)
 {
 	terminat(input, envs, env, headenv);
-	exit(status);
 }
 
-char	**getPath(char **env)
+char	**get_path(char **env)
 {
 	int		i;
 	char	**path;

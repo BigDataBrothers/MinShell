@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 20:54:16 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/26 21:35:45 by myassine         ###   ########.fr       */
+/*   Updated: 2023/12/28 21:59:04 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,19 +85,23 @@ char	*pre_egal(char *str)
 
 char	*post_egal(char *str)
 {
-	char *tmp;
-	int i = 0;
-	int j = 0;
-	int k = 0;
+	char	*tmp;
+	int		i;
+	int 	j;
+	int 	k;
+
+	i = 0;
+	j = 0;
+	k = 0;
 	while (str[i] && !is_egal(str[i]))
 		i++;
 	if(!str[i + 1])
 	{
-		char *ss = malloc(sizeof(char));
-		if(!ss)
+		tmp = malloc(sizeof(char));
+		if(!tmp)
 			return NULL;
-		ss[0] = '\0';
-		return (ss);
+		tmp[0] = '\0';
+		return (tmp);
 	}
 	i++;
 	j = i;
@@ -248,14 +252,13 @@ void	ft_env(t_env *env, t_env *head_env, t_block *block)
 
 int cut_export_argument(char* arg_export)
 {
-	char **exported = ft_split_path(arg_export, '=');
-	// int i = 0;
+	char	**exported;
+	int		status_export;
 
-	int status_export = check_export(exported[0]);
+	exported = ft_split_path(arg_export, '=');
+	status_export = check_export(exported[0]);
 	if (!status_export)
 		return (printf("export: `%s': not a valid identifier\n", exported[0]), SUCCESS);
-	
-	
 	return (SUCCESS);
 }
 
@@ -264,31 +267,25 @@ void	ft_export(t_env *env, t_env *head_env, t_block *block)
 	int		i;
 	
 	i = 0;
-	if(!ft_strcmp(block->cmd, "export") && block->arg == NULL)
+	if(block->arg[0] == NULL)
+			return (print_exp(env, head_env));
+	while(block->arg[i])
 	{
-			print_exp(env, head_env);
-			return;
-	}
-	if((!ft_strcmp(block->cmd, "export")))
-	{
-		while(block->arg[i])
-		{
-			if(!check_export(block->arg[i]))// A VOIR (export a=)-->apparait d en l env ne devrais pas
-				printf("export: `%s': not a valid identifier\n", block->arg[i]);
-			else if(check_export(block->arg[i]) == 1 
-				&& !check_export_exist(env, head_env, block->arg[i]))
-				env = export_env_1(env, head_env, block->arg[i]);
-			else if(check_export(block->arg[i]) == 1 
-				&& check_export_exist(env, head_env, block->arg[i]))
-				i = i;
-			else if(check_export(block->arg[i]) == 2
-				&& !check_export_exist(env, head_env, block->arg[i]))
-				env = export_env_2(env, head_env, block->arg[i]);
-			else if(check_export(block->arg[i]) == 2
-				&& check_export_exist(env, head_env, block->arg[i]))
-				env = rpl_env_var(env, head_env, block->arg[i]);
-			i++;
-		}
+		if(!check_export(block->arg[i]))// A VOIR (export a=)-->apparait d en l env ne devrais pas
+			printf("export: `%s': not a valid identifier\n", block->arg[i]);
+		else if(check_export(block->arg[i]) == 1 
+			&& !check_export_exist(env, head_env, block->arg[i]))
+			env = export_env_1(env, head_env, block->arg[i]);
+		else if(check_export(block->arg[i]) == 1 
+			&& check_export_exist(env, head_env, block->arg[i]))
+			i = i;
+		else if(check_export(block->arg[i]) == 2
+			&& !check_export_exist(env, head_env, block->arg[i]))
+			env = export_env_2(env, head_env, block->arg[i]);
+		else if(check_export(block->arg[i]) == 2
+			&& check_export_exist(env, head_env, block->arg[i]))
+			env = rpl_env_var(env, head_env, block->arg[i]);
+		i++;
 	}
 }
 
@@ -315,8 +312,10 @@ int		is_quote(char *str)
 void printc(char *input)
 {
 	char c;
-	int i = 0;
+	int i;
 
+	i = 0;
+	c = 0;
 	while(input[i])
 	{
 		if(input[i] && (input[i] == '\'' || input[i] == '\"'))

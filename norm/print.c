@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/09 02:20:08 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/26 21:13:12 by myassine         ###   ########.fr       */
+/*   Updated: 2023/12/28 17:39:33 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@ void	print_error(int error)
 		printf("Syntax error :\nRedirection is fail\n");
 	else if (error == 4)
 		printf("Syntax error :\nPipe is fail\n");
+	else if (error == 5)
+		printf("Syntax error :\nambiguous redirect\n");
 }
 //ECRIRE SUR LA SORTI D ERREUR
 

@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 00:52:02 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/26 20:48:04 by myassine         ###   ########.fr       */
+/*   Updated: 2023/12/28 17:56:50 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -207,7 +207,10 @@ int	main(int argc, char **argv, char *envp[])
 			return (0);
 		input = readline(path);
 		if (!input)
-			eof(input, envs, env, head_env, 0);
+		{
+			eof(input, envs, env, head_env);
+			exit(0);
+		}
 		add_history(input);
 		if(!no_input(input))
 		{
@@ -231,6 +234,12 @@ int	main(int argc, char **argv, char *envp[])
 		in_quote(input);
 		input = expa_chang(input, env, head_env);
 		test = NULL;
+		if(check_error(input))
+		{
+			print_error(check_error(input));
+			continue;
+		}	
+		printf(CYAN"input: %s"RESET"\n", input);
 		test = tokenization(input);//chaque t_block et 1 cmd + args
 		(void)pid;
 		int saved_stdout = dup(STDOUT_FILENO);
@@ -279,7 +288,6 @@ int	main(int argc, char **argv, char *envp[])
 					;
 				else if((str = verif_cmd(args, envs)) == NULL)
 					{
-
 					}
 				if(str)
 				{
@@ -312,7 +320,10 @@ int	main(int argc, char **argv, char *envp[])
 					if(args && !ft_strcmp(test->cmd, "exit" ))
 					{
 						if(ft_exit_1(test))
-							eof(input, envs, env, head_env, ft_atoi(test->arg[0]));
+						{
+							eof(input, envs, env, head_env);
+							exit(ft_atoi(test->arg[0]));
+						}
 					}
 					if(applic_bulltin(test, env, head_env, args))
 						exit(0);
@@ -367,17 +378,14 @@ int	main(int argc, char **argv, char *envp[])
 				}
 				args[i] = NULL;
 			}
-			int a = 0;
-			while(args[a])
-			{
-				return_neg(args[a]);
-				a++;
-			}
+			i = 0;
+			while(args[i++])
+				return_neg(args[i]);
 			char *str;
 			str = NULL;
 			apply_redirections_to_command_line(test, env, head_env, saved_stdin);
 			if (args[0] == NULL)
-				{}
+				;
 			else if((str = verif_cmd(args, envs)) == NULL)
 				{
 				}
@@ -387,14 +395,16 @@ int	main(int argc, char **argv, char *envp[])
 				free(str);
 			}
 			if(!ft_strcmp(test->cmd, "exit" ))
-			{
 				if(ft_exit_1(test))
 				{
 					if(!test->arg)
-						eof(input, envs, env, head_env, 0);
-					eof(input, envs, env, head_env, (char)ft_atoi(test->arg[0]));
+					{
+						eof(input, envs, env, head_env);
+						exit(0);
+					}
+					eof(input, envs, env, head_env);
+					exit(ft_atoi(test->arg[0]));
 				}
-			}
 			if(applic_bulltin(test, env, head_env, args))
 				;
 			else if ((pid = fork()) < 0) 
@@ -410,7 +420,7 @@ int	main(int argc, char **argv, char *envp[])
 				exit(127);
 			}
 			if(envs)
-				freeStringArray(envs);
+				free_string_array(envs);
 		}
 		unlink("heredoc_temp_file.txt");
 		dup2(saved_stdin ,STDIN_FILENO);
@@ -428,7 +438,7 @@ int	main(int argc, char **argv, char *envp[])
 		if(test)
 			free_block_list(test);
 		if(args)
-			freeStringArray(args);
+			free_string_array(args);
 	}
 	terminat(input, envs, env, head_env);
 	int i_free_args = -1;

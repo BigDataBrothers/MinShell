@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 00:51:05 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/26 20:16:57 by myassine         ###   ########.fr       */
+/*   Updated: 2023/12/28 21:49:15 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,8 +161,9 @@ t_block		*tokenization(char *input);
 
 //Minishell
 char	*get_current_directory_with_prompt();
-void	eof(char *input, char **envs, t_env *env, t_env *head_env, char status);
+void	eof(char *input, char **envs, t_env *env, t_env *head_env);
 void	terminat(char *input,char **envs, t_env *env, t_env *head_env);
+char 	*removeCharAtIndex(char *str, int i);
 
 //Print
 void	print_env(t_env *env, t_env *head_env);
@@ -172,20 +173,25 @@ void	print_input(char *input);
 void 	print_tab(char **tab, char *prefix);
 
 //Free
-void	free_dir(t_dir *dir);
+void	if_free(char *ptr);
 void	free_block(t_block *block);
 void	free_block_list(t_block *head);
 void	freeStringArrays(char ***arrays);
-void	freeStringArray(char **arrays);
+void	free_string_array(char **arrays);
 void	terminat(char *input, char **envs, t_env *env, t_env *head_env);
 
 //Expand
 
 void 	expand_variables(char *input);
-char 	*ft_get_env(char *exp, t_env *env, t_env *head_env);
 char	*expa_chang(char *input, t_env *env, t_env *head_env);
-char	*exp_var(char *input, int *i);
+char	*exp_(char *exp, t_env *env, t_env *head_env);
+void	if_free(char *ptr);
+void	free_exp(char **v);
+
+//Expand_2
 int 	len_word_exp(const char *str, int i);
+char 	*ft_get_env(char *exp, t_env *env, t_env *head_env);
+char	*exp_var(char *input, int *i);
 
 //Bultins
 void	ft_export(t_env *env, t_env *head_env, t_block *block);
@@ -200,28 +206,30 @@ int		is_bultin(char *args);
 //Lib_mini
 void	ft_bzero(void *s, size_t n);
 void	*ft_calloc(size_t count, size_t size);
-char 	*removeCharAtIndex(char *str, int i);
+char	*ft_strjoin(const char *s1, const char *s2);
 char	*ft_strchr(char *str, int character);
+int		ft_strlen(const char *str);
+
+//Lib_mini_2
+char	*ft_strncpy(char *dest, const char *src, int n);
+char    *ft_substr(char *s, int start, int len);
+int		ft_strcmp(const char *s1, const char *s2);
+char	*ft_strdup(const char *s);
+char	*ft_strcpy(char *dest, const char *src);
+
+//Lib_mini_3
 void    ft_strcpy_len(char **dest, char *src, int start, int end);
 int 	ft_strlen_target(char *str, char c);
-int		ft_strlen(const char *str);
-int		ft_strcmp(const char *s1, const char *s2);
-char	*ft_strjoin(const char *s1, const char *s2);
-char	*ft_strchr_exp(char *str);
-char	*ft_strcpy(char *dest, const char *src);
-char	*ft_strncpy(char *dest, const char *src, int n);
-char	*ft_strdup(const char *s);
-char    *ft_substr(char *s, int start, int len);
-void	return_neg(char *str);
-char 	*if_quote(char *input);
-char	*ft_itoa(int n);
 int		ft_atoi(const char *nptr);
+size_t	ft_num_len(long n);
+char	*ft_itoa(int n);
+
+//Lib_mini_4
 char	*ft_strstr(const char *big, const char *little);
 int		ft_lstsize(t_env *lst);
 int		len_tab(char **tab);
 void	return_neg(char *str);
 int		nbr_arg(char **token, int j, int *count);
-int		is_num(char c);
 
 //Check_char
 
@@ -244,6 +252,13 @@ int		is_underscor(char c);
 int		is_redir(char *str);
 
 //Check_quote
+int		process_quotes(char *input, int i, int *s, int *d);
+int		handle_simple_quote(int s);
+int		handle_double_quote(int d);
+int		process_dollar_sign(char *input, int i);
+int		check_quotes(int s, int d);
+
+//Chevk_quote_2
 int		ft_quote(char *input);
 void	in_quote(char *input);
 char 	*if_quote(char *input);
@@ -283,8 +298,7 @@ char 	**add_new_block_tab(char ***tab, char *str);
 //norm
 //mini1.c
 char *get_current_directory_with_prompt();
-void	eof(char *input, char **envs, t_env *env, t_env *head_env, char status);
-char **getPath(char **env);
+char **get_path(char **env);
 int	no_input(char *input);
 //mini2.c
 void    sigint_handler(int sig);

@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/12 06:55:24 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/26 21:20:13 by myassine         ###   ########.fr       */
+/*   Updated: 2023/12/27 19:41:26 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ char	**ft_split_path(char const *s, char c)
 
 			if (!split[j])
 			{
-				freeStringArray(split);
+				free_string_array(split);
 				return (NULL);
 			}
 
