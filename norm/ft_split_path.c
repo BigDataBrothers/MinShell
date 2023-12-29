@@ -6,11 +6,11 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/12 06:55:24 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/27 19:41:26 by myassine         ###   ########.fr       */
+/*   Updated: 2023/12/29 19:00:58 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 char	**malloc_error(char **split)
 {
@@ -26,55 +26,53 @@ char	**malloc_error(char **split)
 	return (NULL);
 }
 
-int is_charset(char i, char c)
+int	is_charset(char i, char c)
 {
-    return (i == c);
+	return (i == c);
 }
 
-
-int w_count(char const *s, char c)
+int	w_count(char const *s, char c)
 {
-    int i = 0;
-    int word = 0;
+	int	i;
+	int	word;
 
-
-    while (s[i] != '\0')
+	i = 0;
+	word = 0;
+	while (s[i] != '\0')
 	{
-        if (is_charset(s[i], c) == 0)
-            if (i == 0 || is_charset(s[i - 1], c) == 1)
-                word++;
-        i++;
-    }
-
-    return word;
+		if (is_charset(s[i], c) == 0)
+			if (i == 0 || is_charset(s[i - 1], c) == 1)
+				word++;
+		i++;
+	}
+	return (word);
 }
 
-char *get_string(char const *s, char c)
+char	*get_string(char const *s, char c)
 {
-    int i;
-    size_t size;
-    char *tosplit;
+	int		i;
+	size_t	size;
+	char	*tosplit;
 
 	i = 0;
 	size = 0;
-    while ((is_charset(s[i], c) == 0 && s[i]))
-    {
-        size++;
-        i++;
-    }
-    tosplit = malloc(sizeof(char) * (size + 1));
-    if (!tosplit)
-        return NULL;
-    i = 0;
-    while (is_charset(s[i], c) == 0 && s[i])
-    {
-        tosplit[i] = s[i];
-        i++;
-    }
-    tosplit[i] = '\0';
-    return (tosplit);
+	while ((is_charset(s[i], c) == 0 && s[i]))
+	{
+		size++;
+		i++;
+	}
+	tosplit = malloc(sizeof(char) * (size + 1));
+	if (!tosplit)
+		return (NULL);
+	i = 0;
+	while (is_charset(s[i], c) == 0 && s[i])
+	{
+		tosplit[i] = s[i];
+		i++;
+	}
+	tosplit[i] = '\0';
+	return (tosplit);
 }
-
 
 char	**ft_split_path(char const *s, char c)
 {
@@ -84,35 +82,22 @@ char	**ft_split_path(char const *s, char c)
 
 	if (!s)
 		return (NULL);
-
-	int wordCount = w_count(s, c);
-	split = malloc(sizeof(char *) * (wordCount + 1));
-
+	split = malloc(sizeof(char *) * (w_count(s, c) + 1));
 	if (!split)
 		return (NULL);
-
-	split[wordCount] = NULL;
-	i = 0;
+	split[w_count(s, c)] = NULL;
+	i = -1;
 	j = 0;
-
-	while (s[i])
+	while (s[++i])
 	{
 		if ((is_charset(s[i], c) == 0)
 			&& (i == 0 || is_charset(s[i - 1], c) == 1))
 		{
 			split[j] = get_string(&s[i], c);
-
 			if (!split[j])
-			{
-				free_string_array(split);
-				return (NULL);
-			}
-
+				return (free_string_array(split), NULL);
 			j++;
 		}
-
-		i++;
 	}
-
 	return (split);
 }

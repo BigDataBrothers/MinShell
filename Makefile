@@ -6,7 +6,7 @@
 #    By: myassine <myassine@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/10/06 02:16:52 by myassine          #+#    #+#              #
-#    Updated: 2023/12/28 21:56:41 by myassine         ###   ########.fr        #
+#    Updated: 2023/12/29 19:02:15 by myassine         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,8 +18,10 @@ SRCS			= 	minishell.c \
 					norm/lib_mini_2.c \
 					norm/lib_mini_3.c \
 					norm/lib_mini_4.c \
-					ft_split_path.c \
-					tokenization.c \
+					norm/ft_split_path.c \
+					norm/tokenization.c \
+					norm/tokenization_2.c \
+					norm/tokenization_3.c \
 					norm/verifcmd.c \
 					norm/free.c \
 					norm/print.c \

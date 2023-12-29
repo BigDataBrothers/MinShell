@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 20:54:16 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/28 21:59:04 by myassine         ###   ########.fr       */
+/*   Updated: 2023/12/29 20:52:00 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,12 +38,14 @@ void	print_exp(t_env *env, t_env *head_env)
 	}
 	env = head_env;
 }
-// [FONCTION QUI CHECK L'ELEMENT EXPORTABLE, A REVISER SI ERREUR]
+
 int	check_export(char *str)
 {
-	int i = 0;
-	int sig_egal = 0;
+	int i;
+	int sig_egal;
 
+	i = 0;
+	sig_egal = 0;
 	while(str[i] && (is_alpha(str[i]) || is_underscor(str[i])))
 		i++;
 	if(i == 0)
@@ -66,8 +68,10 @@ int	check_export(char *str)
 
 char	*pre_egal(char *str)
 {
-	char *tmp;
-	int i = 0;
+	char	*tmp;
+	int 	i;
+
+	i = 0;
 	while (str[i] && !is_egal(str[i]))
 		i++;
 	tmp = malloc(sizeof(char) * (i + 1));
@@ -83,6 +87,14 @@ char	*pre_egal(char *str)
 	return (tmp);
 }
 
+void	malloc_z(char *tmp)
+{
+	tmp = malloc(sizeof(char));
+	if(!tmp)
+		return ;
+	tmp[0] = '\0';
+}
+
 char	*post_egal(char *str)
 {
 	char	*tmp;
@@ -90,6 +102,7 @@ char	*post_egal(char *str)
 	int 	j;
 	int 	k;
 
+	tmp = NULL;
 	i = 0;
 	j = 0;
 	k = 0;
@@ -190,13 +203,15 @@ t_env	*export_env_2(t_env *env, t_env *head_env, char *str)
 t_env	*rpl_env_var(t_env *env, t_env *head_env, char *str)
 {
 	t_env *tmp;
+	char *p_e;
+	char *te;
 
 	while(env)
 	{
 		tmp = env->next;
-		char *p_e = pre_egal(str);
+		p_e = pre_egal(str);
 		if(!p_e)
-			return NULL;//a voir plus tard
+			return NULL;
 		if(env->next && !ft_strcmp(env->next->str[0],p_e))
 		{
 			free(p_e);
@@ -204,7 +219,7 @@ t_env	*rpl_env_var(t_env *env, t_env *head_env, char *str)
 			{
 				if(tmp->str[1] != NULL)
 					free(tmp->str[1]);
-				char *te = ft_strdup(str);
+				te = ft_strdup(str);
 				te = if_quote(str);
 				tmp->str[1] = post_egal(te);//
 				free(te);
@@ -216,8 +231,7 @@ t_env	*rpl_env_var(t_env *env, t_env *head_env, char *str)
 		free(p_e);
 		env = env->next;
 	}
-	env = head_env;
-	return (env);
+	return (env = head_env, env);
 }
 
 t_env	*sup_env_var(t_env *env, t_env *head_env, char *str)
@@ -265,9 +279,9 @@ int cut_export_argument(char* arg_export)
 void	ft_export(t_env *env, t_env *head_env, t_block *block)
 {
 	int		i;
-	
+
 	i = 0;
-	if(block->arg[0] == NULL)
+	if(block->arg == NULL)
 			return (print_exp(env, head_env));
 	while(block->arg[i])
 	{
@@ -344,9 +358,11 @@ void printc(char *input)
 
 int check_n(char **tab)
 {
-	int i = 1;
-	int j = 1;
-	
+	int i;
+	int j;
+
+	i = 0;
+	j = 0;
 	while(tab[j] && tab[j][0] == '-' && tab[j][1] && tab[j][1] == 'n')
 	{
 		while(tab[j][i])
@@ -364,32 +380,35 @@ int check_n(char **tab)
 
 void	ft_echo(t_block *block)
 {
-	int x = 0;
+	int x;
 	int i;
-	int check_n = 0;
-	if(!block->arg)
+	int check_n;
+
+	x = 0;
+	check_n = 0;
+	if (!block->arg)
 		return ;
-	while(block->arg[x])
+	while (block->arg[x])
 	{
 		i = 1;
-		if(block->arg[x][0] != '-')
+		if (block->arg[x][0] != '-')
 			break;
-		while(block->arg[x][i])
+		while (block->arg[x][i])
 		{
-			if(block->arg[x][i] != 'n')
+			if (block->arg[x][i] != 'n')
 				break;
 			check_n++;
 			i++;
 		}
-		if(block->arg[x][i] && block->arg[x][i] != 'n')
+		if (block->arg[x][i] && block->arg[x][i] != 'n')
 			break;
 		x++;
 	}
-	int tab_len = len_tab(block->arg);
+	i = len_tab(block->arg);
 	while(block->arg[x])
 	{
 		printf("%s", block->arg[x]);
-		if(x < tab_len - 1)
+		if(x < i - 1)
 			printf(" ");
 		x++;
 	}
@@ -412,6 +431,3 @@ void	ft_pwd(t_block *block)
 		printf("%s\n", path);
 	}
 }
-
-
-//echo   eeee"aaa"fff"bbb"gggg       leaks

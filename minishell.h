@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 00:51:05 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/28 21:49:15 by myassine         ###   ########.fr       */
+/*   Updated: 2023/12/29 18:41:47 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,9 +154,23 @@ enum REDIR_TYPES
 	HEREDOC
 };
 
-//Tokenizer
 char		**ft_split_path(char const *s, char c);
+//Tokenizer
 t_block		*tokenization(char *input);
+t_block		*initialize_and_prepare(char **input);
+t_dir		*create_new_dir(void);
+void		process_commands(char **split_input, t_block *original);
+void		choose_type_redir(char **token, int j, t_dir *new_dir);
+void		process_command_token(char **token, int *j, t_block *tmp);
+void		process_redirection_token(char **token, int *j, t_block *tmp);
+void		allocate_and_assign_arguments(char **token, int *j, t_block *tmp);
+void		free_start_dir(t_dir *dir);
+void		add_to_special(char *result, char *str, int *i, int *j);
+void		cleanup_memory(char **split_input);
+int			treat_token(char **token, int *j, t_block *tmp);
+int			treat_cmd_line(char *cmd_line, t_block *tmp);
+char		*add_spaces(char *str);
+
 
 
 //Minishell
@@ -229,7 +243,7 @@ char	*ft_strstr(const char *big, const char *little);
 int		ft_lstsize(t_env *lst);
 int		len_tab(char **tab);
 void	return_neg(char *str);
-int		nbr_arg(char **token, int j, int *count);
+int		nbr_arg(char **token, int j);
 
 //Check_char
 
