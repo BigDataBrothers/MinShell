@@ -1,20 +1,83 @@
-==326416== Memcheck, a memory error detector
-==326416== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
-==326416== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
-==326416== Command: ./minishell
-==326416== Parent PID: 326319
-==326416== 
-==326416== 
-==326416== HEAP SUMMARY:
-==326416==     in use at exit: 214,624 bytes in 356 blocks
-==326416==   total heap usage: 1,176 allocs, 820 frees, 256,386 bytes allocated
-==326416== 
-==326416== LEAK SUMMARY:
-==326416==    definitely lost: 0 bytes in 0 blocks
-==326416==    indirectly lost: 0 bytes in 0 blocks
-==326416==      possibly lost: 0 bytes in 0 blocks
-==326416==    still reachable: 0 bytes in 0 blocks
-==326416==         suppressed: 214,624 bytes in 356 blocks
-==326416== 
-==326416== For lists of detected and suppressed errors, rerun with: -s
-==326416== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 4 from 4)
+==3702693== Memcheck, a memory error detector
+==3702693== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==3702693== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==3702693== Command: ./minishell
+==3702693== Parent PID: 3702580
+==3702693== 
+==3702702== Syscall param execve(filename) points to unaddressable byte(s)
+==3702702==    at 0x49B308B: execve (syscall-template.S:120)
+==3702702==    by 0x10A361: main (minishell.c:368)
+==3702702==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
+==3702702== 
+==3702702== 
+==3702702== HEAP SUMMARY:
+==3702702==     in use at exit: 219,730 bytes in 429 blocks
+==3702702==   total heap usage: 979 allocs, 550 frees, 248,622 bytes allocated
+==3702702== 
+==3702702== 4 bytes in 2 blocks are indirectly lost in loss record 1 of 77
+==3702702==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==3702702==    by 0x10C10C: ft_strdup (lib_mini_2.c:91)
+==3702702==    by 0x10CEB6: process_redirection_token (tokenization.c:72)
+==3702702==    by 0x10CFAD: allocate_and_assign_arguments (tokenization_2.c:31)
+==3702702==    by 0x10D0F3: treat_token (tokenization_2.c:47)
+==3702702==    by 0x10D1F1: treat_cmd_line (tokenization_2.c:79)
+==3702702==    by 0x10CC31: process_commands (tokenization.c:38)
+==3702702==    by 0x10D612: tokenization (tokenization_3.c:58)
+==3702702==    by 0x109B22: main (minishell.c:196)
+==3702702== 
+==3702702== 24 bytes in 1 blocks are indirectly lost in loss record 17 of 77
+==3702702==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==3702702==    by 0x10CB65: create_new_dir (tokenization.c:19)
+==3702702==    by 0x10CED5: process_redirection_token (tokenization.c:74)
+==3702702==    by 0x10CFAD: allocate_and_assign_arguments (tokenization_2.c:31)
+==3702702==    by 0x10D0F3: treat_token (tokenization_2.c:47)
+==3702702==    by 0x10D1F1: treat_cmd_line (tokenization_2.c:79)
+==3702702==    by 0x10CC31: process_commands (tokenization.c:38)
+==3702702==    by 0x10D612: tokenization (tokenization_3.c:58)
+==3702702==    by 0x109B22: main (minishell.c:196)
+==3702702== 
+==3702702== LEAK SUMMARY:
+==3702702==    definitely lost: 0 bytes in 0 blocks
+==3702702==    indirectly lost: 28 bytes in 3 blocks
+==3702702==      possibly lost: 0 bytes in 0 blocks
+==3702702==    still reachable: 0 bytes in 0 blocks
+==3702702==         suppressed: 219,702 bytes in 426 blocks
+==3702702== 
+==3702702== For lists of detected and suppressed errors, rerun with: -s
+==3702702== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 2 from 2)
+==3702693== 
+==3702693== HEAP SUMMARY:
+==3702693==     in use at exit: 214,474 bytes in 348 blocks
+==3702693==   total heap usage: 1,151 allocs, 803 frees, 255,343 bytes allocated
+==3702693== 
+==3702693== 4 bytes in 2 blocks are indirectly lost in loss record 1 of 77
+==3702693==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==3702693==    by 0x10C10C: ft_strdup (lib_mini_2.c:91)
+==3702693==    by 0x10CEB6: process_redirection_token (tokenization.c:72)
+==3702693==    by 0x10CFAD: allocate_and_assign_arguments (tokenization_2.c:31)
+==3702693==    by 0x10D0F3: treat_token (tokenization_2.c:47)
+==3702693==    by 0x10D1F1: treat_cmd_line (tokenization_2.c:79)
+==3702693==    by 0x10CC31: process_commands (tokenization.c:38)
+==3702693==    by 0x10D612: tokenization (tokenization_3.c:58)
+==3702693==    by 0x109B22: main (minishell.c:196)
+==3702693== 
+==3702693== 24 bytes in 1 blocks are indirectly lost in loss record 17 of 77
+==3702693==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==3702693==    by 0x10CB65: create_new_dir (tokenization.c:19)
+==3702693==    by 0x10CED5: process_redirection_token (tokenization.c:74)
+==3702693==    by 0x10CFAD: allocate_and_assign_arguments (tokenization_2.c:31)
+==3702693==    by 0x10D0F3: treat_token (tokenization_2.c:47)
+==3702693==    by 0x10D1F1: treat_cmd_line (tokenization_2.c:79)
+==3702693==    by 0x10CC31: process_commands (tokenization.c:38)
+==3702693==    by 0x10D612: tokenization (tokenization_3.c:58)
+==3702693==    by 0x109B22: main (minishell.c:196)
+==3702693== 
+==3702693== LEAK SUMMARY:
+==3702693==    definitely lost: 0 bytes in 0 blocks
+==3702693==    indirectly lost: 28 bytes in 3 blocks
+==3702693==      possibly lost: 0 bytes in 0 blocks
+==3702693==    still reachable: 0 bytes in 0 blocks
+==3702693==         suppressed: 214,446 bytes in 345 blocks
+==3702693== 
+==3702693== For lists of detected and suppressed errors, rerun with: -s
+==3702693== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 4 from 4)

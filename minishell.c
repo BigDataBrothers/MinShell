@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 00:52:02 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/29 20:53:11 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/03 19:49:53 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -384,11 +384,11 @@ int	main(int argc, char **argv, char *envp[])
 		int status;
 		while (1)
 		{
-			pid = waitpid(-1, &status, WNOHANG);
+			pid = waitpid(-1, &status, /*WNOHANG*/0);
 			if (pid < 0)
-				break;
+				break ;
 		}
-		if(args)
+		if (args)
 			free_string_array(args);
 	}
 	terminat(input, envs, env, head_env);
@@ -400,7 +400,6 @@ int	main(int argc, char **argv, char *envp[])
 	}
 	free(args);
 	all_free_1(test, env, head_env, args);
-	argc = argc;
 	argv = argv;
 	return (SUCCESS);
 }

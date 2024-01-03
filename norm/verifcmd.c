@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/26 20:07:44 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/28 21:56:27 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/03 20:20:45 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ char	*verif_cmd(char **args, char **env)
 	char	**path;
 	int		i;
 
-	i = -1;
+	i = 0;
 	if (!args || !args[0])
 		return (NULL);
 	if (is_bultin(args[0]) || access(args[0], F_OK) == 0)
@@ -28,12 +28,16 @@ char	*verif_cmd(char **args, char **env)
 	free(args[0]);
 	args[0] = ft_strjoin("/", tmp);
 	free(tmp);
-	while (path[++i])
+	if(path != NULL)
 	{
-		tmp = ft_strjoin(path[i], args[0]);
-		if (access(tmp, F_OK) == 0)
-			return (free_string_array(path), free(args[0]), tmp);
-		free(tmp);
+		while (path[i])
+		{
+			tmp = ft_strjoin(path[i], args[0]);
+			if (access(tmp, F_OK) == 0)
+				return (free_string_array(path), free(args[0]), tmp);
+			free(tmp);
+			i++;
+		}
 	}
 	free_string_array(path);
 	tmp = ft_substr(args[0], 1, ft_strlen(args[0]));

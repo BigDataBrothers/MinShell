@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/09 02:19:09 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/28 20:02:39 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/03 20:27:55 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,8 +66,11 @@ char	*process_exp_variable(char *input, int *i, t_env *env, t_env *head_env)
 	j = 0;
 	if (v[tmp])
 		while (v[tmp][j])
-			if (is_spec_char(v[tmp][j++]))
+		{
+			if (is_spec_char(v[tmp][j]))
 				v[tmp][j - 1] *= -1;
+			j++;
+		}
 	v[post_input] = ft_strjoin(v[pre_exp], v[tmp]);
 	v[concat] = ft_strjoin(v[post_input], v[post_exp]);
 	if (v[post_input])

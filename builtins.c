@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 20:54:16 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/29 20:52:00 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/03 18:15:24 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,12 +100,10 @@ char	*post_egal(char *str)
 	char	*tmp;
 	int		i;
 	int 	j;
-	int 	k;
 
 	tmp = NULL;
 	i = 0;
 	j = 0;
-	k = 0;
 	while (str[i] && !is_egal(str[i]))
 		i++;
 	if(!str[i + 1])
@@ -117,21 +115,12 @@ char	*post_egal(char *str)
 		return (tmp);
 	}
 	i++;
-	j = i;
-	while(str[i])
-		i++;
-	k = i - j;
-	tmp = malloc(sizeof(char) * (k + 1));
+	tmp = malloc(sizeof(char) * (ft_strlen(str) - i + 1));
 	if(!tmp)
 		return NULL;
-	i = 0;
-	while(str[j])
-	{
-		tmp[i] = str[j];
-		i++;
-		j++;
-	}
-	tmp[i] = '\0';
+	while(str[i])
+		tmp[j++] = str[i++];
+	tmp[j] = '\0';
 	return (tmp);
 }
 
@@ -199,7 +188,6 @@ t_env	*export_env_2(t_env *env, t_env *head_env, char *str)
 	return (env);
 }
 
-
 t_env	*rpl_env_var(t_env *env, t_env *head_env, char *str)
 {
 	t_env *tmp;
@@ -219,7 +207,6 @@ t_env	*rpl_env_var(t_env *env, t_env *head_env, char *str)
 			{
 				if(tmp->str[1] != NULL)
 					free(tmp->str[1]);
-				te = ft_strdup(str);
 				te = if_quote(str);
 				tmp->str[1] = post_egal(te);//
 				free(te);
@@ -337,10 +324,7 @@ void printc(char *input)
 			c = input[i];
 			i++;
 			while(input[i] && input[i] != c)
-			{
-				printf("%c", input[i]);
-				i++;
-			}
+				printf("%c", input[i++]);
 			i++;
 		}
 		else if(input[i] == 32)
@@ -349,10 +333,7 @@ void printc(char *input)
 			skip_whitespace(input, &i);
 		}
 		else if(input[i])
-		{
-			printf("%c", input[i]);
-			i++;
-		}
+			printf("%c", input[i++]);
 	}
 }
 
@@ -361,17 +342,15 @@ int check_n(char **tab)
 	int i;
 	int j;
 
-	i = 0;
-	j = 0;
-	while(tab[j] && tab[j][0] == '-' && tab[j][1] && tab[j][1] == 'n')
+	i = -1;
+	j = -1;
+	while(tab[++j] && tab[j][0] == '-' && tab[j][1] && tab[j][1] == 'n')
 	{
-		while(tab[j][i])
+		while(tab[j][++i])
 		{
 			if(tab[j][i] != 'n')
 				return (1);
-			i++;
 		}
-		j++;
 	}
 	if(j != 1)
 		return (2);
