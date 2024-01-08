@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 00:52:02 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/08 19:06:50 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/08 21:10:39 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,15 +33,21 @@ char	*removeCharAtIndex(char *str, int i)
     return (newStr);
 }
 
-// void redirect_heredoc_2()
-// {
-// 	heredoc_file = open("heredoc_temp_file.txt", O_WRONLY | O_CREAT | O_TRUNC, 0644);
-//     if (heredoc_file == -1)
-// 	{
-//         perror("Erreur lors de la création du fichier heredoc");
-//         exit(EXIT_FAILURE);
-//     }
-// }
+void redirect_heredoc_2(int *heredoc_file)
+{
+	(*heredoc_file) = open("heredoc_temp_file.txt", O_WRONLY | O_CREAT | O_TRUNC, 0644);
+    if ((*heredoc_file) == -1)
+	{
+    	perror("Erreur lors de la création du fichier heredoc");
+    	exit(EXIT_FAILURE);
+    }
+}
+
+void redirect_heredoc_3()
+{
+	perror("Erreur lors de l'écriture dans le fichier heredoc");
+    exit(EXIT_FAILURE);
+}
 
 void redirect_heredoc(char *delimiter, t_env *env, t_env *head_env, int saved_stdin)
 {
@@ -49,12 +55,7 @@ void redirect_heredoc(char *delimiter, t_env *env, t_env *head_env, int saved_st
     int		heredoc_file;
     size_t	input_len;
 
-	heredoc_file = open("heredoc_temp_file.txt", O_WRONLY | O_CREAT | O_TRUNC, 0644);
-    if (heredoc_file == -1)
-	{
-        perror("Erreur lors de la création du fichier heredoc");
-        exit(EXIT_FAILURE);
-    }
+	redirect_heredoc_2(&heredoc_file);
 	dup2(saved_stdin, STDIN_FILENO);
 	while (1)
 	{
@@ -67,10 +68,7 @@ void redirect_heredoc(char *delimiter, t_env *env, t_env *head_env, int saved_st
         input = expa_chang(input, env, head_env);
         input_len = ft_strlen(input);
         if (write(heredoc_file, input, input_len) == -1 || write(heredoc_file, "\n", 1) == -1)
-		{
-            perror("Erreur lors de l'écriture dans le fichier heredoc");
-            exit(EXIT_FAILURE);
-        }
+			redirect_heredoc_3();
         free(input);
     }
 	redirect_input("heredoc_temp_file.txt");
@@ -101,6 +99,23 @@ sdggdf: command not found
 export a
 */
 
+void	for_arg(t_block *test, int *i_a, int *j_a, char **args)
+{
+	if(test->arg)
+	{
+		while(test->arg[(*j_a)])
+		{
+			return_neg(test->arg[(*j_a)]);
+			test->arg[(*j_a)] = if_quote(test->arg[(*j_a)]);
+			args[(*i_a)] = ft_strdup(test->arg[(*j_a)]);
+			(*i_a)++;
+			(*j_a)++;
+		}
+		args[(*i_a)] = NULL;
+	}
+	(*i_a) = 0;
+}
+
 int	main(int argc, char **argv, char *envp[])
 {
 	if(argc > 1)
@@ -111,8 +126,18 @@ int	main(int argc, char **argv, char *envp[])
 	t_block *test;
 	char	*input;
 	char	*path;
+	char	*str;
+	char	*tmp_path;
 	char	**envs;
 	char	**args;
+	int		pipe_fds[2];
+	int		prev_pipe_fd;
+	int		saved_stdout;
+	int		saved_stdin;
+	int		command_alone;
+	int		i_a;
+	int		j_a;
+	int		status;
 
 	env = NULL;
 	envs = NULL;
@@ -127,16 +152,15 @@ int	main(int argc, char **argv, char *envp[])
 		envs = ft_lstsplit(&env);
 		input = NULL;
 		path = get_current_directory_with_prompt();
-		if(!path)
+		if (!path)
 			return (FAILURE);
-		int u = 0;
-		while(path[u])
-			u++;
-		char *tmp_path;
-		if(path[--u] != ' ')
+		i_a = 0;
+		while (path[i_a])
+			i_a++;
+		if (path[--i_a] != ' ')
 			tmp_path = ft_strjoin(path, "$> ");
 		path = tmp_path;
-		if(!path)
+		if (!path)
 			return (0);
 		input = readline(path);
 		if (!input)
@@ -145,24 +169,24 @@ int	main(int argc, char **argv, char *envp[])
 			exit(0);
 		}
 		add_history(input);
-		if(!no_input(input))
+		if (!no_input(input))
 		{
-			if(input)
+			if (input)
 				free(input);
 			continue;
 		}
-		if(check_error(input))
+		if (check_error(input))
 		{
 			print_error(check_error(input));
 			continue;
 		}
-		int	i_alone = 0;
-		int command_alone = 0;
-		while (input && input[i_alone])
+		i_a = 0;
+		command_alone = 0;
+		while (input && input[i_a])
 		{
-			if (input[i_alone] == '|')
+			if (input[i_a] == '|')
 				command_alone++;
-			i_alone++;
+			i_a++;
 		}
 		in_quote(input);
 		input = expa_chang(input, env, head_env);
@@ -172,17 +196,14 @@ int	main(int argc, char **argv, char *envp[])
 			print_error(check_error(input));
 			continue;
 		}	
-		printf(CYAN"input: %s"RESET"\n", input);
-		test = tokenization(input);//chaque t_block et 1 cmd + args
-		(void)pid;
-		int saved_stdout = dup(STDOUT_FILENO);
-    	int saved_stdin = dup(STDIN_FILENO);
-		if (command_alone > 0)//Gere les pipeline ICI
+		test = tokenization(input);
+		saved_stdout = dup(STDOUT_FILENO);
+    	saved_stdin = dup(STDIN_FILENO);
+		if (command_alone > 0)
 		{
 			printf(BACK_RED"multi"RST"\n");
-			int pipe_fds[2];
-			int prev_pipe_fd = -1;
-			while(test)
+			prev_pipe_fd = -1;
+			while (test)
 			{
 				return_neg(test->cmd);
 				test->cmd = if_quote(test->cmd);
@@ -192,30 +213,16 @@ int	main(int argc, char **argv, char *envp[])
 					args = malloc(sizeof(char *) * (len_tab(test->arg) + 2));
 				if(!args)
 					return (0);
-				int i = 1;
-				int j = 0;
-
+				i_a = 1;
+				j_a = 0;
 				args[0] = ft_strdup(test->cmd);
-				args[i] = NULL;
-				if(test->arg)
+				args[i_a] = NULL;
+				for_arg(test, &i_a, &j_a, args);
+				while(args[i_a])
 				{
-					while(test->arg[j])
-					{
-						return_neg(test->arg[j]);
-						test->arg[j] = if_quote(test->arg[j]);
-						args[i] = ft_strdup(test->arg[j]);
-						i++;
-						j++;
-					}
-					args[i] = NULL;
+					return_neg(args[i_a]);
+					i_a++;
 				}
-				int a = 0;
-				while(args[a])
-				{
-					return_neg(args[a]);
-					a++;
-				}
-				char *str;
 				str = NULL;
 				if (args[0] == NULL)
 					;
@@ -234,7 +241,6 @@ int	main(int argc, char **argv, char *envp[])
 					printf("fork\n");
 					exit(EXIT_FAILURE);
 				}
-				// [START OF CHILDREN'S JOURNEY TO EXEC]
 				if (pid == 0)
 				{
 					if (prev_pipe_fd != -1)
@@ -295,26 +301,13 @@ int	main(int argc, char **argv, char *envp[])
 				args = malloc(sizeof(char *) * (len_tab(test->arg) + 2));
 			if(!args)
 				return (0);
-			int i = 1;
-			int j = 0;
+			i_a = 1;
+			j_a = 0;
 			args[0] = ft_strdup(test->cmd);
-			args[i] = NULL;
-			if(test->arg)
-			{
-				while(test->arg[j])
-				{
-					return_neg(test->arg[j]);
-					test->arg[j] = if_quote(test->arg[j]);
-					args[i] = ft_strdup(test->arg[j]);
-					i++;
-					j++;
-				}
-				args[i] = NULL;
-			}
-			i = 0;
-			while(args[i++])
-				return_neg(args[i]);
-			char *str;
+			args[i_a] = NULL;
+			for_arg(test, &i_a, &j_a, args);
+			while(args[i_a++])
+				return_neg(args[i_a]);
 			str = NULL;
 			apply_redirections_to_command_line(test, env, head_env, saved_stdin);
 			if (args[0] == NULL)
@@ -361,7 +354,6 @@ int	main(int argc, char **argv, char *envp[])
 		close(saved_stdin);
 		close(saved_stdout);
 		signal(SIGINT, SIG_IGN);
-		int status;
 		while (1)
 		{
 			pid = waitpid(-1, &status, /*WNOHANG*/0);
@@ -372,18 +364,17 @@ int	main(int argc, char **argv, char *envp[])
 			free_string_array(args);
 	}
 	terminat(input, envs, env, head_env);
-	int i_free_args = -1;
-	while (args[++i_free_args])
+	i_a = -1;
+	while (args[++i_a])
 	{
-		free(args[i_free_args]);
-		args[i_free_args] = NULL;
+		free(args[i_a]);
+		args[i_a] = NULL;
 	}
 	free(args);
 	all_free_1(test, env, head_env, args);
 	argv = argv;
 	return (SUCCESS);
 }
-
 
 /*
 	A FAIRE ;
