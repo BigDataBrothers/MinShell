@@ -6,24 +6,24 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 00:52:02 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/03 19:49:53 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/08 19:06:50 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char *removeCharAtIndex(char *str, int i)
+char	*removeCharAtIndex(char *str, int i)
 {
-    int j;
-    int k;
-	
+    int	j;
+    int	k;
+
 	j = 0;
 	k = 0;
     if (str == NULL || i < 0)
-        return NULL;
+        return (NULL);
     char *newStr = (char *)ft_calloc(ft_strlen(str), 1);
     if (newStr == NULL)
-        return NULL;
+        return (NULL);
     while (str[k] != '\0')
 	{
         if (k != i)
@@ -33,38 +33,15 @@ char *removeCharAtIndex(char *str, int i)
     return (newStr);
 }
 
-
-//ls -l | grep .c | wc -l > file.txt < input.txt
-
-void printBlock(t_block *block)
-{
-    if (block == NULL)
-	{
-        printf("Block is NULL\n");
-        return;
-    }
-    if (block->arg != NULL)
-	{
-        printf("Arguments/Options:\n");
-        for (int i = 0; block->arg[i] != NULL; ++i)
-            printf("%s\n", block->arg[i]);
-    }
-	else
-        printf("No arguments/options\n");
-	if(block->dir)
-	{
-		while (block->dir)
-		{
-			dprintf(2, "[%d]\n", block->dir->fd);
-			dprintf(2, "[%d]\n", block->dir->type);
-			dprintf(2, "[%s]\n", block->dir->file);
-			block->dir = block->dir->next;
-		}
-	}
-}
-
-//Un pipe est egal a une redirection in et out
-
+// void redirect_heredoc_2()
+// {
+// 	heredoc_file = open("heredoc_temp_file.txt", O_WRONLY | O_CREAT | O_TRUNC, 0644);
+//     if (heredoc_file == -1)
+// 	{
+//         perror("Erreur lors de la création du fichier heredoc");
+//         exit(EXIT_FAILURE);
+//     }
+// }
 
 void redirect_heredoc(char *delimiter, t_env *env, t_env *head_env, int saved_stdin)
 {
@@ -119,6 +96,9 @@ check_error.o	free.o		      minishell.h  valgrind_leaks_ignore.txt
 check_quote.c	ft_split_path.c       minishell.o  valgrind.log
 check_quote.o	ft_split_path.o       output.txt
 sdggdf: command not found
+
+
+export a
 */
 
 int	main(int argc, char **argv, char *envp[])

@@ -6,14 +6,13 @@
 #    By: myassine <myassine@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/10/06 02:16:52 by myassine          #+#    #+#              #
-#    Updated: 2023/12/29 19:02:15 by myassine         ###   ########.fr        #
+#    Updated: 2024/01/08 19:00:32 by myassine         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 SRCS			= 	minishell.c \
 					norm/check_quote.c \
 					norm/check_quote_2.c \
-					builtins.c \
 					norm/lib_mini.c \
 					norm/lib_mini_2.c \
 					norm/lib_mini_3.c \
@@ -33,6 +32,11 @@ SRCS			= 	minishell.c \
 					norm/expand.c \
 					norm/expand_2.c \
 					norm/lstsplit.c \
+					norm/builtins.c \
+					norm/builtins_2.c \
+					norm/builtins_3.c \
+					norm/builtins_4.c \
+					norm/builtins_5.c \
 					norm/skip_char.c \
 					norm/check_error.c \
 					norm/check_char.c \

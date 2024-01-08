@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 00:51:05 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/29 18:41:47 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/08 18:33:53 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -208,14 +208,38 @@ char 	*ft_get_env(char *exp, t_env *env, t_env *head_env);
 char	*exp_var(char *input, int *i);
 
 //Bultins
-void	ft_export(t_env *env, t_env *head_env, t_block *block);
+int	is_plus(char c);
+int	is_egal(char c);
+void	print_exp(t_env *env, t_env *head_env);
+int	check_export(char *str);
+char	*pre_egal(char *str);
+
+void	malloc_z(char *tmp);
+char	*post_egal(char *str);
+int	check_export_exist(t_env *env, t_env *head_env, char *str);
+t_env	*export_env_1(t_env *env, t_env *head_env, char *str);
+t_env	*export_env_2(t_env *env, t_env *head_env, char *str);
+
+int	rpl_en_var_2(char *str, t_env *tmp);
+t_env	*rpl_env_var(t_env *env, t_env *head_env, char *str);
+t_env	*sup_env_var(t_env *env, t_env *head_env, char *str);
 void	ft_env(t_env *env, t_env *head_env, t_block *block);
+int	cut_export_argument(char *arg_export);
+
+void	ft_export(t_env *env, t_env *head_env, t_block *block);
 void	ft_unset(t_env *env, t_env *head_env, t_block *block);
+int	is_quote(char *str);
+void	printc(char *input);
+int	check_n(char **tab);
+
+int	ft_echo_1(t_block *block, int *i, int *x, int *check_n);
 void	ft_echo(t_block *block);
+void	ft_putstr_fd(char *s, int fd);
 void	ft_pwd(t_block *block);
-void	ft_cd(char *input);
-void	ft_exp(t_env *env, t_env *head_env, char **envs, t_block *block);
-int		is_bultin(char *args);
+
+// void	ft_cd(char *input);
+// void	ft_exp(t_env *env, t_env *head_env, char **envs, t_block *block);
+// int		is_bultin(char *args);
 
 //Lib_mini
 void	ft_bzero(void *s, size_t n);
