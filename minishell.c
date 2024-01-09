@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 00:52:02 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/08 21:10:39 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/09 19:18:56 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,6 +116,40 @@ void	for_arg(t_block *test, int *i_a, int *j_a, char **args)
 	(*i_a) = 0;
 }
 
+char	**creat_args(t_block *test, int *i_a, int *j_a)
+{
+	char	**args;
+
+	return_neg(test->cmd);
+	test->cmd = if_quote(test->cmd);
+	if (!test->arg)
+		args = malloc(sizeof(char *) * 2);
+	else
+		args = malloc(sizeof(char *) * (len_tab(test->arg) + 2));
+	if(!args)
+		return (NULL);
+	(*i_a) = 1;
+	(*j_a) = 0;
+	args[0] = ft_strdup(test->cmd);
+	args[(*i_a)] = NULL;
+	for_arg(test, &(*i_a), &(*j_a), args);
+	while(args[(*i_a)++])
+		return_neg(args[(*i_a)]);
+	return (args);
+}
+
+void	free_tab(char **args)
+{
+	int	i_a;
+
+	i_a = -1;
+	while (args[++i_a])
+	{
+		free(args[i_a]);
+		args[i_a] = NULL;
+	}
+}
+
 int	main(int argc, char **argv, char *envp[])
 {
 	if(argc > 1)
@@ -205,31 +239,8 @@ int	main(int argc, char **argv, char *envp[])
 			prev_pipe_fd = -1;
 			while (test)
 			{
-				return_neg(test->cmd);
-				test->cmd = if_quote(test->cmd);
-				if (!test->arg)
-					args = malloc(sizeof(char *) * 2);
-				else
-					args = malloc(sizeof(char *) * (len_tab(test->arg) + 2));
-				if(!args)
-					return (0);
-				i_a = 1;
-				j_a = 0;
-				args[0] = ft_strdup(test->cmd);
-				args[i_a] = NULL;
-				for_arg(test, &i_a, &j_a, args);
-				while(args[i_a])
-				{
-					return_neg(args[i_a]);
-					i_a++;
-				}
-				str = NULL;
-				if (args[0] == NULL)
-					;
-				else if((str = verif_cmd(args, envs)) == NULL)
-					{
-					}
-				if(str)
+				args = creat_args(test, &i_a, &j_a);
+				if((str = verif_cmd(args, envs)) != NULL)
 				{
 					args[0] = ft_strdup(str);
 					free(str);
@@ -238,7 +249,7 @@ int	main(int argc, char **argv, char *envp[])
 					exit(EXIT_FAILURE);
 				if ((pid = fork()) < 0) 
 				{
-					printf("fork\n");
+					perror("fork\n");
 					exit(EXIT_FAILURE);
 				}
 				if (pid == 0)
@@ -293,29 +304,9 @@ int	main(int argc, char **argv, char *envp[])
 		else
 		{
 			printf(BACK_GREEN"alone"RST"\n");
-			return_neg(test->cmd);
-			test->cmd = if_quote(test->cmd);
-			if (!test->arg)
-				args = malloc(sizeof(char *) * 2);
-			else
-				args = malloc(sizeof(char *) * (len_tab(test->arg) + 2));
-			if(!args)
-				return (0);
-			i_a = 1;
-			j_a = 0;
-			args[0] = ft_strdup(test->cmd);
-			args[i_a] = NULL;
-			for_arg(test, &i_a, &j_a, args);
-			while(args[i_a++])
-				return_neg(args[i_a]);
-			str = NULL;
+			args = creat_args(test, &i_a, &j_a);
 			apply_redirections_to_command_line(test, env, head_env, saved_stdin);
-			if (args[0] == NULL)
-				;
-			else if((str = verif_cmd(args, envs)) == NULL)
-				{
-				}
-			if(str)
+			if((str = verif_cmd(args, envs)) != NULL)
 			{
 				args[0] = ft_strdup(str);
 				free(str);
@@ -335,7 +326,7 @@ int	main(int argc, char **argv, char *envp[])
 				;
 			else if ((pid = fork()) < 0) 
 			{
-				printf("fork\n");
+				perror("fork\n");
 				exit(EXIT_FAILURE);
 			}
 			else if (pid == 0 && !is_bultin(args[0]) && execve(args[0], args, envs) == -1)
@@ -345,8 +336,7 @@ int	main(int argc, char **argv, char *envp[])
 				all_free_1(test, env, head_env, args);
 				exit(127);
 			}
-			if(envs)
-				free_string_array(envs);
+			free_string_array(envs);
 		}
 		unlink("heredoc_temp_file.txt");
 		dup2(saved_stdin ,STDIN_FILENO);
@@ -356,24 +346,15 @@ int	main(int argc, char **argv, char *envp[])
 		signal(SIGINT, SIG_IGN);
 		while (1)
 		{
-			pid = waitpid(-1, &status, /*WNOHANG*/0);
+			pid = waitpid(-1, &status, 0);
 			if (pid < 0)
 				break ;
 		}
-		if (args)
-			free_string_array(args);
+		free_string_array(args);
 	}
 	terminat(input, envs, env, head_env);
-	i_a = -1;
-	while (args[++i_a])
-	{
-		free(args[i_a]);
-		args[i_a] = NULL;
-	}
-	free(args);
-	all_free_1(test, env, head_env, args);
 	argv = argv;
-	return (SUCCESS);
+	return (all_free_1(test, env, head_env, args), SUCCESS);
 }
 
 /*
