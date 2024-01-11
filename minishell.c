@@ -6,73 +6,77 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 00:52:02 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/09 19:18:56 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/11 19:18:44 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*removeCharAtIndex(char *str, int i)
+char	*remove_char_at_index(char *str, int i)
 {
-    int	j;
-    int	k;
+	char	*new_str;
+	int		j;
+	int		k;
 
 	j = 0;
 	k = 0;
-    if (str == NULL || i < 0)
-        return (NULL);
-    char *newStr = (char *)ft_calloc(ft_strlen(str), 1);
-    if (newStr == NULL)
-        return (NULL);
-    while (str[k] != '\0')
+	new_str = (char *)ft_calloc(ft_strlen(str), 1);
+	if (str == NULL || i < 0)
+		return (NULL);
+	if (new_str == NULL)
+		return (NULL);
+	while (str[k] != '\0')
 	{
-        if (k != i)
-            newStr[j++] = str[k];
-        k++;
-    }
-    return (newStr);
+		if (k != i)
+			new_str[j++] = str[k];
+		k++;
+	}
+	return (new_str);
 }
 
-void redirect_heredoc_2(int *heredoc_file)
+void	redirect_heredoc_2(int *heredoc_file)
 {
-	(*heredoc_file) = open("heredoc_temp_file.txt", O_WRONLY | O_CREAT | O_TRUNC, 0644);
-    if ((*heredoc_file) == -1)
+	(*heredoc_file) = open("heredoc_temp_file.txt", \
+	O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if ((*heredoc_file) == -1)
 	{
-    	perror("Erreur lors de la création du fichier heredoc");
-    	exit(EXIT_FAILURE);
-    }
+		perror("Erreur lors de la création du fichier heredoc");
+		exit(EXIT_FAILURE);
+	}
 }
 
-void redirect_heredoc_3()
+void	redirect_heredoc_3(void)
 {
 	perror("Erreur lors de l'écriture dans le fichier heredoc");
-    exit(EXIT_FAILURE);
+	exit(EXIT_FAILURE);
 }
 
-void redirect_heredoc(char *delimiter, t_env *env, t_env *head_env, int saved_stdin)
+void	redirect_heredoc(char *delimiter, t_env *env, \
+t_env *head_env, int saved_stdin)
 {
-    char	*input;
-    int		heredoc_file;
-    size_t	input_len;
+	char	*input;
+	int		heredoc_file;
+	size_t	input_len;
 
 	redirect_heredoc_2(&heredoc_file);
 	dup2(saved_stdin, STDIN_FILENO);
 	while (1)
 	{
-        input = readline("> ");
-        if (!input || ft_strcmp(input, delimiter) == 0)
+		input = readline("> ");
+		if (!input || ft_strcmp(input, delimiter) == 0)
 		{
-            free(input);
-            break;
-        }
-        input = expa_chang(input, env, head_env);
-        input_len = ft_strlen(input);
-        if (write(heredoc_file, input, input_len) == -1 || write(heredoc_file, "\n", 1) == -1)
+			free(input);
+			break ;
+		}
+		input = expa_chang(input, env, head_env);
+		input_len = ft_strlen(input);
+		if (write(heredoc_file, input, input_len) == -1 || \
+		write(heredoc_file, "\n", 1) == -1)
 			redirect_heredoc_3();
-        free(input);
-    }
+		free(input);
+	}
 	redirect_input("heredoc_temp_file.txt");
-    close(heredoc_file);
+	close(heredoc_file);
 }
 
 /*
@@ -101,9 +105,9 @@ export a
 
 void	for_arg(t_block *test, int *i_a, int *j_a, char **args)
 {
-	if(test->arg)
+	if (test->arg)
 	{
-		while(test->arg[(*j_a)])
+		while (test->arg[(*j_a)])
 		{
 			return_neg(test->arg[(*j_a)]);
 			test->arg[(*j_a)] = if_quote(test->arg[(*j_a)]);
@@ -126,14 +130,14 @@ char	**creat_args(t_block *test, int *i_a, int *j_a)
 		args = malloc(sizeof(char *) * 2);
 	else
 		args = malloc(sizeof(char *) * (len_tab(test->arg) + 2));
-	if(!args)
+	if (!args)
 		return (NULL);
 	(*i_a) = 1;
 	(*j_a) = 0;
 	args[0] = ft_strdup(test->cmd);
 	args[(*i_a)] = NULL;
 	for_arg(test, &(*i_a), &(*j_a), args);
-	while(args[(*i_a)++])
+	while (args[(*i_a)++])
 		return_neg(args[(*i_a)]);
 	return (args);
 }
@@ -152,209 +156,111 @@ void	free_tab(char **args)
 
 int	main(int argc, char **argv, char *envp[])
 {
-	if(argc > 1)
-		return (FAILURE);
-	pid_t	pid;
-	t_env	*env;
-	t_env	*head_env;
-	t_block *test;
-	char	*input;
-	char	*path;
-	char	*str;
-	char	*tmp_path;
-	char	**envs;
-	char	**args;
-	int		pipe_fds[2];
-	int		prev_pipe_fd;
-	int		saved_stdout;
-	int		saved_stdin;
-	int		command_alone;
-	int		i_a;
-	int		j_a;
-	int		status;
+	t_all	all;
 
-	env = NULL;
-	envs = NULL;
-	head_env = NULL;
-	env = init_env(env, head_env, envp);
-	pid = -1;
-	path = NULL;
-	while(1)
+	init_all(&all, envp);
+	if (argc > 1)
+		return (FAILURE);
+	while (1)
 	{
-		signal(SIGINT, &sigint_handler);
-		signal(SIGQUIT, SIG_IGN);
-		envs = ft_lstsplit(&env);
-		input = NULL;
-		path = get_current_directory_with_prompt();
-		if (!path)
+		if (start_input(&all) == FAILURE)
 			return (FAILURE);
-		i_a = 0;
-		while (path[i_a])
-			i_a++;
-		if (path[--i_a] != ' ')
-			tmp_path = ft_strjoin(path, "$> ");
-		path = tmp_path;
-		if (!path)
-			return (0);
-		input = readline(path);
-		if (!input)
+		check_error_input(&all);
+		parsing(&all);
+		if (all.command_alone > 0)
 		{
-			eof(input, envs, env, head_env);
-			exit(0);
-		}
-		add_history(input);
-		if (!no_input(input))
-		{
-			if (input)
-				free(input);
-			continue;
-		}
-		if (check_error(input))
-		{
-			print_error(check_error(input));
-			continue;
-		}
-		i_a = 0;
-		command_alone = 0;
-		while (input && input[i_a])
-		{
-			if (input[i_a] == '|')
-				command_alone++;
-			i_a++;
-		}
-		in_quote(input);
-		input = expa_chang(input, env, head_env);
-		test = NULL;
-		if(check_error(input))
-		{
-			print_error(check_error(input));
-			continue;
-		}	
-		test = tokenization(input);
-		saved_stdout = dup(STDOUT_FILENO);
-    	saved_stdin = dup(STDIN_FILENO);
-		if (command_alone > 0)
-		{
-			printf(BACK_RED"multi"RST"\n");
-			prev_pipe_fd = -1;
-			while (test)
+			all.prev_pipe_fd = -1;
+			while (all.test)
 			{
-				args = creat_args(test, &i_a, &j_a);
-				if((str = verif_cmd(args, envs)) != NULL)
+				all.args = creat_args(all.test, &all.i_a, &all.j_a);
+				all.str = verif_cmd(all.args, all.envs);
+				if (all.str != NULL)
 				{
-					args[0] = ft_strdup(str);
-					free(str);
+					all.args[0] = ft_strdup(all.str);
+					free(all.str);
 				}
-				if (pipe(pipe_fds) == -1)
+				if (pipe(all.pipe_fds) == -1)
 					exit(EXIT_FAILURE);
-				if ((pid = fork()) < 0) 
+				all.pid = fork();
+				if (all.pid < 0)
 				{
 					perror("fork\n");
 					exit(EXIT_FAILURE);
 				}
-				if (pid == 0)
+				if (all.pid == 0)
 				{
-					if (prev_pipe_fd != -1)
-					{
-						if (dup2(prev_pipe_fd, STDIN_FILENO) == -1)
-							exit(EXIT_FAILURE);
-						close(prev_pipe_fd);
-					}
-					if (test->next)
-					{
-						if (dup2(pipe_fds[1], STDOUT_FILENO) == -1)
-							exit(EXIT_FAILURE);
-						close(pipe_fds[1]);
-					}
-					apply_redirections_to_command_line(test, env, head_env, saved_stdin);
-					if(args && !ft_strcmp(test->cmd, "exit" ))
-					{
-						if(ft_exit_1(test))
-						{
-							eof(input, envs, env, head_env);
-							exit(ft_atoi(test->arg[0]));
-						}
-					}
-					if(applic_bulltin(test, env, head_env, args))
+					dup_in_child(&all);
+					if (applic_bulltin(all.test, all.env, all.head_env, all.args))
 						exit(0);
-					else if(execve(args[0], args, envs) == -1)
+					else if (execve(all.args[0], all.args, all.envs) == -1)
 					{
-						if(test->cmd)
-							printf("%s: command not found\n", test->cmd);
-						all_free_1(test, env, head_env, args);
+						if (all.test->cmd)
+							printf("%s: command not found\n", all.test->cmd);
+						all_free_1(all.test, all.env, all.head_env, all.args);
 						exit(127);
 					}
 				}
 				else
 				{
- 					if (test->next)
+					if (all.test->next)
 					{
-						close(pipe_fds[1]);
-						prev_pipe_fd = pipe_fds[0];
+						close(all.pipe_fds[1]);
+						all.prev_pipe_fd = all.pipe_fds[0];
 					}
 					else
 					{
-						close(pipe_fds[0]);
-						close(pipe_fds[1]);					
+						close(all.pipe_fds[0]);
+						close(all.pipe_fds[1]);
 					}
-					test = test->next;
-				}		
+					all.test = all.test->next;
+				}
 			}
 		}
 		else
 		{
-			printf(BACK_GREEN"alone"RST"\n");
-			args = creat_args(test, &i_a, &j_a);
-			apply_redirections_to_command_line(test, env, head_env, saved_stdin);
-			if((str = verif_cmd(args, envs)) != NULL)
+			all.args = creat_args(all.test, &all.i_a, &all.j_a);
+			apply_redirections_to_command_line(all.test, all.env, \
+			all.head_env, all.saved_stdin);
+			all.str = verif_cmd(all.args, all.envs);
+			if (all.str != NULL)
+				all.args[0] = ft_strdupf(all.str);
+			if (!ft_strcmp(all.test->cmd, "exit" ))
 			{
-				args[0] = ft_strdup(str);
-				free(str);
-			}
-			if(!ft_strcmp(test->cmd, "exit" ))
-				if(ft_exit_1(test))
+				if (ft_exit_1(all.test))
 				{
-					if(!test->arg)
+					if (!all.test->arg)
 					{
-						eof(input, envs, env, head_env);
+						eof(all.input, all.envs, all.env, all.head_env);
 						exit(0);
 					}
-					eof(input, envs, env, head_env);
-					exit(ft_atoi(test->arg[0]));
+					eof(all.input, all.envs, all.env, all.head_env);
+					exit(ft_atoi(all.test->arg[0]));
 				}
-			if(applic_bulltin(test, env, head_env, args))
-				;
-			else if ((pid = fork()) < 0) 
-			{
-				perror("fork\n");
-				exit(EXIT_FAILURE);
 			}
-			else if (pid == 0 && !is_bultin(args[0]) && execve(args[0], args, envs) == -1)
+			if (!applic_bulltin(all.test, all.env, all.head_env, all.args))
 			{
-				if(args[0] && test->cmd)
-					printf("%s: command not found\n", args[0]);
-				all_free_1(test, env, head_env, args);
-				exit(127);
+				all.pid = fork();
+				if ((all.pid) < 0)
+				{
+					perror("fork\n");
+					exit(EXIT_FAILURE);
+				}
+				else if (all.pid == 0 && !is_bultin(all.args[0]) && \
+				execve(all.args[0], all.args, all.envs) == -1)
+				{
+					if (all.args[0] && all.test->cmd)
+						printf("%s: command not found\n", all.args[0]);
+					all_free_1(all.test, all.env, all.head_env, all.args);
+					exit(127);
+				}
 			}
-			free_string_array(envs);
+			free_string_array(all.envs);
 		}
-		unlink("heredoc_temp_file.txt");
-		dup2(saved_stdin ,STDIN_FILENO);
-		dup2(saved_stdout ,STDOUT_FILENO);
-		close(saved_stdin);
-		close(saved_stdout);
-		signal(SIGINT, SIG_IGN);
-		while (1)
-		{
-			pid = waitpid(-1, &status, 0);
-			if (pid < 0)
-				break ;
-		}
-		free_string_array(args);
+		end_prompt(&all);
 	}
-	terminat(input, envs, env, head_env);
+	terminat(all.input, all.envs, all.env, all.head_env);
 	argv = argv;
-	return (all_free_1(test, env, head_env, args), SUCCESS);
+	return (all_free_1(all.test, all.env, all.head_env, all.args), SUCCESS);
 }
 
 /*
@@ -362,5 +268,6 @@ int	main(int argc, char **argv, char *envp[])
 		leaks a gerer
 		$? valeur de retour a gerer
 		norm
+		chercher dans sujets fonctions autorisees    -> isatty   avant argc
 
 */

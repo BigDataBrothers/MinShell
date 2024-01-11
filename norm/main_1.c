@@ -1,0 +1,113 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main_1.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/01/11 18:35:07 by myassine          #+#    #+#             */
+/*   Updated: 2024/01/11 19:12:09 by myassine         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../minishell.h"
+
+int	start_input(t_all *all)
+{
+	signal(SIGINT, &sigint_handler);
+	signal(SIGQUIT, SIG_IGN);
+	all->envs = ft_lstsplit(&all->env);
+	all->path = get_current_directory_with_prompt();
+	if (!all->path)
+		return (FAILURE);
+	while (all->path[all->i_a])
+		all->i_a++;
+	if (all->path[--all->i_a] != ' ')
+		all->tmp_path = ft_strjoin(all->path, "$> ");
+	all->path = all->tmp_path;
+	if (!all->path)
+		return (0);
+	all->input = readline(all->path);
+	return (SUCCESS);
+}
+
+void	end_prompt(t_all *all)
+{
+	unlink("heredoc_temp_file.txt");
+	dup2(all->saved_stdin ,STDIN_FILENO);
+	dup2(all->saved_stdout ,STDOUT_FILENO);
+	close(all->saved_stdin);
+	close(all->saved_stdout);
+	signal(SIGINT, SIG_IGN);
+	while (1)
+	{
+		all->pid = waitpid(-1, &all->status, 0);
+		if (all->pid < 0)
+			break ;
+	}
+	free_string_array(all->args);
+}
+
+void	check_error_input(t_all *all)
+{
+	if (!all->input)
+	{
+		eof(all->input, all->envs, all->env, all->head_env);
+		exit(0);
+	}
+	if (all->input[0])
+		add_history(all->input);
+	if (!no_input(all->input))
+	{
+		if (all->input)
+			free(all->input);
+	}
+	if (check_error(all->input))
+		print_error(check_error(all->input));
+	all->i_a = 0;
+	all->command_alone = 0;
+}
+
+void	parsing(t_all *all)
+{
+	while (all->input && all->input[all->i_a])
+	{
+		if (all->input[all->i_a] == '|')
+			all->command_alone++;
+		all->i_a++;
+	}
+	in_quote(all->input);
+	all->input = expa_chang(all->input, all->env, all->head_env);
+	all->test = NULL;
+	if (check_error(all->input))
+		print_error(check_error(all->input));
+	all->test = tokenization(all->input);
+	all->saved_stdout = dup(STDOUT_FILENO);
+	all->saved_stdin = dup(STDIN_FILENO);
+}
+
+void	dup_in_child(t_all *all)
+{
+	if (all->prev_pipe_fd != -1)
+	{
+		if (dup2(all->prev_pipe_fd, STDIN_FILENO) == -1)
+			exit(EXIT_FAILURE);
+		close(all->prev_pipe_fd);
+	}
+	if (all->test->next)
+	{
+		if (dup2(all->pipe_fds[1], STDOUT_FILENO) == -1)
+			exit(EXIT_FAILURE);
+		close(all->pipe_fds[1]);
+	}
+	apply_redirections_to_command_line(all->test, all->env, \
+	all->head_env, all->saved_stdin);
+	if (all->args && !ft_strcmp(all->test->cmd, "exit" ))
+	{
+		if (ft_exit_1(all->test))
+		{
+			eof(all->input, all->envs, all->env, all->head_env);
+			exit(ft_atoi(all->test->arg[0]));
+		}
+	}
+}

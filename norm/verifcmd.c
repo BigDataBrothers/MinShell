@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/26 20:07:44 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/03 20:20:45 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/11 19:12:09 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ char	*verif_cmd(char **args, char **env)
 	free(args[0]);
 	args[0] = ft_strjoin("/", tmp);
 	free(tmp);
-	if(path != NULL)
+	if (path != NULL)
 	{
 		while (path[i])
 		{

@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/29 18:43:20 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/29 18:47:59 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/11 18:33:05 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,6 @@ int	treat_cmd_line(char *cmd_line, t_block *tmp)
 	t_dir	*head;
 
 	j = 0;
-	printf(PURPLE "cmd_line: %s" RESET "\n", cmd_line);
 	token = ft_split_path(cmd_line, ' ');
 	tmp->dir = create_new_dir();
 	if (!tmp->dir)

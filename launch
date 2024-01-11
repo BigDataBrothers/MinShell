@@ -1,0 +1,6 @@
+ls -la | grep -i MY | wc -l > ok > abc 
+cat abc
+echo $USER$USER
+export abc=$USER
+echo $abc
+exit 8

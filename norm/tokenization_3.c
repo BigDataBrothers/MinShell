@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/29 18:44:48 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/29 18:47:50 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/11 18:33:15 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,6 @@ t_block	*tokenization(char *input)
 	t_block	*original;
 
 	original = initialize_and_prepare(&input);
-	printf(GREEN "input: %s" RESET "\n", input);
 	split_input = ft_split_path(input, '|');
 	process_commands(split_input, original);
 	cleanup_memory(split_input);

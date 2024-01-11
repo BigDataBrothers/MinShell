@@ -6,11 +6,13 @@
 #    By: myassine <myassine@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/10/06 02:16:52 by myassine          #+#    #+#              #
-#    Updated: 2024/01/08 19:00:32 by myassine         ###   ########.fr        #
+#    Updated: 2024/01/11 18:46:46 by myassine         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 SRCS			= 	minishell.c \
+					norm/main_1.c \
+					norm/struct_main.c \
 					norm/check_quote.c \
 					norm/check_quote_2.c \
 					norm/lib_mini.c \

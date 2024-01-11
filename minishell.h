@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 00:51:05 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/08 18:33:53 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/11 19:08:51 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,6 +146,31 @@ typedef struct s_block
 	t_dir	*dir;
 }	t_block;
 
+typedef struct s_all
+{
+	char	**envs;
+	pid_t	pid;
+	t_env	*env;
+	t_env	*head_env;
+	t_block *test;
+	
+	char	*input;
+	char	*path;
+	char	*str;
+	char	*tmp_path;
+	char	**args;
+	
+	int		pipe_fds[2];
+	int		prev_pipe_fd;
+	int		saved_stdout;
+	int		saved_stdin;
+	int		command_alone;
+	
+	int		i_a;
+	int		j_a;
+	int		status;
+}	t_all;
+
 enum REDIR_TYPES
 {
 	APPEND,
@@ -177,7 +202,7 @@ char		*add_spaces(char *str);
 char	*get_current_directory_with_prompt();
 void	eof(char *input, char **envs, t_env *env, t_env *head_env);
 void	terminat(char *input,char **envs, t_env *env, t_env *head_env);
-char 	*removeCharAtIndex(char *str, int i);
+char 	*remove_char_at_index(char *str, int i);
 
 //Print
 void	print_env(t_env *env, t_env *head_env);
@@ -322,10 +347,19 @@ void	skip_alpha(char *str, int *i);
 //Env
 
 void	free_env(t_env *env, t_env *head_env);
-int     build_env_2(t_env *env, t_env *head_env, char **envp);
-int     build_env(t_env *env, t_env *head_env, char **envp);
-int     get_env(t_env *env, t_env *head_env, char **envp);
+int		build_env_2(t_env *env, t_env *head_env, char **envp);
+int		build_env(t_env *env, t_env *head_env, char **envp);
+int		get_env(t_env *env, t_env *head_env, char **envp);
 t_env	*init_env(t_env *env, t_env *head_env, char **envp);
+
+// norm
+char	*ft_strdupf(char *s);
+int		start_input(t_all *all);
+void	init_all(t_all *all, char **envp);
+void	end_prompt(t_all *all);
+void	check_error_input(t_all *all);
+void	parsing(t_all *all);
+void	dup_in_child(t_all *all);
 
 //Malloc
 t_dir	*new_dir(char *redir, char *target, t_dir *dir);
