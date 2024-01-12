@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/26 20:07:09 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/26 20:07:10 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/12 19:59:44 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,20 +26,19 @@ void	redirect_input(char *filename)
 	close(file);
 }
 
-void	apply_redirections_to_command_line(t_block *test, t_env *env,
-		t_env *head_env, int saved_stdin)
+void	apply_redirections_to_command_line(t_all *all)
 {
-	while (test && test->dir && test->dir->file)
+	while (all->test && all->test->dir && all->test->dir->file)
 	{
-		if (test->dir->type == APPEND)
-			append_output(test->dir->file);
-		else if (test->dir->type == IN)
-			redirect_input(test->dir->file);
-		else if (test->dir->type == OUT)
-			redirect_output(test->dir->file);
-		else if (test->dir->type == HEREDOC)
-			redirect_heredoc(test->dir->file, env, head_env, saved_stdin);
-		test->dir = test->dir->next;
+		if (all->test->dir->type == APPEND)
+			append_output(all->test->dir->file);
+		else if (all->test->dir->type == IN)
+			redirect_input(all->test->dir->file);
+		else if (all->test->dir->type == OUT)
+			redirect_output(all->test->dir->file);
+		else if (all->test->dir->type == HEREDOC)
+			redirect_heredoc(all->test->dir->file, all->saved_stdin, all);
+		all->test->dir = all->test->dir->next;
 	}
 }
 

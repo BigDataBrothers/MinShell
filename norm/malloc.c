@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 21:16:58 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/26 21:32:49 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/12 19:28:49 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,9 +73,19 @@ void	free_env(t_env *env, t_env *head_env)
 	while (env)
 	{
 		head_env = env->next;
-		free(env->str[0]);
-		free(env->str[1]);
-		free(env);
+		if (env->str && env->str[0])
+		{
+			free(env->str[0]);
+			env->str[0] = NULL;
+		}
+		if (env->str && env->str[1])
+		{
+			free(env->str[1]);
+			env->str[1] = NULL;
+		}
+		if (env)
+			free(env);
+		env = NULL;
 		env = head_env;
 	}
 	env = NULL;

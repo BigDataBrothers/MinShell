@@ -1,6 +1,22 @@
 ls -la | grep -i MY | wc -l > ok > abc 
 cat abc
-echo $USER$USER
 export abc=$USER
 echo $abc
+
+echo ''
+echo ""
+echo $
+echo '$'
+echo "$"
+echo $USER
+echo '$USER'
+echo "$USER"
+echo $USER$USER
+echo '$USER$USER'
+echo "$USER$USER"
+echo '"$USER$USER"'
+echo "'$USER$USER'"
+
+ls -la | grep -i MY | wc -l > ok > abc 
+
 exit 8

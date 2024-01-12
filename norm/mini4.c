@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/26 20:07:05 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/26 20:07:06 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/12 19:33:58 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 int	applic_bulltin(t_block *test, t_env *env, t_env *head_env, char **args)
 {
-	if (args && !ft_strcmp(test->cmd, "cd") && chdir(args[1]) == 0)
+	if (args && args[1] && !ft_strcmp(test->cmd, "cd") && chdir(args[1]) == 0)
 		return (1);
-	else if (args && !ft_strcmp(test->cmd, "cd") && !args[1]
+	else if (args && args[1] && !ft_strcmp(test->cmd, "cd") && !args[1]
 		&& chdir(ft_get_env("HOME", env, head_env)) == 0)
 		return (1);
 	else if (args && !ft_strcmp(test->cmd, "unset"))

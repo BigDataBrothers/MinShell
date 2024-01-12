@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/28 21:47:40 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/11 19:08:51 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/12 18:09:01 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	ft_quote(char *input)
 	i = 0;
 	d = 0;
 	s = 0;
-	while (input[i])
+	while (input && input[i])
 	{
 		if (is_simple_quote(input[i]) || is_double_quote(input[i]))
 		{

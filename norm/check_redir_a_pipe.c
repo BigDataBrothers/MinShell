@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 19:46:28 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/26 21:02:55 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/12 18:32:42 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ int	check_redir(char *input)
 
 	i = 0;
 	error = 0;
+	tmp = 0;
 	while (input[i])
 	{
 		tmp = 0;

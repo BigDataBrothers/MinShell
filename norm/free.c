@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/27 18:58:47 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/27 19:47:03 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/12 18:37:02 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,17 @@ void	free_block(t_block *block)
 	if (block)
 	{
 		if (block->cmd)
+		{
 			free(block->cmd);
+			block->cmd = NULL;
+		}
 		if (block->arg)
 		{
 			arg = block->arg;
 			while (*arg)
 			{
 				free(*arg);
+				*arg = NULL;
 				arg++;
 			}
 			free(block->arg);

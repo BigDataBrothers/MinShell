@@ -6,54 +6,130 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 17:41:49 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/11 18:43:18 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/12 20:03:53 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	init_all(t_all *all, char **envp)
+void	prepare_block(t_all *all)
 {
-	all->head_env = NULL;
-	all->env = NULL;
-	all->env = init_env(all->env, all->head_env, envp);
-	all->input = NULL;
-	all->envs = NULL;
-	all->path = NULL;
-	all->str = NULL;
-	all->tmp_path = NULL;
-	all->args = NULL;
-	all->pipe_fds[0] = -1; // maybe not init
-	all->pipe_fds[1] = -1; // maybe not init
-	all->prev_pipe_fd = 0;
-	all->saved_stdout = 0;
-	all->saved_stdin = 0;
-	all->command_alone = 0;
-	all->i_a = 0;
-	all->j_a = 0;
-	all->pid = -1;
-	all->status = 0;
+	all->args = creat_args(all->test, &all->i_a, &all->j_a);
+	all->str = verif_cmd(all->args, all->envs);
+	if (all->str != NULL)
+	{
+		all->args[0] = ft_strdup(all->str);
+		free(all->str);
+	}
+	if (pipe(all->pipe_fds) == -1)
+	{
+		all_free_1(all->test, all->env, all->head_env, all->args);
+		exit(EXIT_FAILURE);
+	}
+	all->pid = fork();
+	if (all->pid < 0)
+	{
+		perror("fork\n");
+		all_free_1(all->test, all->env, all->head_env, all->args);
+		exit(EXIT_FAILURE);
+	}
 }
 
-char	*ft_strdupf(char *s)
+void	exec_command_alone(t_all *all)
 {
-	int		len;
-	int		i;
-	char	*d;
-
-	i = 0;
-	if (s == NULL)
-		return (NULL);
-	len = ft_strlen(s);
-	d = malloc(sizeof(char) * (len + 1));
-	if (!d)
-		return (NULL);
-	while (s[i] != '\0')
+	if (all->pid == 0)
 	{
-		d[i] = s[i];
-		i++;
+		dup_in_child(all);
+		if (applic_bulltin(all->test, all->env, all->head_env, all->args))
+		{
+			all_free_1(all->test, all->env, all->head_env, all->args);
+			exit(0);
+		}
+		else if (execve(all->args[0], all->args, all->envs) == -1)
+		{
+			if (all->test->cmd)
+				printf("%s: command not found\n", all->test->cmd);
+			all_free_1(all->test, all->env, all->head_env, all->args);
+			exit(127);
+		}
 	}
-	d[i] = '\0';
-	free(s);
-	return (d);
+	else
+	{
+		close(all->pipe_fds[1]);
+		if (all->test->next)
+			all->prev_pipe_fd = all->pipe_fds[0];
+		else
+			close(all->pipe_fds[0]);
+		all->test = all->test->next;
+	}
+}
+
+void	prepare_n_exit(t_all *all)
+{
+	all->args = creat_args(all->test, &all->i_a, &all->j_a);
+	apply_redirections_to_command_line(all);
+	all->str = verif_cmd(all->args, all->envs);
+	if (all->str != NULL)
+		all->args[0] = ft_strdupf(all->str);
+	if (!ft_strcmp(all->test->cmd, "exit" ))
+	{
+		if (ft_exit_1(all->test))
+		{
+			if (!all->test->arg)
+			{
+				eof(all->input, all->envs, all->env, all->head_env);
+				all_free_1(all->test, all->env, all->head_env, all->args);
+				exit(0);
+			}
+			eof(all->input, all->envs, all->env, all->head_env);
+			all_free_1(all->test, all->env, all->head_env, all->args);
+			// printf(PURPLE"all->test: %p\n", all->test);
+			// printf(PURPLE"all->test->arg: %p\n", all->test->arg);
+			// printf(PURPLE"all->test->arg[0]: %p\n", all->test->arg[0]);
+			// check all->test->arg is at NULL
+			exit(ft_atoi(all->test->arg[0]));
+		}
+	}
+}
+
+void	exec_multi_cmd(t_all *all)
+{
+	if (!applic_bulltin(all->test, all->env, all->head_env, all->args))
+	{
+		all->pid = fork();
+		if ((all->pid) < 0)
+		{
+			perror("fork\n");
+			all_free_1(all->test, all->env, all->head_env, all->args);
+			exit(EXIT_FAILURE);
+		}
+		else if (all->pid == 0 && !is_bultin(all->args[0]) && \
+		execve(all->args[0], all->args, all->envs) == -1)
+		{
+			if (all->args[0] && all->test->cmd)
+				printf("%s: command not found\n", all->args[0]);
+			all_free_1(all->test, all->env, all->head_env, all->args);
+			exit(127);
+		}
+	}
+}
+
+void	exec_all(t_all *all)
+{
+	if (all->command_alone > 0)
+	{
+		all->prev_pipe_fd = -1;
+		while (all->test)
+		{
+			prepare_block(all);
+			exec_command_alone(all);
+		}
+	}
+	else
+	{
+		prepare_n_exit(all);
+		exec_multi_cmd(all);
+		free_string_array(all->envs);
+	}
+	end_prompt(all);
 }

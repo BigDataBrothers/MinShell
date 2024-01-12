@@ -1,0 +1,35 @@
+
+
+/*
+	consider les bulltin comme des command pour ne pas print que la cmd existe pas
+	gerer tout les cas avec des quot char negatif
+	si command ecrit avec chemin absolut l executer
+*/
+
+
+/*myassine@made-f0Br1s4:~/MIN/MIN$ sdggdf | ls
+builtins.c	check_redir_a_pipe.c  lib_mini.c   print.c
+builtins.o	check_redir_a_pipe.o  lib_mini.o   print.o
+check_char_2.c	env.c		      Makefile	   skip_char.c
+check_char_2.o	env.o		      malloc.c	   skip_char.o
+check_char.c	expand.c	      malloc.o	   tokenization.c
+check_char.o	expand.o	      minishell    tokenization.o
+check_error.c	free.c		      minishell.c  valgrind_BU.log
+check_error.o	free.o		      minishell.h  valgrind_leaks_ignore.txt
+check_quote.c	ft_split_path.c       minishell.o  valgrind.log
+check_quote.o	ft_split_path.o       output.txt
+sdggdf: command not found
+
+
+export a
+// $OKO>$Okok 2 variable inexistante marche pas avec pipe aussi
+*/
+
+/*
+	A FAIRE ;
+		leaks a gerer
+		$? valeur de retour a gerer
+		norm
+		chercher dans sujets fonctions autorisees    -> isatty   avant argc
+
+*/

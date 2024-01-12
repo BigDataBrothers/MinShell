@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 18:35:07 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/11 19:12:09 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/12 19:02:33 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,8 @@ int	start_input(t_all *all)
 void	end_prompt(t_all *all)
 {
 	unlink("heredoc_temp_file.txt");
-	dup2(all->saved_stdin ,STDIN_FILENO);
-	dup2(all->saved_stdout ,STDOUT_FILENO);
+	dup2(all->saved_stdin, STDIN_FILENO);
+	dup2(all->saved_stdout, STDOUT_FILENO);
 	close(all->saved_stdin);
 	close(all->saved_stdout);
 	signal(SIGINT, SIG_IGN);
@@ -53,15 +53,19 @@ void	check_error_input(t_all *all)
 	if (!all->input)
 	{
 		eof(all->input, all->envs, all->env, all->head_env);
+		all_free_1(all->test, all->env, all->head_env, all->args);
 		exit(0);
 	}
 	if (all->input[0])
 		add_history(all->input);
-	if (!no_input(all->input))
-	{
-		if (all->input)
-			free(all->input);
-	}
+	// if (!no_input(all->input))
+	// {
+	// 	if (all->input)
+	// 	{
+	// 		free(all->input);
+	// 		all->input = NULL;
+	// 	}
+	// }
 	if (check_error(all->input))
 		print_error(check_error(all->input));
 	all->i_a = 0;
@@ -100,8 +104,7 @@ void	dup_in_child(t_all *all)
 			exit(EXIT_FAILURE);
 		close(all->pipe_fds[1]);
 	}
-	apply_redirections_to_command_line(all->test, all->env, \
-	all->head_env, all->saved_stdin);
+	apply_redirections_to_command_line(all);
 	if (all->args && !ft_strcmp(all->test->cmd, "exit" ))
 	{
 		if (ft_exit_1(all->test))

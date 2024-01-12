@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/09 02:19:09 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/03 20:27:55 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/12 17:45:40 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,14 +63,10 @@ char	*process_exp_variable(char *input, int *i, t_env *env, t_env *head_env)
 	j = *i + ft_strlen(v[exp]);
 	v[post_exp] = ft_substr(input, j, ft_strlen(input));
 	v[tmp] = exp_(v[exp], env, head_env);
-	j = 0;
-	if (v[tmp])
-		while (v[tmp][j])
-		{
-			if (is_spec_char(v[tmp][j]))
-				v[tmp][j - 1] *= -1;
-			j++;
-		}
+	j = -1;
+	while (v[tmp] && v[tmp][++j])
+		if (is_spec_char(v[tmp][j]))
+			v[tmp][j - 1] *= -1;
 	v[post_input] = ft_strjoin(v[pre_exp], v[tmp]);
 	v[concat] = ft_strjoin(v[post_input], v[post_exp]);
 	if (v[post_input])
@@ -79,8 +75,7 @@ char	*process_exp_variable(char *input, int *i, t_env *env, t_env *head_env)
 	if (input)
 		free(input);
 	input = strdup(v[post_input]);
-	free_exp(v);
-	return (input);
+	return (free_exp(v), input);
 }
 //========================================================
 

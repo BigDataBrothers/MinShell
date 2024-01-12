@@ -6,15 +6,17 @@
 #    By: myassine <myassine@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/10/06 02:16:52 by myassine          #+#    #+#              #
-#    Updated: 2024/01/11 18:46:46 by myassine         ###   ########.fr        #
+#    Updated: 2024/01/12 18:07:57 by myassine         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 SRCS			= 	minishell.c \
 					norm/main_1.c \
 					norm/struct_main.c \
+					norm/struct_main2.c \
 					norm/check_quote.c \
 					norm/check_quote_2.c \
+					norm/redirect_heredoc.c\
 					norm/lib_mini.c \
 					norm/lib_mini_2.c \
 					norm/lib_mini_3.c \
@@ -70,7 +72,7 @@ fclean:			clean
 re:				fclean $(NAME)
 
 v: re
-	valgrind --leak-check=full --suppressions=valgrind_leaks_ignore.txt --show-leak-kinds=all --trace-children=yes --track-origins=yes --log-file=valgrind.log ./minishell
+	valgrind --leak-check=full --suppressions=valgrind_leaks_ignore.txt --show-leak-kinds=all --trace-children=yes --track-origins=yes ./minishell
 
 i: re
 	@valgrind --leak-check=full --suppressions=valgrind_leaks_ignore.txt --show-leak-kinds=all --track-origins=yes --log-file=valgrind.log env -i ./minishell
