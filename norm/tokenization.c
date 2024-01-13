@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 21:39:12 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/03 20:33:13 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/13 20:57:02 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ t_dir	*create_new_dir(void)
 	new_dir->file = NULL;
 	new_dir->fd = -1;
 	new_dir->type = -1;
+	new_dir->next = NULL;
 	return (new_dir);
 }
 
@@ -61,7 +62,9 @@ void	choose_type_redir(char **token, int j, t_dir *new_dir)
 void	process_command_token(char **token, int *j, t_block *tmp)
 {
 	if (!tmp->cmd && !is_redir(token[*j]))
+	{		
 		tmp->cmd = ft_strdup(token[(*j)++]);
+	}
 }
 
 void	process_redirection_token(char **token, int *j, t_block *tmp)

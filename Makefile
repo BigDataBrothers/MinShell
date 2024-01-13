@@ -6,7 +6,7 @@
 #    By: myassine <myassine@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/10/06 02:16:52 by myassine          #+#    #+#              #
-#    Updated: 2024/01/12 18:07:57 by myassine         ###   ########.fr        #
+#    Updated: 2024/01/13 19:56:51 by myassine         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -71,7 +71,7 @@ fclean:			clean
 
 re:				fclean $(NAME)
 
-v: re
+v: $(NAME)
 	valgrind --leak-check=full --suppressions=valgrind_leaks_ignore.txt --show-leak-kinds=all --trace-children=yes --track-origins=yes ./minishell
 
 i: re

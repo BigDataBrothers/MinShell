@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 18:35:07 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/12 19:02:33 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/13 20:50:31 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,29 @@ int	start_input(t_all *all)
 	return (SUCCESS);
 }
 
+// all == addresse d une structure t_all
+// *all == valeur a l adresse stockee
+// &all == addresse de all
+
+// {
+// t_lst *lst; lst == addr d un lst  *lst == valeur dans struct lst  &lst == 
+
+// lst = 0xfee7548;
+
+// lst->next = 0xfee7548
+// }
+
+// call(&lst);
+
+// {
+
+
+// lst == 0x1684ade
+
+// *lst = (*lst)->next;
+
+// }
+
 void	end_prompt(t_all *all)
 {
 	unlink("heredoc_temp_file.txt");
@@ -45,7 +68,17 @@ void	end_prompt(t_all *all)
 		if (all->pid < 0)
 			break ;
 	}
+	if(all->args != NULL)
+	{
+		free_struct_all(all);
+	}
+
+}
+void	free_struct_all(t_all *all)
+{
 	free_string_array(all->args);
+	free_block_list(all->test);
+	all->test = NULL;
 }
 
 void	check_error_input(t_all *all)
@@ -58,14 +91,6 @@ void	check_error_input(t_all *all)
 	}
 	if (all->input[0])
 		add_history(all->input);
-	// if (!no_input(all->input))
-	// {
-	// 	if (all->input)
-	// 	{
-	// 		free(all->input);
-	// 		all->input = NULL;
-	// 	}
-	// }
 	if (check_error(all->input))
 		print_error(check_error(all->input));
 	all->i_a = 0;

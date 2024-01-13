@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 17:39:28 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/12 17:45:01 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/13 18:36:50 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ void	init_all(t_all *all, char **envp)
 	all->j_a = 0;
 	all->pid = -1;
 	all->status = 0;
+	all->test = NULL;
 }
 
 char	*ft_strdupf(char *s)

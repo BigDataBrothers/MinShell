@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/26 20:07:13 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/12 18:53:10 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/13 18:59:24 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,8 @@ void	all_free_1(t_block *test, t_env *env, t_env *head_env, char **args)
 {
 	if (test)
 		free_block_list(test);
-	if (env)
-		free_env(env, head_env);
+	(void)env;
+	(void)head_env;
 	if (args)
 		free_string_array(args);
 }

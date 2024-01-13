@@ -6,36 +6,40 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/27 18:58:47 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/12 18:37:02 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/13 21:23:27 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
+void	free_struct_dir(t_dir *dir)
+{
+	t_dir *tmp;
+
+	printf("dir == %p", dir);
+	while (dir)
+	{
+		tmp = dir;
+		dir = dir->next;
+		printf("file == %s", tmp->file);
+		free(tmp->file);
+		free(tmp);
+	}
+}
+
 void	free_block(t_block *block)
 {
-	char	**arg;
-
 	if (block)
 	{
 		if (block->cmd)
 		{
+			printf(BACK_RED"TEST"RST"\n");
 			free(block->cmd);
 			block->cmd = NULL;
 		}
-		if (block->arg)
-		{
-			arg = block->arg;
-			while (*arg)
-			{
-				free(*arg);
-				*arg = NULL;
-				arg++;
-			}
-			free(block->arg);
-			block->arg = NULL;
-		}
-		free(block->dir);
+		free_string_array(block->arg);
+		block->arg = NULL;
+		free_struct_dir(block->dir);
 		free(block);
 		block = NULL;
 	}
@@ -52,6 +56,7 @@ void	free_block_list(t_block *head)
 		temp = head;
 		head = head->next;
 		free_block(temp);
+		temp = NULL;
 	}
 }
 

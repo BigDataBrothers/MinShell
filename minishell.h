@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 00:51:05 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/12 19:02:41 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/13 20:40:17 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -204,6 +204,8 @@ void		free_block_list(t_block *head);
 void		freeStringArrays(char ***arrays);
 void		free_string_array(char **arrays);
 void		terminat(char *input, char **envs, t_env *env, t_env *head_env);
+void		free_struct_all(t_all *all);
+
 
 //Expand
 void		expand_variables(char *input);
