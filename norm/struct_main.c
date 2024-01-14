@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 17:41:49 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/13 19:07:31 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/14 18:29:57 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,13 @@ void	prepare_block(t_all *all)
 
 void	exec_command_alone(t_all *all)
 {
+	// printf(BACK_RED"LA"RST"\n");
 	if (all->pid == 0)
 	{
 		dup_in_child(all);
+		// printf(BACK_RED"ICI"RST"\n");
+		// printf(GREEN"all->test->cmd: %s"RESET"\n", all->test->cmd);
+		// printf(GREEN"all->args[0]: %s"RESET"\n", all->args[0]);
 		if (applic_bulltin(all->test, all->env, all->head_env, all->args))
 		{
 			all_free_1(all->test, all->env, all->head_env, all->args);
@@ -47,6 +51,7 @@ void	exec_command_alone(t_all *all)
 		}
 		else if (execve(all->args[0], all->args, all->envs) == -1)
 		{
+			// printf(BACK_RED"LOIN"RST"\n");
 			if (all->test->cmd)
 				printf("%s: command not found\n", all->test->cmd);
 			all_free_1(all->test, all->env, all->head_env, all->args);

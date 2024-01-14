@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 18:35:07 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/13 20:50:31 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/14 18:24:32 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,8 @@ void	end_prompt(t_all *all)
 }
 void	free_struct_all(t_all *all)
 {
-	free_string_array(all->args);
+	//free_string_array(all->args);
+	(void)all->args;
 	free_block_list(all->test);
 	all->test = NULL;
 }
