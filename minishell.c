@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 00:52:02 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/12 19:56:28 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/15 18:13:52 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,8 @@ int	main(int argc, char **argv, char *envp[])
 	{
 		if (start_input(&all) == FAILURE)
 			return (FAILURE);
-		check_error_input(&all);
+		if (check_error_input(&all))
+			continue ;
 		parsing(&all);
 		if (is_empty_input(&all) == FAILURE)
 			exec_all(&all);

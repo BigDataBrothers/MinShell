@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 17:47:27 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/12 19:00:03 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/15 17:55:46 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,6 @@ void	redirect_heredoc(char *delimiter, int saved_stdin, t_all *all)
 			redirect_heredoc_3(all);
 		free(input);
 	}
-	redirect_input("heredoc_temp_file.txt");
+	redirect_input("heredoc_temp_file.txt", all);
 	close(heredoc_file);
 }

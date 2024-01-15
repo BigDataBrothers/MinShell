@@ -23,13 +23,24 @@ sdggdf: command not found
 
 export a
 // $OKO>$Okok 2 variable inexistante marche pas avec pipe aussi
+>? r
+
+
 */
 
 /*
 	A FAIRE ;
-		leaks a gerer
+		leaks a gerer => sur la commande :
+			fdvffgb | fdvbxfdgb
+		il n'y a qu'un seul command not found, si tu trouves comment faire apparaitre le deuxieme, ca devrait resoudre tout tes leaks
+		
+		> abc | > def
+		// -> a gerer peut etre avec des erreurs 
+		
 		$? valeur de retour a gerer
+		
 		norm
+		
 		chercher dans sujets fonctions autorisees    -> isatty   avant argc
 
 	si n fichier a existe : a a fait un pb

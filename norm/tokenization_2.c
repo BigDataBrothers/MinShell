@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/29 18:43:20 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/14 18:20:41 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/15 17:32:17 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,11 +79,8 @@ int	treat_cmd_line(char *cmd_line, t_block *tmp)
 			return (1);
 	tmp->dir = head;
 	if (tmp->dir && tmp->dir->file == NULL)
-	{
-		puts("jsui passer");
 		return (free_string_array(token), 0);
-	}
-//	free_start_dir(tmp->dir);
+	// free_start_dir(tmp->dir);
 	tmp->dir = head;
 	free_string_array(token);
 	return (0);

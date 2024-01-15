@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 18:35:07 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/14 18:24:32 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/15 18:19:00 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,6 @@ void	end_prompt(t_all *all)
 	{
 		free_struct_all(all);
 	}
-
 }
 void	free_struct_all(t_all *all)
 {
@@ -82,7 +81,7 @@ void	free_struct_all(t_all *all)
 	all->test = NULL;
 }
 
-void	check_error_input(t_all *all)
+int	check_error_input(t_all *all)
 {
 	if (!all->input)
 	{
@@ -96,6 +95,7 @@ void	check_error_input(t_all *all)
 		print_error(check_error(all->input));
 	all->i_a = 0;
 	all->command_alone = 0;
+	return (check_error(all->input));
 }
 
 void	parsing(t_all *all)

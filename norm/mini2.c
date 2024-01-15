@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/26 20:07:13 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/14 18:08:47 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/15 18:49:34 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int	ft_strncmp(const char *s1, const char *s2, size_t n)
 	return (0);
 }
 
-void	redirect_output(char *filename)
+void	redirect_output(char *filename, t_all *all)
 {
 	int	file;
 
@@ -55,18 +55,20 @@ void	redirect_output(char *filename)
 	if (file == -1)
 	{
 		perror("Erreur lors de l'ouverture du fichier");
+		free_struct_all(all);
 		exit(EXIT_FAILURE);
 	}
 	if (dup2(file, STDOUT_FILENO) == -1)
 	{
 		perror("Erreur lors de la redirection de la sortie standard");
 		close(file);
+		free_struct_all(all);
 		exit(EXIT_FAILURE);
 	}
 	close(file);
 }
 
-void	append_output(char *filename)
+void	append_output(char *filename, t_all *all)
 {
 	int	file;
 
@@ -74,12 +76,14 @@ void	append_output(char *filename)
 	if (file == -1)
 	{
 		perror("Erreur lors de l'ouverture du fichier en mode ajout");
+		free_struct_all(all);
 		exit(EXIT_FAILURE);
 	}
 	if (dup2(file, STDOUT_FILENO) == -1)
 	{
 		perror("Erreur lors de la redirection de la sortie standard");
 		close(file);
+		free_struct_all(all);
 		exit(EXIT_FAILURE);
 	}
 	close(file);

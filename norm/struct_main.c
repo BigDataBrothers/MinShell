@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 17:41:49 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/14 18:29:57 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/15 18:50:43 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,13 +37,9 @@ void	prepare_block(t_all *all)
 
 void	exec_command_alone(t_all *all)
 {
-	// printf(BACK_RED"LA"RST"\n");
 	if (all->pid == 0)
 	{
 		dup_in_child(all);
-		// printf(BACK_RED"ICI"RST"\n");
-		// printf(GREEN"all->test->cmd: %s"RESET"\n", all->test->cmd);
-		// printf(GREEN"all->args[0]: %s"RESET"\n", all->args[0]);
 		if (applic_bulltin(all->test, all->env, all->head_env, all->args))
 		{
 			all_free_1(all->test, all->env, all->head_env, all->args);
@@ -51,7 +47,6 @@ void	exec_command_alone(t_all *all)
 		}
 		else if (execve(all->args[0], all->args, all->envs) == -1)
 		{
-			// printf(BACK_RED"LOIN"RST"\n");
 			if (all->test->cmd)
 				printf("%s: command not found\n", all->test->cmd);
 			all_free_1(all->test, all->env, all->head_env, all->args);
@@ -75,7 +70,7 @@ void	prepare_n_exit(t_all *all)
 	apply_redirections_to_command_line(all);
 	all->str = verif_cmd(all->args, all->envs);
 	if (all->str != NULL)
-		all->args[0] = ft_strdupf(all->str);
+		all->args[0] = ft_strdup(all->str);
 	if (!ft_strcmp(all->test->cmd, "exit" ))
 	{
 		if (ft_exit_1(all->test))
@@ -88,10 +83,6 @@ void	prepare_n_exit(t_all *all)
 			}
 			eof(all->input, all->envs, all->env, all->head_env);
 			all_free_1(all->test, all->env, all->head_env, all->args);
-			// printf(PURPLE"all->test: %p\n", all->test);
-			// printf(PURPLE"all->test->arg: %p\n", all->test->arg);
-			// printf(PURPLE"all->test->arg[0]: %p\n", all->test->arg[0]);
-			// check all->test->arg is at NULL
 			exit(ft_atoi(all->test->arg[0]));
 		}
 	}
@@ -108,12 +99,18 @@ void	exec_multi_cmd(t_all *all)
 			all_free_1(all->test, all->env, all->head_env, all->args);
 			exit(EXIT_FAILURE);
 		}
+		else if (all->pid == 0 && !all->args[0])
+		{
+			free_struct_all(all);
+			exit(0);
+		}
 		else if (all->pid == 0 && !is_bultin(all->args[0]) && \
 		execve(all->args[0], all->args, all->envs) == -1)
 		{
 			if (all->args[0] && all->test->cmd)
 				printf("%s: command not found\n", all->args[0]);
-			all_free_1(all->test, all->env, all->head_env, all->args);
+			// all_free_1(all->test, all->env, all->head_env, all->args);
+			free_struct_all(all);
 			exit(127);
 		}
 	}

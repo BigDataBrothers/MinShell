@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 21:39:12 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/13 20:57:02 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/15 17:46:12 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,8 @@ void	process_commands(char **split_input, t_block *original)
 			tmp = tmp->next;
 		i++;
 	}
+	// free_block(tmp);
+	// tmp->dir->file
 }
 
 void	choose_type_redir(char **token, int j, t_dir *new_dir)
