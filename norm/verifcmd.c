@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/26 20:07:44 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/12 20:02:30 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/16 19:34:23 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,8 @@ char	*verif_cmd(char **args, char **env)
 	tmp = ft_strdupf(args[0]);
 	args[0] = ft_strjoin_rfree("/", tmp);
 
-	printf(GREEN"args[0]: %s"RESET"\n", args[0]);
-	printf(GREEN"args[1]: %s"RESET"\n", args[1]);
+	// printf(GREEN"args[0]: %s"RESET"\n", args[0]);
+	// printf(GREEN"args[1]: %s"RESET"\n", args[1]);
 	if (path != NULL)
 	{
 		while (path[++i])

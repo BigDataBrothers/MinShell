@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 00:51:05 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/15 18:39:00 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/16 17:37:14 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -337,7 +337,7 @@ int			start_input(t_all *all);
 void		init_all(t_all *all, char **envp);
 void		end_prompt(t_all *all);
 int			check_error_input(t_all *all);
-void		parsing(t_all *all);
+int			parsing(t_all *all);
 void		dup_in_child(t_all *all);
 void		prepare_block(t_all *all);
 void		exec_command_alone(t_all *all);

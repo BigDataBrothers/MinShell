@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/29 18:44:48 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/15 17:48:52 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/16 17:23:34 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,12 @@ char	*add_spaces(char *str)
 	int		i;
 	int		j;
 
-	result = (char *)malloc(sizeof(char) * (strlen(str) * 2 + 1));
+	result = (char *)malloc(sizeof(char) * (ft_strlen(str) * 2 + 1));
 	if (result == NULL)
 		return (NULL);
 	i = 0;
 	j = i;
-	while (str[i] != '\0')
+	while (str[i])
 		add_to_special(result, str, &i, &j);
 	result[j] = '\0';
 	return (result);

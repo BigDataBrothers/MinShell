@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 18:35:07 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/15 18:19:00 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/16 17:36:05 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ int	check_error_input(t_all *all)
 	return (check_error(all->input));
 }
 
-void	parsing(t_all *all)
+int	parsing(t_all *all)
 {
 	while (all->input && all->input[all->i_a])
 	{
@@ -110,10 +110,11 @@ void	parsing(t_all *all)
 	all->input = expa_chang(all->input, all->env, all->head_env);
 	all->test = NULL;
 	if (check_error(all->input))
-		print_error(check_error(all->input));
+		return(print_error(check_error(all->input)), check_error(all->input));
 	all->test = tokenization(all->input);
 	all->saved_stdout = dup(STDOUT_FILENO);
 	all->saved_stdin = dup(STDIN_FILENO);
+	return (0);
 }
 
 void	dup_in_child(t_all *all)
