@@ -31,11 +31,8 @@ export a
 /*
 	A FAIRE ;
 		leaks a gerer => sur la commande :
-			fdvffgb | fdvbxfdgb
 		il n'y a qu'un seul command not found, si tu trouves comment faire apparaitre le deuxieme, ca devrait resoudre tout tes leaks
 
-		> abc | > def
-		./ls	(Ne doit pas marcher)
 		// -> a gerer peut etre avec des erreurs 
 
 		$? valeur de retour a gerer

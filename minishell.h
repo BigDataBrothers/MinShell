@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 00:51:05 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/16 17:37:14 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/18 20:06:47 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -205,7 +205,7 @@ void		freeStringArrays(char ***arrays);
 void		free_string_array(char **arrays);
 void		terminat(char *input, char **envs, t_env *env, t_env *head_env);
 void		free_struct_all(t_all *all);
-
+void		free_struct_dir(t_dir *dir);
 
 //Expand
 void		expand_variables(char *input);
@@ -252,7 +252,7 @@ void		ft_pwd(t_block *block);
 //Lib_mini
 void		ft_bzero(void *s, size_t n);
 void		*ft_calloc(size_t count, size_t size);
-char		*ft_strjoin(const char *s1, const char *s2);
+char		*ft_strjoin(char *s1, char *s2);
 char		*ft_strchr(char *str, int character);
 int			ft_strlen(const char *str);
 

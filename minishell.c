@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 00:52:02 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/16 17:37:00 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/18 19:17:54 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,7 @@ int	main(int argc, char **argv, char *envp[])
 			continue;
 		if (is_empty_input(&all) == FAILURE)
 			exec_all(&all);
+		free_struct_all(&all);
 	}
 	terminat(all.input, all.envs, all.env, all.head_env);
 	argv = argv;

@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 17:41:49 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/16 19:42:29 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/18 20:11:03 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,21 @@ void	prepare_block(t_all *all)
 	}
 }
 
+int is_executable(const char *path) {
+    struct stat st;
+
+    if (stat(path, &st) == 0) {
+        if (st.st_mode & S_IXUSR || st.st_mode & S_IXGRP || st.st_mode & S_IXOTH) {
+            return 1; // Le fichier est exécutable
+        } else {
+            return 0; // Le fichier n'est pas exécutable
+        }
+    } else {
+        perror("stat");
+        return -1; // Erreur
+    }
+}
+
 void	exec_command_alone(t_all *all)
 {
 	if (all->pid == 0)
@@ -47,11 +62,20 @@ void	exec_command_alone(t_all *all)
 		}
 		if (!all->args || !all->args[0])
 			;
-		else if (access(all->args[0], F_OK))
-			dprintf(2, "%s: command not found\n", all->test->cmd);//Ecrir sur sortie d erreur
+		else if (access(all->args[0], F_OK) || is_executable(all->args[0]) == 0)
+		{
+			char	*tmp;
+
+			if(all->args[0])
+			{
+				tmp = ft_strjoin(all->args[0], " : command not found\n");
+				write(2, tmp, ft_strlen(tmp));
+				free(tmp;)
+			}
+		}
 		else
 			execve(all->args[0], all->args, all->envs);
-		all_free_1(all->test, all->env, all->head_env, all->args);
+		free_struct_all(all);
 		exit(127);
 	}
 	else
@@ -61,6 +85,8 @@ void	exec_command_alone(t_all *all)
 			all->prev_pipe_fd = all->pipe_fds[0];
 		else
 			close(all->pipe_fds[0]);
+		free(all->test->cmd);
+		free_struct_dir(all->test->dir);
 		all->test = all->test->next;
 	}
 }
@@ -109,14 +135,10 @@ void	exec_multi_cmd(t_all *all)
 		{
 			if (!all->args || !all->args[0])
 				;
-			else if (access(all->args[0], F_OK))
-				write(2, "123\n", 4);
-				//printf("%s: command not found\n", all->test->cmd);
+			else if (access(all->args[0], F_OK) || is_executable(all->args[0]) == 0)
+				printf("%s: command not found\n", all->test->cmd);
 			else
 				execve(all->args[0], all->args, all->envs);
-			// if (all->args[0] && all->test->cmd)
-			// 	printf("%s: command not found\n", all->args[0]);
-			// all_free_1(all->test, all->env, all->head_env, all->args);
 			free_struct_all(all);
 			exit(127);
 		}
@@ -125,9 +147,6 @@ void	exec_multi_cmd(t_all *all)
 
 void	exec_all(t_all *all)
 {
-	// t_block *tmp = all->test;
-	
-	// printf(GREEN"all->command: %d"RESET"\n", all->command_alone);
 	if (all->command_alone > 0)
 	{
 		all->prev_pipe_fd = -1;
@@ -144,6 +163,5 @@ void	exec_all(t_all *all)
 		exec_multi_cmd(all);
 		free_string_array(all->envs);
 	}
-	// all->test = tmp;
 	end_prompt(all);
 }

@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/26 20:07:44 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/16 19:34:23 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/18 19:33:10 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,16 +19,13 @@ char	*verif_cmd(char **args, char **env)
 	int		i;
 
 	i = -1;
-	if (!args || !args[0])
+	if (!args || !args[0] || ft_strncmp(args[0], "./", 2) == 0)
 		return (NULL);
 	if (is_bultin(args[0]) || access(args[0], F_OK) == 0)
 		return (args[1]);
 	path = get_path(env);
 	tmp = ft_strdupf(args[0]);
 	args[0] = ft_strjoin_rfree("/", tmp);
-
-	// printf(GREEN"args[0]: %s"RESET"\n", args[0]);
-	// printf(GREEN"args[1]: %s"RESET"\n", args[1]);
 	if (path != NULL)
 	{
 		while (path[++i])
