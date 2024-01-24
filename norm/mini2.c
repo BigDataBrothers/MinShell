@@ -6,11 +6,12 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/26 20:07:13 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/15 18:49:34 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/19 22:03:49 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
 
 void	sigint_handler(int sig)
 {
@@ -18,7 +19,6 @@ void	sigint_handler(int sig)
 	{
 		write(2, "\n", 1);
 		rl_on_new_line();
-		rl_clear_history();
 		rl_replace_line("", 0);
 		rl_redisplay();
 	}

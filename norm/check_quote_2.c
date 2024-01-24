@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/28 21:47:40 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/12 18:09:01 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/24 20:29:25 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,7 @@ char	*if_quote(char *input)
 					str[i - 1] *= -1;
 			input = remove_char_at_index(str, i);
 			free(str);
+			str = NULL;
 		}
 		else if (input[i])
 			i++;

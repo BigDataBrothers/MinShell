@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins_3.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ade-tena <ade-tena@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 18:34:30 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/08 18:59:17 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/19 16:38:26 by ade-tena         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,12 @@ t_env	*rpl_env_var(t_env *env, t_env *head_env, char *str)
 		{
 			free(p_e);
 			if (tmp)
+			{
 				if (!rpl_en_var_2(str, tmp))
+				{
 					return (NULL);
+				}
+			}
 			return (env);
 		}
 		free(p_e);

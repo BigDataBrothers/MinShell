@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/27 18:58:47 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/18 19:08:14 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/24 20:48:06 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,30 +14,34 @@
 
 void	free_struct_dir(t_dir *dir)
 {
-	t_dir *tmp;
+	t_dir	*tmp;
 
 	while (dir)
 	{
 		tmp = dir;
 		dir = dir->next;
 		free(tmp->file);
-		free(tmp);
+		tmp->file = NULL;
 	}
+	free(dir);
 }
 
 void	free_block(t_block *block)
 {
+	printf(BACK_RED"free b"RST"\n");
 	if (block)
 	{
+		printf(CYAN"block->cmd: %p"RESET"\n", block->cmd);
 		if (block->cmd)
 		{
-			// dprintf(2, BACK_RED"TEST"RST"\n");
+			// printf(RED"%p: %s"RESET"\n"RST, block->cmd, block->cmd);
 			free(block->cmd);
 			block->cmd = NULL;
 		}
 		free_string_array(block->arg);
 		block->arg = NULL;
 		free_struct_dir(block->dir);
+		block->dir = NULL;
 		free(block);
 		block = NULL;
 	}
@@ -67,7 +71,8 @@ void	free_string_array(char **array)
 		return ;
 	while (array && array[i])
 	{
-		free(array[i]);
+		if(array[i])
+			free(array[i]);
 		array[i] = NULL;
 		i++;
 	}
@@ -81,6 +86,7 @@ void	terminat(char *input, char **envs, t_env *env, t_env *head_env)
 		free(input);
 	if (env)
 		free_env(env, head_env);
-	if (envs)
-		free_string_array(envs);
+	(void)envs;
+	// if (envs)
+	// 	free_string_array(envs);
 }

@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 00:51:05 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/18 20:06:47 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/24 20:58:20 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,8 @@
 //   STRUCTURES   //
 ////////////////////
 
+extern int ret_val;
+
 enum e_dir
 {
 	FILES,
@@ -131,6 +133,7 @@ typedef struct s_block
 	int		pipe_out;
 	int		pipe_in;
 	void	*next;
+	t_dir	*dir_head;
 	t_dir	*dir;
 }	t_block;
 
@@ -141,6 +144,7 @@ typedef struct s_all
 	t_env	*env;
 	t_env	*head_env;
 	t_block	*test;
+	t_block	*test_head;
 
 	char	*input;
 	char	*path;
@@ -153,10 +157,12 @@ typedef struct s_all
 	int		saved_stdout;
 	int		saved_stdin;
 	int		command_alone;
+	int		cnt;
 
 	int		i_a;
 	int		j_a;
 	int		status;
+	int		ret_val;
 }	t_all;
 
 enum e_REDIR_TYPES
@@ -169,7 +175,7 @@ enum e_REDIR_TYPES
 
 char		**ft_split_path(char const *s, char c);
 //Tokenizer
-t_block		*tokenization(char *input);
+void		tokenization(t_all *all);
 t_block		*initialize_and_prepare(char **input);
 t_dir		*create_new_dir(void);
 void		process_commands(char **split_input, t_block *original);
@@ -209,7 +215,7 @@ void		free_struct_dir(t_dir *dir);
 
 //Expand
 void		expand_variables(char *input);
-char		*expa_chang(char *input, t_env *env, t_env *head_env);
+char		*expa_chang(char *input, t_all *all);
 char		*exp_(char *exp, t_env *env, t_env *head_env);
 void		if_free(char *ptr);
 void		free_exp(char **v);
@@ -229,7 +235,7 @@ char		*pre_egal(char *str);
 void		malloc_z(char *tmp);
 char		*post_egal(char *str);
 int			check_export_exist(t_env *env, t_env *head_env, char *str);
-t_env		*export_env_1(t_env *env, t_env *head_env, char *str);
+t_env		*export_env_1(t_all *all, char *str, int do_free);
 t_env		*export_env_2(t_env *env, t_env *head_env, char *str);
 
 int			rpl_en_var_2(char *str, t_env *tmp);
@@ -238,7 +244,7 @@ t_env		*sup_env_var(t_env *env, t_env *head_env, char *str);
 void		ft_env(t_env *env, t_env *head_env, t_block *block);
 int			cut_export_argument(char *arg_export);
 
-void		ft_export(t_env *env, t_env *head_env, t_block *block);
+void		ft_export(t_env *env, t_env *head_env, t_block *block, t_all *all);
 void		ft_unset(t_env *env, t_env *head_env, t_block *block);
 int			is_quote(char *str);
 void		printc(char *input);
@@ -371,8 +377,7 @@ int			is_real_num(const char *num);
 int			ft_exit_1(t_block *block);
 
 //mini4.c
-int			applic_bulltin(t_block *test, t_env *env, t_env *head_env, \
-char **args);
+int	applic_bulltin(t_all *all);
 
 //minishell.c
 void		redirect_heredoc(char *delimiter, int saved_stdin, t_all *all);

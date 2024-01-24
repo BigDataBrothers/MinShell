@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ade-tena <ade-tena@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 21:16:50 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/12 19:25:55 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/19 12:47:10 by ade-tena         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,5 @@ int	build_env(t_env *env, t_env *head_env, char **envp)
 		env = env->next;
 		i++;
 	}
-	// env->next = NULL;
 	return (SUCCESS);
 }

@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 18:26:50 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/08 18:59:44 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/24 18:01:32 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,10 +71,10 @@ int	check_export_exist(t_env *env, t_env *head_env, char *str)
 	return (0);
 }
 
-t_env	*export_env_1(t_env *env, t_env *head_env, char *str)
+t_env	*export_env_1(t_all *all, char *str, int do_free)
 {
 	t_env	*new_block_env;
-
+	
 	new_block_env = malloc(sizeof(t_env));
 	if (!new_block_env)
 		return (NULL);
@@ -83,11 +83,15 @@ t_env	*export_env_1(t_env *env, t_env *head_env, char *str)
 		return (NULL);
 	new_block_env->str[1] = NULL;
 	new_block_env->next = NULL;
-	while (env->next != NULL)
-		env = env->next;
-	env->next = new_block_env;
-	env = head_env;
-	return (env);
+	while (all->env->next != NULL)
+		all->env = all->env->next;
+	all->env->next = new_block_env;
+	all->env = all->head_env;
+	if (do_free && str)
+		free(str);
+	str = NULL;
+	(void)do_free;
+	return (all->env);
 }
 
 t_env	*export_env_2(t_env *env, t_env *head_env, char *str)

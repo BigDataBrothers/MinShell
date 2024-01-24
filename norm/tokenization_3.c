@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/29 18:44:48 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/16 17:23:34 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/24 19:33:54 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ t_block	*initialize_and_prepare(char **input)
 	tmp_input = ft_strdup(*input);
 	*input = add_spaces(tmp_input);
 	free(tmp_input);
+	tmp_input = NULL;
 	return (original);
 }
 
@@ -47,14 +48,22 @@ void	cleanup_memory(char **split_input)
 		free_string_array(split_input);
 }
 
-t_block	*tokenization(char *input)
+void tokenization(t_all *all)
 {
 	char	**split_input;
 	t_block	*original;
 
-	original = initialize_and_prepare(&input);
-	split_input = ft_split_path(input, '|');
+	/*if(all->input != NULL)
+	{
+		free(all->input);
+		all->input = NULL;
+	}*/
+	original = initialize_and_prepare(&all->input);
+	split_input = ft_split_path(all->input, '|');
 	process_commands(split_input, original);
+	// printf(BACK_GREEN"all->test->dir_head: %p"RST"\n", all->test->dir_head);
 	cleanup_memory(split_input);
-	return (original);
+	free_block_list(all->test);
+	all->test = original;
+	all->test_head = original;
 }

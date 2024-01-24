@@ -6,12 +6,13 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 00:52:02 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/18 19:17:54 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/24 18:32:03 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+int ret_val;
 char	*remove_char_at_index(char *str, int i)
 {
 	char	*new_str;
@@ -90,6 +91,7 @@ int	main(int argc, char **argv, char *envp[])
 	t_all	all;
 
 	init_all(&all, envp);
+	ret_val = 0;
 	if (argc > 1)
 		return (FAILURE);
 	while (1)
@@ -103,16 +105,17 @@ int	main(int argc, char **argv, char *envp[])
 		if (is_empty_input(&all) == FAILURE)
 			exec_all(&all);
 		free_struct_all(&all);
+		all.cnt++;
 	}
 	terminat(all.input, all.envs, all.env, all.head_env);
 	argv = argv;
-	return (all_free_1(all.test, all.env, all.head_env, all.args), SUCCESS);
+	return (free_struct_all(&all), SUCCESS);
 }
 
 int	is_empty_input(t_all *all)
 {
 	int	i;
-
+	
 	i = -1;
 	while (all->input && all->input[++i])
 	{

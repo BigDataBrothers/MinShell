@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 18:35:07 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/16 17:36:05 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/24 20:45:08 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,48 +14,45 @@
 
 int	start_input(t_all *all)
 {
+	//  signal(SIGQUIT, sigquit_handlers);
 	signal(SIGINT, &sigint_handler);
 	signal(SIGQUIT, SIG_IGN);
+	if (all->envs)
+	{
+		free_string_array(all->envs);
+	}
+	// printf(BLUE"res1%p"RST, all->envs);
 	all->envs = ft_lstsplit(&all->env);
+	// printf(BLUE"res2%p"RST, all->envs);
 	all->path = get_current_directory_with_prompt();
 	if (!all->path)
 		return (FAILURE);
 	while (all->path[all->i_a])
 		all->i_a++;
+	if(all->tmp_path && all->cnt != 0)
+	{
+		free(all->tmp_path);
+		all->tmp_path = NULL;
+	}
 	if (all->path[--all->i_a] != ' ')
 		all->tmp_path = ft_strjoin(all->path, "$> ");
-	all->path = all->tmp_path;
+	/*all->path = */ft_strcpy(all->path, all->tmp_path);
 	if (!all->path)
 		return (0);
+	if (all->input)
+	{
+		free(all->input);
+		all->input = NULL;
+	}
 	all->input = readline(all->path);
 	return (SUCCESS);
 }
 
-// all == addresse d une structure t_all
-// *all == valeur a l adresse stockee
-// &all == addresse de all
-
-// {
-// t_lst *lst; lst == addr d un lst  *lst == valeur dans struct lst  &lst == 
-
-// lst = 0xfee7548;
-
-// lst->next = 0xfee7548
-// }
-
-// call(&lst);
-
-// {
-
-
-// lst == 0x1684ade
-
-// *lst = (*lst)->next;
-
-// }
-
 void	end_prompt(t_all *all)
 {
+	int statu;
+	
+	statu = 0;
 	unlink("heredoc_temp_file.txt");
 	dup2(all->saved_stdin, STDIN_FILENO);
 	dup2(all->saved_stdout, STDOUT_FILENO);
@@ -64,28 +61,50 @@ void	end_prompt(t_all *all)
 	signal(SIGINT, SIG_IGN);
 	while (1)
 	{
-		all->pid = waitpid(-1, &all->status, 0);
+		all->pid = waitpid(-1, &statu, 0);
 		if (all->pid < 0)
 			break ;
 	}
-	if(all->args != NULL)
+	//free_env(all->env, all->head_env);
+	if (all->status == -1)
 	{
-		free_struct_all(all);
+		all->status = statu;
+		all->status = all->status / 256;
 	}
+	if (all->args != NULL)
+		free_struct_all(all);
 }
+
 void	free_struct_all(t_all *all)
 {
-	//free_string_array(all->args);
+	// free_env(all->env, all->head_env);
+	free_string_array(all->envs);
+	all->envs = NULL;
+	if_free(all->tmp_path);
+	all->tmp_path = NULL;
 	(void)all->args;
-	free_block_list(all->test);
+	if_free(all->str);
+	all->str = NULL;
+	free_string_array(all->args);
+	all->args = NULL;
+	// free_struct_dir(all->test_head->dir_head);
+	free_block_list(all->test_head);
 	all->test = NULL;
+	all->test_head = NULL;
+	if_free(all->input);
+	all->input = NULL;
 }
 
 int	check_error_input(t_all *all)
 {
 	if (!all->input)
 	{
+		if (all->envs)
+			free_string_array(all->envs);
+		printf("exit\n");
 		eof(all->input, all->envs, all->env, all->head_env);
+		free(all->tmp_path);
+		all->tmp_path = NULL;
 		all_free_1(all->test, all->env, all->head_env, all->args);
 		exit(0);
 	}
@@ -107,11 +126,12 @@ int	parsing(t_all *all)
 		all->i_a++;
 	}
 	in_quote(all->input);
-	all->input = expa_chang(all->input, all->env, all->head_env);
+	all->input = expa_chang(all->input, all);
 	all->test = NULL;
 	if (check_error(all->input))
-		return(print_error(check_error(all->input)), check_error(all->input));
-	all->test = tokenization(all->input);
+		return (print_error(check_error(all->input)), check_error(all->input));
+	// free_block_list(all->test);
+	tokenization(all);
 	all->saved_stdout = dup(STDOUT_FILENO);
 	all->saved_stdin = dup(STDIN_FILENO);
 	return (0);
@@ -134,6 +154,7 @@ void	dup_in_child(t_all *all)
 	apply_redirections_to_command_line(all);
 	if (all->args && !ft_strcmp(all->test->cmd, "exit" ))
 	{
+		// printf(RED"ex1");
 		if (ft_exit_1(all->test))
 		{
 			eof(all->input, all->envs, all->env, all->head_env);

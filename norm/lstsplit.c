@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/26 20:07:22 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/12 19:24:01 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/20 09:42:46 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,11 @@ int	elsefunc(char **res, t_env *ptr, int i)
 	char	*tmp;
 
 	tmp = ft_strjoin(ptr->str[0], "=");
+	if (res[i])
+	{
+		free(res[i]);
+		res[i] = NULL;
+	}
 	res[i] = ft_strjoin(tmp, ptr->str[1]);
 	if (tmp)
 		free(tmp);
@@ -52,6 +57,7 @@ char	**ft_lstsplit(t_env **lst)
 	i = -1;
 	size = ft_lstsize(ptr);
 	res = (char **)ft_calloc(sizeof(char *), (size + 1));
+	// printf(RED"res%p"RST, res);
 	if (!res)
 		return (NULL);
 	while (++i < size)
@@ -59,13 +65,14 @@ char	**ft_lstsplit(t_env **lst)
 		if (!ft_strcmp("SHLVL", ptr->str[0]))
 		{
 			if (tmpfunc(res, ptr, i))
-				return (NULL);
+				return (free_string_array(res), NULL);
 			ptr = ptr->next;
 			continue ;
 		}
 		if (elsefunc(res, ptr, i))
-			return (NULL);
+			return (free_string_array(res), NULL);
 		ptr = ptr->next;
 	}
+	// printf(RED"res%p"RST, res);
 	return (res);
 }

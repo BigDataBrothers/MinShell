@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 21:39:12 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/16 17:38:16 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/24 20:59:45 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	process_commands(char **split_input, t_block *original)
 	i = 0;
 	while (split_input[i])
 	{
-		*tmp = (t_block){NULL, NULL, STDOUT_FILENO, STDIN_FILENO, NULL, NULL};
+		*tmp = (t_block){NULL, NULL, STDOUT_FILENO, STDIN_FILENO, NULL, NULL, NULL};
 		if (treat_cmd_line(split_input[i], tmp))
 			return ;
 		if (split_input[i + 1])
@@ -62,7 +62,7 @@ void	choose_type_redir(char **token, int j, t_dir *new_dir)
 void	process_command_token(char **token, int *j, t_block *tmp)
 {
 	if (!tmp->cmd && !is_redir(token[*j]))
-	{		
+	{
 		tmp->cmd = ft_strdup(token[(*j)++]);
 	}
 }
