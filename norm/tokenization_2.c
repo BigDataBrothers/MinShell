@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/29 18:43:20 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/25 19:27:02 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/25 21:04:23 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	allocate_and_assign_arguments(char **token, int *j, t_block *tmp)
 		else if (!tmp->cmd)
 			process_command_token(token, j, tmp);
 		else
-			args[v++] = token[*j];
+			args[v++] = token[*j]; // args[v++] = ft_strdup(token[*j]);
 		(*j)++;
 	}
 	args[v] = NULL;

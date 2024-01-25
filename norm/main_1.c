@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 18:35:07 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/25 18:31:51 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/25 18:55:54 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,7 +123,7 @@ int	check_error_input(t_all *all)
 
 int	parsing(t_all *all)
 {
-	char *tmp;
+	// char *tmp;
 	
 	while (all->input && all->input[all->i_a])
 	{
@@ -133,10 +133,10 @@ int	parsing(t_all *all)
 	}
 	in_quote(all->input);
 	// printf(PURPLE"all->input: %p"RESET"\n", all->input);
-	tmp = all->input;
-	all->input = expa_chang(all->input, all);
-	if (tmp != all->input)
-		free(tmp);
+	// tmp = all->input;
+	expa_chang(all);
+	// if (tmp != all->input)
+	// 	free(tmp);
 	// printf(PURPLE"all->input: %p"RESET"\n", all->input);
 	all->test = NULL;
 	if (check_error(all->input))

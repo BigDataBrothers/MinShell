@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/28 20:12:03 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/25 20:02:56 by myassine         ###   ########.fr       */
+/*   Updated: 2023/12/29 18:39:14 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ void	return_neg(char *str)
 	if (!str)
 		return ;
 	i = -1;
-	while (str && str[++i])
+	while (str[++i])
 		if (str[i] < 0)
 			str[i] *= -1;
 }

@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 17:41:49 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/25 20:04:53 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/25 18:04:21 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,10 +152,7 @@ void	prepare_n_exit(t_all *all)
 				all_free_1(all->test, all->env, all->head_env, all->args);
 				exit(0);
 			}
-			int bob;
-		
-			// printf("al = tes t====== %s\n",all->test->arg[0]);
-			bob  = ft_atoi(all->test->arg[0]);
+			int bob = ft_atoi(all->test->arg[0]);
 
 			if (all->envs)
 				free_string_array(all->envs);

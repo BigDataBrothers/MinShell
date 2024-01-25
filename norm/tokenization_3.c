@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/29 18:44:48 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/25 19:38:39 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/25 17:53:03 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ char	*add_spaces(char *str)
 	while (str[i])
 		add_to_special(result, str, &i, &j);
 	result[j] = '\0';
-	//free(str);
 	return (result);
 }
 
