@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 17:41:49 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/24 20:47:52 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/25 20:04:53 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,24 @@ void	exec_command_alone(t_all *all)
 	}
 }
 
+void free_string_arrayss(char ***array)
+{
+    int i;
+
+    i = 0;
+    if (*array == NULL)
+        return;
+    while (*array && (*array)[i])
+    {
+        free((*array)[i]);
+        (*array)[i] = NULL;
+        i++;
+    }
+    free(*array);
+    *array = NULL;
+}
+
+
 void	prepare_n_exit(t_all *all)
 {
 	if (all->cnt != 0)
@@ -111,42 +129,45 @@ void	prepare_n_exit(t_all *all)
 	}
 	all->args = creat_args(all->test, &all->i_a, &all->j_a);
 	apply_redirections_to_command_line(all);
-	if(all->str)
-		free(all->str);
-	all->str = NULL;
 	all->str = verif_cmd(all->args, all->envs);
 	if (all->str != NULL)
 	{
-		// free(all->args[0]);
-		all->args[0] = ft_strdup(all->str);
+		if(all->args[0])
+			free(all->args[0]);
+		all->args[0] = ft_strdupf(all->str);
 	}
 	if (!ft_strcmp(all->test->cmd, "exit" ))
 	{
 		if (ft_exit_1(all->test))
 		{
-			// printf(RED"aa"RST);
 			if (!all->test->arg)
 			{
-				// printf(RED"bb"RST);
-
-				free_string_array(all->args);
+				if (all->envs)
+					free_string_array(all->envs);
+				printf("exit\n");
 				eof(all->input, all->envs, all->env, all->head_env);
-				free_struct_all(all);
 				free(all->tmp_path);
 				all->tmp_path = NULL;
-				all->input = NULL;
+				free_string_array(all->args);
+				all_free_1(all->test, all->env, all->head_env, all->args);
 				exit(0);
 			}
-			int bob = ft_atoi(all->test->arg[0]);
+			int bob;
+		
+			// printf("al = tes t====== %s\n",all->test->arg[0]);
+			bob  = ft_atoi(all->test->arg[0]);
 
-			free_string_array(all->args);
+			if (all->envs)
+				free_string_array(all->envs);
 			eof(all->input, all->envs, all->env, all->head_env);
-			free_struct_all(all);
 			free(all->tmp_path);
 			all->tmp_path = NULL;
-			all->input = NULL;
-			// printf(RED"cc"RST);
-
+			free_string_array(all->args);
+			all->args = NULL;
+			all_free_1(all->test, all->env, all->head_env, all->args);
+			// free(all->input);
+			// free(all->str);
+			// all->str = NULL;
 			exit(bob);
 		}
 	}
@@ -204,7 +225,6 @@ void	exec_all(t_all *all)
 	if (all->command_alone > 0)
 	{
 		all->prev_pipe_fd = -1;
-		printf(BACK_CYAN"multi"RST"\n");
 		while (all->test)
 		{
 			prepare_block(all);
@@ -213,11 +233,8 @@ void	exec_all(t_all *all)
 	}
 	else
 	{
-		printf(BACK_CYAN"alone"RST"\n");
 		prepare_n_exit(all);
 		exec_multi_cmd(all);
-		//free_string_array(all->envs);
-		//free(all->tmp_path);
 	}
 	end_prompt(all);
 }

@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 18:35:07 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/24 20:45:08 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/25 18:31:51 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,11 +82,15 @@ void	free_struct_all(t_all *all)
 	all->envs = NULL;
 	if_free(all->tmp_path);
 	all->tmp_path = NULL;
-	(void)all->args;
-	if_free(all->str);
-	all->str = NULL;
+	// (void)all->args;
+	// while(all->args[i])
+		// printf("all->args = %p\n", all->args[0]);
 	free_string_array(all->args);
+	// free(all->args[0]);
 	all->args = NULL;
+	// printf("all->str = %p\n", all->str);
+	// if_free(all->str);
+	// all->str = NULL;
 	// free_struct_dir(all->test_head->dir_head);
 	free_block_list(all->test_head);
 	all->test = NULL;
@@ -119,6 +123,8 @@ int	check_error_input(t_all *all)
 
 int	parsing(t_all *all)
 {
+	char *tmp;
+	
 	while (all->input && all->input[all->i_a])
 	{
 		if (all->input[all->i_a] == '|')
@@ -126,7 +132,12 @@ int	parsing(t_all *all)
 		all->i_a++;
 	}
 	in_quote(all->input);
+	// printf(PURPLE"all->input: %p"RESET"\n", all->input);
+	tmp = all->input;
 	all->input = expa_chang(all->input, all);
+	if (tmp != all->input)
+		free(tmp);
+	// printf(PURPLE"all->input: %p"RESET"\n", all->input);
 	all->test = NULL;
 	if (check_error(all->input))
 		return (print_error(check_error(all->input)), check_error(all->input));
@@ -154,7 +165,6 @@ void	dup_in_child(t_all *all)
 	apply_redirections_to_command_line(all);
 	if (all->args && !ft_strcmp(all->test->cmd, "exit" ))
 	{
-		// printf(RED"ex1");
 		if (ft_exit_1(all->test))
 		{
 			eof(all->input, all->envs, all->env, all->head_env);

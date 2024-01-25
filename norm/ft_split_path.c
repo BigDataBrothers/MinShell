@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/12 06:55:24 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/13 19:10:21 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/25 19:39:04 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int	w_count(char const *s, char c)
 	return (word);
 }
 
-char	*get_string(char const *s, char c)
+char	*get_string(char *s, char c)
 {
 	int		i;
 	size_t	size;
@@ -71,10 +71,11 @@ char	*get_string(char const *s, char c)
 		i++;
 	}
 	tosplit[i] = '\0';
+	//free(s);
 	return (tosplit);
 }
 
-char	**ft_split_path(char const *s, char c)
+char	**ft_split_path(char *s, char c)
 {
 	int		i;
 	int		j;
@@ -99,5 +100,6 @@ char	**ft_split_path(char const *s, char c)
 			j++;
 		}
 	}
+//	free(s);
 	return (split);
 }

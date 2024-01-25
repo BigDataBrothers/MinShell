@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/26 20:07:09 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/16 18:19:23 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/25 15:10:09 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,9 @@ int	is_real_num(const char *num)
 
 int	ft_exit_1(t_block *block)
 {
-	dprintf(2, "exit\n");
+
+	write(2, "exit\n", 5);
+	// dprintf(2, "exit\n");
 	if (block->arg && len_tab(block->arg) > 1 && !is_real_num(block->arg[1]))
 		return (printf("exit doesn't have the right arguments\n"), 0);
 	return (1);

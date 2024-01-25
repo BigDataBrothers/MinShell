@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/29 18:44:48 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/24 19:33:54 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/25 19:38:39 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ char	*add_spaces(char *str)
 	while (str[i])
 		add_to_special(result, str, &i, &j);
 	result[j] = '\0';
+	//free(str);
 	return (result);
 }
 
@@ -61,7 +62,6 @@ void tokenization(t_all *all)
 	original = initialize_and_prepare(&all->input);
 	split_input = ft_split_path(all->input, '|');
 	process_commands(split_input, original);
-	// printf(BACK_GREEN"all->test->dir_head: %p"RST"\n", all->test->dir_head);
 	cleanup_memory(split_input);
 	free_block_list(all->test);
 	all->test = original;

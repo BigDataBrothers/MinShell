@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/09 02:19:09 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/24 18:50:55 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/25 19:27:45 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,10 +90,10 @@ char	*process_exp_status(char *input, int *i, t_all *all)
 	v[concat] = ft_strjoin(v[post_input], v[post_exp]);
 	if (v[post_input])
 		free(v[post_input]);
-	v[post_input] = strdup(v[concat]);
+	v[post_input] = ft_strdup(v[concat]);
 	if (input)
 		free(input);
-	input = strdup(v[post_input]);
+	input = ft_strdup(v[post_input]);
 	return (free_exp(v), input);
 }
 
@@ -121,10 +121,10 @@ char	*process_exp_variable(char *input, int *i, t_all *all)
 	v[concat] = ft_strjoin(v[post_input], v[post_exp]);
 	if (v[post_input])
 		free(v[post_input]);
-	v[post_input] = strdup(v[concat]);
-	if (input)
-		free(input);
-	input = strdup(v[post_input]);
+	v[post_input] = ft_strdup(v[concat]);
+	// if (input)
+	// 	free(input);
+	input = ft_strdup(v[post_input]);
 	return (free_exp(v), input);
 }
 //========================================================
@@ -133,7 +133,7 @@ char	*expa_chang(char *input, t_all *all)
 {
 	int		i;
 	char	*tmp;
-
+	
 	i = 0;
 	tmp = NULL;
 	while (input[i] && input[i + 1])
@@ -144,10 +144,12 @@ char	*expa_chang(char *input, t_all *all)
 			if (!tmp)
 			{
 				if_free(input);
+				input = NULL;
 				break ;
 			}
-			free(input);
-			input = ft_strdup(tmp);
+			// printf(BACK_GREEN"input: %s"RST"\n", input);
+			input = tmp;
+			// printf(BACK_GREEN"input: %s"RST"\n", input);
 			if_free(tmp);
 		}
 		if (is_doll_sign(input[i]) && input[i + 1] && is_alpha(input[i + 1]))
@@ -155,5 +157,9 @@ char	*expa_chang(char *input, t_all *all)
 		else if (input[i])
 			i++;
 	}
+	// tmp = ft_strdup(input);
+	// free(input);
+	printf(PURPLE"der->input: %p"RESET"\n", input);
 	return (input);
+	// return (tmp);
 }
