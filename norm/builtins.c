@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 20:54:16 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/08 18:59:33 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/26 20:44:09 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,21 @@ void	print_exp(t_env *env, t_env *head_env)
 	while (env)
 	{
 		if (env->str[0])
-			printf("declare -x %s", env->str[0]);
+		{
+			write(1,"declare -x ", 11);
+			write(1, env->str[0], ft_strlen(env->str[0]));
+		}
+			// printf("declare -x %s", env->str[0]);
 		if (env->str[1])
-			printf("=\"%s\"\n", env->str[1]);
+		{
+			write(1,"=\"", 2);
+			write(1, env->str[1], ft_strlen(env->str[1]));
+			write(1,"\"\n", 2);
+		}
+			// printf("=\"%s\"\n", env->str[1]);
 		else if (!env->str[1])
-			printf("\n");
+			write(1,"\n", 1);
+			// printf("\n");
 		env = env->next;
 	}
 	env = head_env;

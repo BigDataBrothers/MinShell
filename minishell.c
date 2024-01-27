@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 00:52:02 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/25 18:01:57 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/27 19:20:08 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ char	*remove_char_at_index(char *str, int i)
 
 	j = 0;
 	k = 0;
-	new_str = (char *)ft_calloc(ft_strlen(str), 1);
+	new_str = ft_calloc(sizeof(char), (ft_strlen(str) + 1));
 	if (str == NULL || i < 0)
 		return (NULL);
 	if (new_str == NULL)
@@ -29,34 +29,54 @@ char	*remove_char_at_index(char *str, int i)
 	while (str[k] != '\0')
 	{
 		if (k != i)
+		{
+			// printf("STR ========== %c\n i ====== %d\nm k ===== %d\n", str[k], i, k);
 			new_str[j++] = str[k];
+		}
 		k++;
 	}
+	new_str[j] = '\0';
+	// printf(" k last ==== %d\n i alst ===== %d\n", k, i);
 	return (new_str);
 }
 
-void	for_arg(t_block *test, int *i_a, int *j_a, char **args)
+// void	for_arg(t_block *test, int *i_a, int *j_a, char **args)
+// {
+// 	while (test->arg && test->arg[(*j_a)])
+// 	{
+// 		return_neg(test->arg[(*j_a)]);
+// 		test->arg[(*j_a)] = if_quote(test->arg[(*j_a)]);
+// 		args[(*i_a)] = ft_strdup(test->arg[(*j_a)]);
+// 		(*i_a)++;
+// 		(*j_a)++;
+// 		args[(*i_a)] = NULL;
+// 	}
+// 	(*i_a) = 0;
+// }
+void for_arg(t_block *test, int *i_a, int *j_a, char **args)
 {
-	if (test->arg)
-	{
-		while (test->arg[(*j_a)])
-		{
-			return_neg(test->arg[(*j_a)]);
-			test->arg[(*j_a)] = if_quote(test->arg[(*j_a)]);
-			args[(*i_a)] = ft_strdup(test->arg[(*j_a)]);
-			(*i_a)++;
-			(*j_a)++;
-		}
-		args[(*i_a)] = NULL;
-	}
-	(*i_a) = 0;
+    if (test->arg)
+    {
+        while (test->arg[(*j_a)])
+        {
+            return_neg(test->arg[(*j_a)]);
+            test->arg[(*j_a)] = if_quote(test->arg[(*j_a)]);
+            args[(*i_a)] = ft_strdup(test->arg[(*j_a)]);
+            (*i_a)++;
+            (*j_a)++;
+        }
+    }
+    args[(*i_a)] = NULL;
+    (*i_a) = 0;
 }
+
 
 char	**creat_args(t_block *test, int *i_a, int *j_a)
 {
 	char	**args;
 
 	return_neg(test->cmd);
+	// printf("---------- test : [%s]---------\n", test->cmd);
 	test->cmd = if_quote(test->cmd);
 	if (!test->arg)
 		args = malloc(sizeof(char *) * 2);

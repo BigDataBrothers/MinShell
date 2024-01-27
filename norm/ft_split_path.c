@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/12 06:55:24 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/13 19:10:21 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/27 20:03:08 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int	w_count(char const *s, char c)
 	return (word);
 }
 
-char	*get_string(char const *s, char c)
+char	*get_string(char *s, char c)
 {
 	int		i;
 	size_t	size;
@@ -68,13 +68,16 @@ char	*get_string(char const *s, char c)
 	while (is_charset(s[i], c) == 0 && s[i])
 	{
 		tosplit[i] = s[i];
+		printf(BACK_YELLOW"%c"YELLOW":%i"RESET" ", tosplit[i], tosplit[i]);
 		i++;
 	}
+	printf("\n");
 	tosplit[i] = '\0';
+	//free(s);
 	return (tosplit);
 }
 
-char	**ft_split_path(char const *s, char c)
+char	**ft_split_path(char *s, char c)
 {
 	int		i;
 	int		j;
@@ -82,7 +85,7 @@ char	**ft_split_path(char const *s, char c)
 
 	if (!s)
 		return (NULL);
-	split = malloc(sizeof(char *) * (w_count(s, c) + 1));
+	split = ft_calloc(sizeof(char *),  (w_count(s, c) + 1));
 	if (!split)
 		return (NULL);
 	split[w_count(s, c)] = NULL;
@@ -95,9 +98,10 @@ char	**ft_split_path(char const *s, char c)
 		{
 			split[j] = get_string(&s[i], c);
 			if (!split[j])
-				return (free_string_array(split), NULL);
+				return (NULL);
 			j++;
 		}
 	}
+//	free(s);
 	return (split);
 }

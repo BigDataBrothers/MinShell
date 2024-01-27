@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/28 20:12:03 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/29 18:39:14 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/26 19:02:34 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,17 +58,28 @@ int	len_tab(char **tab)
 	return (i);
 }
 
-void	return_neg(char *str)
-{
-	int	i;
+// void	return_neg(char *str)
+// {
+// 	int	i;
 
-	if (!str)
-		return ;
-	i = -1;
-	while (str[++i])
-		if (str[i] < 0)
-			str[i] *= -1;
+// 	if (!str)
+// 		return ;
+// 	i = -1;
+// 	while (str && str[++i])
+// 		if (str[i] < 0)
+// 			str[i] *= -1;
+// }
+void return_neg(char *str)
+{
+    if (!str)
+        return;
+
+    int i = -1;
+    while (str[++i])
+        if (str[i] < 0)
+            str[i] = -str[i];
 }
+
 
 int	nbr_arg(char **token, int j)
 {

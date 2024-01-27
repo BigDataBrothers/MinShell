@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 18:36:52 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/12 18:04:36 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/26 20:38:54 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,15 +44,21 @@ void	ft_echo(t_block *block)
 		if (!ft_echo_1(block, &i, &x, &check_n))
 			break ;
 	i = len_tab(block->arg);
+	// printf("i ==== %d\n", i);
 	while (block->arg[x])
 	{
-		printf("%s", block->arg[x]);
-		if (x < i - 1)
-			printf(" ");
+		
+		// printf("%s", block->arg[x]);
+		write(1, block->arg[x], ft_strlen(block->arg[x]));
+		if (x < (i - 1))
+			write(1," ", 1);
+			// printf(" ");
 		x++;
 	}
+	// printf("x ==== %d\n", x);
+	
 	if (!check_n)
-		printf("\n");
+		write(1,"\n", 1);
 }
 
 void	ft_putstr_fd(char *s, int fd)

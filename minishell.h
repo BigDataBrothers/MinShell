@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 00:51:05 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/25 18:40:52 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/27 20:45:38 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,7 +173,7 @@ enum e_REDIR_TYPES
 	HEREDOC
 };
 
-char		**ft_split_path(char const *s, char c);
+char		**ft_split_path(char *s, char c);
 //Tokenizer
 void		tokenization(t_all *all);
 t_block		*initialize_and_prepare(char **input);
@@ -215,7 +215,7 @@ void		free_struct_dir(t_dir *dir);
 
 //Expand
 void		expand_variables(char *input);
-void		expa_chang(t_all *all);
+char		*expa_chang(char *input, t_all *all);
 char		*exp_(char *exp, t_env *env, t_env *head_env);
 void		if_free(char *ptr);
 void		free_exp(char **v);

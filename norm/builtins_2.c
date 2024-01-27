@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 18:26:50 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/24 18:01:32 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/26 18:47:45 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,10 +40,10 @@ char	*post_egal(char *str)
 		return (tmp);
 	}
 	i++;
-	tmp = malloc(sizeof(char) * (ft_strlen(str) - i + 1));
+	tmp = malloc(sizeof(char) * (ft_strlen(str) - i + 2));
 	if (!tmp)
 		return (NULL);
-	while (str[i])
+	while (str && str[i])
 		tmp[j++] = str[i++];
 	tmp[j] = '\0';
 	return (tmp);

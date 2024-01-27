@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 17:41:49 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/25 18:04:21 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/26 19:14:29 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,6 +126,7 @@ void	prepare_n_exit(t_all *all)
 	if (all->cnt != 0)
 	{
 		free_string_array(all->args);
+		all->args = NULL;
 	}
 	all->args = creat_args(all->test, &all->i_a, &all->j_a);
 	apply_redirections_to_command_line(all);
@@ -152,8 +153,9 @@ void	prepare_n_exit(t_all *all)
 				all_free_1(all->test, all->env, all->head_env, all->args);
 				exit(0);
 			}
-			int bob = ft_atoi(all->test->arg[0]);
-
+			int exit_fd;
+		
+			exit_fd  = ft_atoi(all->test->arg[0]);
 			if (all->envs)
 				free_string_array(all->envs);
 			eof(all->input, all->envs, all->env, all->head_env);
@@ -162,13 +164,12 @@ void	prepare_n_exit(t_all *all)
 			free_string_array(all->args);
 			all->args = NULL;
 			all_free_1(all->test, all->env, all->head_env, all->args);
-			// free(all->input);
-			// free(all->str);
-			// all->str = NULL;
-			exit(bob);
+			exit(exit_fd);
 		}
 	}
 }
+
+
 
 char	*ft_check_abs_cmd(t_all *all)
 {

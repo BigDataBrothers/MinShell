@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 18:35:07 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/25 18:55:54 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/25 20:21:57 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,17 @@ void	free_struct_all(t_all *all)
 	all->input = NULL;
 }
 
+int is_space_cp(char *str)
+{
+	int	i;
+
+	i = -1;
+	while(str[++i])
+		if(!is_space(str[i]))
+			return (0);
+	return (1);
+}
+
 int	check_error_input(t_all *all)
 {
 	if (!all->input)
@@ -123,7 +134,7 @@ int	check_error_input(t_all *all)
 
 int	parsing(t_all *all)
 {
-	// char *tmp;
+	char *tmp;
 	
 	while (all->input && all->input[all->i_a])
 	{
@@ -133,10 +144,10 @@ int	parsing(t_all *all)
 	}
 	in_quote(all->input);
 	// printf(PURPLE"all->input: %p"RESET"\n", all->input);
-	// tmp = all->input;
-	expa_chang(all);
-	// if (tmp != all->input)
-	// 	free(tmp);
+	tmp = all->input;
+	all->input = expa_chang(all->input, all);
+	if (tmp != all->input)
+		free(tmp);
 	// printf(PURPLE"all->input: %p"RESET"\n", all->input);
 	all->test = NULL;
 	if (check_error(all->input))

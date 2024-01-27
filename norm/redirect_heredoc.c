@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirect_heredoc.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ade-tena <ade-tena@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 17:47:27 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/25 21:02:00 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/19 15:24:09 by ade-tena         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void	redirect_heredoc(char *delimiter, int saved_stdin, t_all *all)
 			free(input);
 			break ;
 		}
-		expa_chang(all);
+		input = expa_chang(input, all);
 		input_len = ft_strlen(input);
 		if (write(heredoc_file, input, input_len) == -1 || \
 		write(heredoc_file, "\n", 1) == -1)

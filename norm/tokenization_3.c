@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/29 18:44:48 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/25 17:53:03 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/27 20:38:13 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ char	*add_spaces(char *str)
 	while (str[i])
 		add_to_special(result, str, &i, &j);
 	result[j] = '\0';
+	//free(str);
 	return (result);
 }
 
@@ -35,6 +36,7 @@ t_block	*initialize_and_prepare(char **input)
 	char	*tmp_input;
 
 	original = new_block();
+	// printf("inpput : [%s]\n", input[0]);
 	tmp_input = ft_strdup(*input);
 	*input = add_spaces(tmp_input);
 	free(tmp_input);
@@ -60,6 +62,7 @@ void tokenization(t_all *all)
 	}*/
 	original = initialize_and_prepare(&all->input);
 	split_input = ft_split_path(all->input, '|');
+	//printf("split input [%s]\n", split_input[0]);
 	process_commands(split_input, original);
 	cleanup_memory(split_input);
 	free_block_list(all->test);

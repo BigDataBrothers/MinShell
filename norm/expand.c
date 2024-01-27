@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/09 02:19:09 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/25 21:04:06 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/27 19:37:07 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,17 +70,17 @@ int	ft_sizeint(int n)
 	return (i + 1);
 }
 
-void	process_exp_status(int *i, t_all *all)
+char	*process_exp_status(char *input, int *i, t_all *all)
 {
 	char	*v[6];
 	int		len_exp;
 	int		j;
 
-	v[pre_exp] = ft_substr(all->input, 0, *i);
-	len_exp = len_word_exp(all->input, *i) + 1;
-	v[exp] = ft_substr(all->input, *i, len_exp);
+	v[pre_exp] = ft_substr(input, 0, *i);
+	len_exp = len_word_exp(input, *i) + 1;
+	v[exp] = ft_substr(input, *i, len_exp);
 	j = *i + ft_strlen(v[exp]);
-	v[post_exp] = ft_substr(all->input, j, ft_strlen(all->input));
+	v[post_exp] = ft_substr(input, j, ft_strlen(input));
 	v[tmp] = ft_itoa(all->status);
 	j = -1;
 	while (v[tmp] && v[tmp][++j])
@@ -89,71 +89,78 @@ void	process_exp_status(int *i, t_all *all)
 	v[post_input] = ft_strjoin(v[pre_exp], v[tmp]);
 	v[concat] = ft_strjoin(v[post_input], v[post_exp]);
 	if (v[post_input])
-	{
 		free(v[post_input]);
-		v[post_input] = NULL;
-	}
-	v[post_input] = ft_strdup(v[concat]);	
-	all->input = ft_strdup(v[post_input]);
-	free_exp(v);
+	v[post_input] = ft_strdup(v[concat]);
+	if (input)
+		free(input);
+	input = ft_strdup(v[post_input]);
+	return (free_exp(v), input);
 }
 
-void	process_exp_variable(int *i, t_all *all)
+char	*process_exp_variable(char *input, int *i, t_all *all)
 {
-	char	*unknow[6];
+	char	*v[6];
 	int		len_exp;
 	int		j;
-	// char 	*to_free;
 
-	if (all->input[*i] == '$' && all->input[*i + 1] == '?')
+	if (input[*i] == '$' && input[*i + 1] == '?')
 	{
-		process_exp_status(i, all);
-		return ;
+		return (process_exp_status(input, i, all));
 	}
-	unknow[pre_exp] = ft_substr(all->input, 0, *i);
-	len_exp = len_word_exp(all->input, *i);
-	unknow[exp] = ft_substr(all->input, *i, len_exp);
-	j = *i + ft_strlen(unknow[exp]);
-	unknow[post_exp] = ft_substr(all->input, j, ft_strlen(all->input));
-	unknow[tmp] = exp_(unknow[exp], all->env, all->head_env);
+	v[pre_exp] = ft_substr(input, 0, *i);
+	len_exp = len_word_exp(input, *i);
+	v[exp] = ft_substr(input, *i, len_exp);
+	j = *i + ft_strlen(v[exp]);
+	v[post_exp] = ft_substr(input, j, ft_strlen(input));
+	v[tmp] = exp_(v[exp], all->env, all->head_env);
 	j = -1;
-	while (unknow[tmp] && unknow[tmp][++j])
-		if (is_spec_char(unknow[tmp][j]))
-			unknow[tmp][j - 1] *= -1;
-	unknow[post_input] = ft_strjoin(unknow[pre_exp], unknow[tmp]);
-	unknow[concat] = ft_strjoin(unknow[post_input], unknow[post_exp]);
-	if (unknow[post_input])
-		free(unknow[post_input]);
-	unknow[post_input] = ft_strdup(unknow[concat]);
-	// if (all->input)
-	// 	free(all->input);
-	// to_free = all->input;
-	if (all->input)
-	{
-		free(all->input);
-		all->input = NULL;
-	}
-	all->input = unknow[post_input]; // all->input = ft_strdup(unknow[post_input]);
-	// if(all->input != to_free && to_free)
-		// free(to_free);
-	free_exp(unknow);
+	while (v[tmp] && v[tmp][++j])
+		if (is_spec_char(v[tmp][j]))
+			v[tmp][j - 1] *= -1;
+	v[post_input] = ft_strjoin(v[pre_exp], v[tmp]);
+	v[concat] = ft_strjoin(v[post_input], v[post_exp]);
+	if (v[post_input])
+		free(v[post_input]);
+	v[post_input] = ft_strdup(v[concat]);
+	// if (input)
+	// 	free(input);
+	input = ft_strdup(v[post_input]);
+	// printf("in processe variable")
+	return (free_exp(v), input);
 }
+//========================================================
 
-
-void	expa_chang(t_all *all)
+char	*expa_chang(char *input, t_all *all)
 {
 	int		i;
+	char	*tmp;
 	
 	i = 0;
-	while (all->input[i] && all->input[i + 1])
+	tmp = NULL;
+	// printf("---------input[] befor while : [%s]-------------\n", input);
+	while (input[i] && input[i + 1])
 	{
-		if (is_doll_sign(all->input[i]))
+		// printf("---------------input [%c]---------------\n", input[i]);
+		if (is_doll_sign(input[i]))
 		{
-			process_exp_variable(&i, all);
+			tmp = process_exp_variable(input, &i, all);
+			if (!tmp)
+			{
+				if_free(input);
+				input = NULL;
+				break ;
+			}
+			// printf(BACK_GREEN"input: %s"RST"\n", input);
+			input = tmp;
 		}
-		if (is_doll_sign(all->input[i]) && all->input[i + 1] && is_alpha(all->input[i + 1]))
+		if (is_doll_sign(input[i]) && input[i + 1] && is_alpha(input[i + 1]))
 			i--;
-		else if (all->input[i])
+		else if (input[i])
 			i++;
 	}
+	// tmp = ft_strdup(input);
+	// free(input);
+	printf("---------------input : [%s] --------------\n", input);
+	return (input);
+	// return (tmp);
 }
