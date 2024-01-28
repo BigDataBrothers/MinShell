@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 17:41:49 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/28 21:50:32 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/28 23:06:04 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,6 +150,8 @@ void	prepare_n_exit(t_all *all)
 				free(all->tmp_path);
 				all->tmp_path = NULL;
 				free_string_array(all->args);
+				free_string_array(all->test->arg);
+				// free_block_list(all->test_head->arg);
 				all_free_1(all->test, all->env, all->head_env, all->args);
 				exit(0);
 			}

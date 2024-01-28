@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/29 18:43:20 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/28 21:37:40 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/28 22:57:11 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	allocate_and_assign_arguments(char **token, int *j, t_block *tmp)
 	int		v;
 	int		argc;
 	char	**args = NULL;
-	int l = *j;
+	// int l = *j;
 //	(void)l;
 	// printf("----------------- j : [%d]--------------\n", *j);
 	argc = nbr_arg(token, (*j));
@@ -43,10 +43,11 @@ void	allocate_and_assign_arguments(char **token, int *j, t_block *tmp)
 		}
 		// printf("------------------------token in allocate with j: [%s]----------------\n", token[*j]);
 		// l = *j;
-		l++;
+		// l++;
 	}
 	args[v] = '\0';
 	tmp->arg = args;
+	printf(BLUE"tmp->arg: %p"RESET"\n", tmp->arg);
 }
 
 int	treat_token(char **token, int *j, t_block *tmp)

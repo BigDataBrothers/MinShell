@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/27 18:58:47 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/28 21:40:32 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/28 23:48:59 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ void	free_block(t_block *block)
 {
 	if (block)
 	{
+		printf(PURPLE"block->cmd: %s block->cmd: %p"RESET"\n", block->cmd, block->cmd);
 		if (block->cmd)
 		{
 			free(block->cmd);

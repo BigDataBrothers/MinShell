@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 18:35:07 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/28 21:40:25 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/28 23:41:11 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ void	free_struct_all(t_all *all)
 	// if_free(all->str);
 	// all->str = NULL;
 	// free_struct_dir(all->test_head->dir_head);
-	free_block_list(all->test_head);
+	free_block_list(all->test);
 	all->test = NULL;
 	all->test_head = NULL;
 	if_free(all->input);
@@ -117,7 +117,8 @@ int	check_error_input(t_all *all)
 	{
 		if (all->envs)
 			free_string_array(all->envs);
-		printf("exit\n");
+		printf(YELLOW"exit\n");
+		// free_string_array(all->test->arg);
 		eof(all->input, all->envs, all->env, all->head_env);
 		free(all->tmp_path);
 		all->tmp_path = NULL;
