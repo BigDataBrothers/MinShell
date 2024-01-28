@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/29 18:43:20 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/27 22:08:51 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/28 21:37:40 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,10 @@ void	allocate_and_assign_arguments(char **token, int *j, t_block *tmp)
 			process_command_token(token, j, tmp);
 		else
 		{
-			args[v++] = token[(*j)++];
+			args[v++] = ft_strdup(token[(*j)++]);
 		}
 		// printf("------------------------token in allocate with j: [%s]----------------\n", token[*j]);
+		// l = *j;
 		l++;
 	}
 	args[v] = '\0';
@@ -81,6 +82,8 @@ int	treat_cmd_line(char *cmd_line, t_block *tmp)
 	j = 0;
 	printf(BACK_BLUE"cmd_line: %s"RST"\n", cmd_line);
 	token = ft_split_path(cmd_line, ' ');
+	if(!token)
+		return (1);
 	while(token[j])
 		printf(BACK_PURPLE"token[j]: %s"RST"\n", token[j++]);
 	j = 0;
@@ -97,14 +100,15 @@ int	treat_cmd_line(char *cmd_line, t_block *tmp)
 			return (free_string_array(token), 1);
 	}
 	j = 0;
-	while(token[j])
-		printf(BACK_YELLOW"token[j]: %s"RST"\n", token[j++]);
+	while(token[j++])
+		printf(BACK_YELLOW"token[j]: %s\n&token[j]: %p"RST"\n", token[j], token[j]);
+	free_string_array(token);
 	tmp->dir = head;
 	if (tmp->dir && tmp->dir->file == NULL)
-		return (free_string_array(token), 0);
+		return (0);
 	tmp->dir = head;
 	tmp->dir_head = head;
-	return (free_string_array(token), 0);
+	return (0);
 }
 
 void	add_to_special(char *result, char *str, int *i, int *j)

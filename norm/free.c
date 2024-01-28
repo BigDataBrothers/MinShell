@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/27 18:58:47 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/26 20:29:24 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/28 21:40:32 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	free_block(t_block *block)
 			free(block->cmd);
 			block->cmd = NULL;
 		}
-		// free_string_array(block->arg);
+		free_string_array(block->arg);
 		block->arg = NULL;
 		free_struct_dir(block->dir);
 		

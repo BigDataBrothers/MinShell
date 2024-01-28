@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 17:41:49 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/26 19:14:29 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/28 21:50:32 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -227,6 +227,7 @@ void	exec_all(t_all *all)
 		{
 			prepare_block(all);
 			exec_command_alone(all);
+			// exec_multi_cmd(all);
 		}
 	}
 	else

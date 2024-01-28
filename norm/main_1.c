@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 18:35:07 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/25 20:21:57 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/28 21:40:25 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,7 @@ void	free_struct_all(t_all *all)
 	free_string_array(all->args);
 	// free(all->args[0]);
 	all->args = NULL;
+	// free_string_array(all->test);
 	// printf("all->str = %p\n", all->str);
 	// if_free(all->str);
 	// all->str = NULL;
