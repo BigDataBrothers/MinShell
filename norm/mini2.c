@@ -6,12 +6,11 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/26 20:07:13 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/19 22:03:49 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/14 18:08:47 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
 
 void	sigint_handler(int sig)
 {
@@ -19,6 +18,7 @@ void	sigint_handler(int sig)
 	{
 		write(2, "\n", 1);
 		rl_on_new_line();
+		rl_clear_history();
 		rl_replace_line("", 0);
 		rl_redisplay();
 	}
@@ -47,7 +47,7 @@ int	ft_strncmp(const char *s1, const char *s2, size_t n)
 	return (0);
 }
 
-void	redirect_output(char *filename, t_all *all)
+void	redirect_output(char *filename)
 {
 	int	file;
 
@@ -55,20 +55,18 @@ void	redirect_output(char *filename, t_all *all)
 	if (file == -1)
 	{
 		perror("Erreur lors de l'ouverture du fichier");
-		free_struct_all(all);
 		exit(EXIT_FAILURE);
 	}
 	if (dup2(file, STDOUT_FILENO) == -1)
 	{
 		perror("Erreur lors de la redirection de la sortie standard");
 		close(file);
-		free_struct_all(all);
 		exit(EXIT_FAILURE);
 	}
 	close(file);
 }
 
-void	append_output(char *filename, t_all *all)
+void	append_output(char *filename)
 {
 	int	file;
 
@@ -76,14 +74,12 @@ void	append_output(char *filename, t_all *all)
 	if (file == -1)
 	{
 		perror("Erreur lors de l'ouverture du fichier en mode ajout");
-		free_struct_all(all);
 		exit(EXIT_FAILURE);
 	}
 	if (dup2(file, STDOUT_FILENO) == -1)
 	{
 		perror("Erreur lors de la redirection de la sortie standard");
 		close(file);
-		free_struct_all(all);
 		exit(EXIT_FAILURE);
 	}
 	close(file);

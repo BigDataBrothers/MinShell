@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirect_heredoc.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ade-tena <ade-tena@student.42.fr>          +#+  +:+       +#+        */
+/*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 17:47:27 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/19 15:24:09 by ade-tena         ###   ########.fr       */
+/*   Updated: 2024/02/01 20:12:32 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,13 +46,27 @@ void	redirect_heredoc(char *delimiter, int saved_stdin, t_all *all)
 			free(input);
 			break ;
 		}
-		input = expa_chang(input, all);
+		input = expa_chang(input, all->env, all->head_env);
 		input_len = ft_strlen(input);
+		if(all->test->dir->next && all->test->dir->next->type == OUT)
 		if (write(heredoc_file, input, input_len) == -1 || \
 		write(heredoc_file, "\n", 1) == -1)
 			redirect_heredoc_3(all);
 		free(input);
 	}
-	redirect_input("heredoc_temp_file.txt", all);
-	close(heredoc_file);
+	redirect_input("heredoc_temp_file.txt");
+	// if (all->test->dir->next && all->test->dir->next->type == OUT)
+        // dup2(heredoc_file, STDOUT_FILENO);
+    close(heredoc_file);
+	// close(heredoc_file);
 }
+
+
+	
+	// close(heredoc_file);  // Ferme heredoc_file après la boucle
+    // redirect_input("heredoc_temp_file.txt");  // Rétablit la redirection standard d'entrée
+    // if (all->test->dir->next && all->test->dir->next->type == OUT)
+    //     dup2(STDOUT_FILENO, heredoc_file);
+	//printf("alll -==== %s\n", all->test->dir);
+	// if (all->test->dir->next->fd)
+	// 	redirect_output_heredoc("heredoc_temp_file.txt", all->test->dir->next->fd);

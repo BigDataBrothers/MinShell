@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/29 18:43:20 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/28 22:57:11 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/14 18:20:41 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,43 +16,32 @@ void	allocate_and_assign_arguments(char **token, int *j, t_block *tmp)
 {
 	int		v;
 	int		argc;
-	char	**args = NULL;
-	// int l = *j;
-//	(void)l;
-	// printf("----------------- j : [%d]--------------\n", *j);
+	char	**args;
+
 	argc = nbr_arg(token, (*j));
 	if (argc == -1)
 		return ;
-	args = ft_calloc(sizeof(char **),  (argc + 1));
+	args = (char **)malloc(sizeof(char *) * (argc + 1));
 	if (!args)
 		return ;
 	v = 0;
-	// printf("------------------------token in allocate : [%s]----------------\n", token[0]);
 	while (token[*j])
 	{
-		if (token[*j] == NULL)
-			break ;
-		// printf("------------------------token in allocate with j: [%s]----------------\n", token[*j]);
-		if (is_redir(token[*j]) && token[*j] != NULL)
+		if (is_redir(token[*j]))
 			process_redirection_token(token, j, tmp);
 		else if (!tmp->cmd)
 			process_command_token(token, j, tmp);
 		else
-		{
-			args[v++] = ft_strdup(token[(*j)++]);
-		}
-		// printf("------------------------token in allocate with j: [%s]----------------\n", token[*j]);
-		// l = *j;
-		// l++;
+			args[v++] = ft_strdup(token[*j]);
+		(*j)++;
 	}
-	args[v] = '\0';
+	args[v] = NULL;
 	tmp->arg = args;
-	printf(BLUE"tmp->arg: %p"RESET"\n", tmp->arg);
 }
 
 int	treat_token(char **token, int *j, t_block *tmp)
 {
-	if (token && token[*j] && tmp && !tmp->cmd && !is_redir(token[*j]))
+	if (!tmp->cmd && !is_redir(token[*j]))
 		process_command_token(token, j, tmp);
 	else
 		allocate_and_assign_arguments(token, j, tmp);
@@ -77,38 +66,26 @@ int	treat_cmd_line(char *cmd_line, t_block *tmp)
 {
 	char	**token;
 	int		j;
-	// int		*l;
 	t_dir	*head;
 
 	j = 0;
-	printf(BACK_BLUE"cmd_line: %s"RST"\n", cmd_line);
 	token = ft_split_path(cmd_line, ' ');
-	if(!token)
-		return (1);
-	while(token[j])
-		printf(BACK_PURPLE"token[j]: %s"RST"\n", token[j++]);
-	j = 0;
 	tmp->dir = create_new_dir();
 	if (!tmp->dir)
 		return (FAILURE);
 	head = tmp->dir;
-	printf(BACK_RED"token[j]: %s"RST"\n", token[j]);
-	while (token && token[j] != NULL && tmp)
-	{
-		printf(BOLD_CYAN"--------------------token [%s]-------------\n", token[j]);
-		printf(BACK_CYAN"tmp->cmd: %s"RST"\n", tmp->cmd);
+	while (token[j] != NULL)
 		if (treat_token(token, &j, tmp))
-			return (free_string_array(token), 1);
-	}
-	j = 0;
-	while(token[j++])
-		printf(BACK_YELLOW"token[j]: %s\n&token[j]: %p"RST"\n", token[j], token[j]);
-	free_string_array(token);
+			return (1);
 	tmp->dir = head;
 	if (tmp->dir && tmp->dir->file == NULL)
-		return (0);
+	{
+		puts("jsui passer");
+		return (free_string_array(token), 0);
+	}
+//	free_start_dir(tmp->dir);
 	tmp->dir = head;
-	tmp->dir_head = head;
+	free_string_array(token);
 	return (0);
 }
 

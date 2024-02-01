@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/26 20:07:15 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/25 15:41:42 by myassine         ###   ########.fr       */
+/*   Updated: 2023/12/27 20:00:00 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ char	*get_current_directory_with_prompt(void)
 void	eof(char *input, char **envs, t_env *env, t_env *headenv)
 {
 	terminat(input, envs, env, headenv);
-	input = NULL;
 }
 
 char	**get_path(char **env)

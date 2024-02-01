@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 00:51:05 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/27 20:45:38 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/14 18:09:57 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,8 +103,6 @@
 //   STRUCTURES   //
 ////////////////////
 
-extern int ret_val;
-
 enum e_dir
 {
 	FILES,
@@ -133,7 +131,6 @@ typedef struct s_block
 	int		pipe_out;
 	int		pipe_in;
 	void	*next;
-	t_dir	*dir_head;
 	t_dir	*dir;
 }	t_block;
 
@@ -144,7 +141,6 @@ typedef struct s_all
 	t_env	*env;
 	t_env	*head_env;
 	t_block	*test;
-	t_block	*test_head;
 
 	char	*input;
 	char	*path;
@@ -157,12 +153,10 @@ typedef struct s_all
 	int		saved_stdout;
 	int		saved_stdin;
 	int		command_alone;
-	int		cnt;
 
 	int		i_a;
 	int		j_a;
 	int		status;
-	int		ret_val;
 }	t_all;
 
 enum e_REDIR_TYPES
@@ -173,9 +167,9 @@ enum e_REDIR_TYPES
 	HEREDOC
 };
 
-char		**ft_split_path(char *s, char c);
+char		**ft_split_path(char const *s, char c);
 //Tokenizer
-void		tokenization(t_all *all);
+t_block		*tokenization(char *input);
 t_block		*initialize_and_prepare(char **input);
 t_dir		*create_new_dir(void);
 void		process_commands(char **split_input, t_block *original);
@@ -211,11 +205,11 @@ void		freeStringArrays(char ***arrays);
 void		free_string_array(char **arrays);
 void		terminat(char *input, char **envs, t_env *env, t_env *head_env);
 void		free_struct_all(t_all *all);
-void		free_struct_dir(t_dir *dir);
+
 
 //Expand
 void		expand_variables(char *input);
-char		*expa_chang(char *input, t_all *all);
+char		*expa_chang(char *input, t_env *env, t_env *head_env);
 char		*exp_(char *exp, t_env *env, t_env *head_env);
 void		if_free(char *ptr);
 void		free_exp(char **v);
@@ -235,7 +229,7 @@ char		*pre_egal(char *str);
 void		malloc_z(char *tmp);
 char		*post_egal(char *str);
 int			check_export_exist(t_env *env, t_env *head_env, char *str);
-t_env		*export_env_1(t_all *all, char *str, int do_free);
+t_env		*export_env_1(t_env *env, t_env *head_env, char *str);
 t_env		*export_env_2(t_env *env, t_env *head_env, char *str);
 
 int			rpl_en_var_2(char *str, t_env *tmp);
@@ -244,7 +238,7 @@ t_env		*sup_env_var(t_env *env, t_env *head_env, char *str);
 void		ft_env(t_env *env, t_env *head_env, t_block *block);
 int			cut_export_argument(char *arg_export);
 
-void		ft_export(t_env *env, t_env *head_env, t_block *block, t_all *all);
+void		ft_export(t_env *env, t_env *head_env, t_block *block);
 void		ft_unset(t_env *env, t_env *head_env, t_block *block);
 int			is_quote(char *str);
 void		printc(char *input);
@@ -258,7 +252,7 @@ void		ft_pwd(t_block *block);
 //Lib_mini
 void		ft_bzero(void *s, size_t n);
 void		*ft_calloc(size_t count, size_t size);
-char		*ft_strjoin(char *s1, char *s2);
+char		*ft_strjoin(const char *s1, const char *s2);
 char		*ft_strchr(char *str, int character);
 int			ft_strlen(const char *str);
 
@@ -342,8 +336,8 @@ char		*ft_strdupf(char *s);
 int			start_input(t_all *all);
 void		init_all(t_all *all, char **envp);
 void		end_prompt(t_all *all);
-int			check_error_input(t_all *all);
-int			parsing(t_all *all);
+void		check_error_input(t_all *all);
+void		parsing(t_all *all);
 void		dup_in_child(t_all *all);
 void		prepare_block(t_all *all);
 void		exec_command_alone(t_all *all);
@@ -366,18 +360,19 @@ int			no_input(char *input);
 void		sigint_handler(int sig);
 void		all_free_1(t_block *test, t_env *env, t_env *head_env, char **args);
 int			ft_strncmp(const char *s1, const char *s2, size_t n);
-void		redirect_output(char *filename, t_all *all);
-void		append_output(char *filename, t_all *all);
+void		redirect_output(char *filename);
+void		append_output(char *filename);
 
 //mini3.c
-void		redirect_input(char *filename, t_all *all);
+void		redirect_input(char *filename);
 void		apply_redirections_to_command_line(t_all *all);
 int			is_bultin(char *args);
 int			is_real_num(const char *num);
 int			ft_exit_1(t_block *block);
 
 //mini4.c
-int	applic_bulltin(t_all *all);
+int			applic_bulltin(t_block *test, t_env *env, t_env *head_env, \
+char **args);
 
 //minishell.c
 void		redirect_heredoc(char *delimiter, int saved_stdin, t_all *all);

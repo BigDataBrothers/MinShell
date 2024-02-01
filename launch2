@@ -1,6 +1,0 @@
-export a="o abc"
-ech$a
-exit 123
-
-$a > $b
-ls -la | grep minish

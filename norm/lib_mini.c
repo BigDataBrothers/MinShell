@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/09 02:17:16 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/18 20:06:36 by myassine         ###   ########.fr       */
+/*   Updated: 2023/12/28 20:36:10 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	*ft_calloc(size_t count, size_t size)
 	return (new);
 }
 
-char	*ft_strjoin(char *s1, char *s2)
+char	*ft_strjoin(const char *s1, const char *s2)
 {
 	int		len1;
 	int		len2;

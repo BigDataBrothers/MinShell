@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/28 20:11:37 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/25 15:31:49 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/03 20:24:25 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,6 @@ char	*ft_strdup(const char *s)
 	int		len;
 	int		i;
 	char	*d;
-
 
 	i = 0;
 	if (s == NULL)

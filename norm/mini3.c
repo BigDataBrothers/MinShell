@@ -6,13 +6,13 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/26 20:07:09 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/25 15:10:09 by myassine         ###   ########.fr       */
+/*   Updated: 2024/02/01 18:39:35 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	redirect_input(char *filename, t_all *all)
+void	redirect_input(char *filename)
 {
 	int	file;
 
@@ -20,7 +20,6 @@ void	redirect_input(char *filename, t_all *all)
 	if (file == -1)
 	{
 		printf("minishell: %s: No such file or directory\n", filename);
-		free_struct_all(all);
 		exit(EXIT_FAILURE);
 	}
 	dup2(file, STDIN_FILENO);
@@ -29,22 +28,17 @@ void	redirect_input(char *filename, t_all *all)
 
 void	apply_redirections_to_command_line(t_all *all)
 {
-	t_dir	*tmp;
-
-	tmp = NULL;
-	if (all && all->test && all->test->dir)
-		tmp = all->test->dir;
-	while (tmp && tmp->file)
+	while (all->test && all->test->dir && all->test->dir->file)
 	{
-		if (tmp->type == APPEND)
-			append_output(all->test->dir->file, all);
-		else if (tmp->type == IN)
-			redirect_input(all->test->dir->file, all);
-		else if (tmp->type == OUT)
-			redirect_output(all->test->dir->file, all);
-		else if (tmp->type == HEREDOC)
+		if (all->test->dir->type == APPEND)
+			append_output(all->test->dir->file);
+		else if (all->test->dir->type == IN)
+			redirect_input(all->test->dir->file);
+		else if (all->test->dir->type == OUT)
+			redirect_output(all->test->dir->file);
+		else if (all->test->dir->type == HEREDOC)
 			redirect_heredoc(all->test->dir->file, all->saved_stdin, all);
-		tmp = tmp->next;
+		all->test->dir = all->test->dir->next;
 	}
 }
 
@@ -87,9 +81,7 @@ int	is_real_num(const char *num)
 
 int	ft_exit_1(t_block *block)
 {
-
-	write(2, "exit\n", 5);
-	// dprintf(2, "exit\n");
+	dprintf(2, "exit\n");
 	if (block->arg && len_tab(block->arg) > 1 && !is_real_num(block->arg[1]))
 		return (printf("exit doesn't have the right arguments\n"), 0);
 	return (1);

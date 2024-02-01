@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 17:39:28 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/24 20:57:18 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/13 18:36:50 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@ void	init_all(t_all *all, char **envp)
 	all->head_env = NULL;
 	all->env = NULL;
 	all->env = init_env(all->env, all->head_env, envp);
-	all->head_env = all->env;
 	all->input = NULL;
 	all->envs = NULL;
 	all->path = NULL;
@@ -35,9 +34,6 @@ void	init_all(t_all *all, char **envp)
 	all->pid = -1;
 	all->status = 0;
 	all->test = NULL;
-	all->test_head = NULL;
-	all->ret_val = -1;
-	all->cnt = 0;
 }
 
 char	*ft_strdupf(char *s)

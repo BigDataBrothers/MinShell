@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 21:39:12 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/28 23:52:52 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/13 20:57:02 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,13 +35,9 @@ void	process_commands(char **split_input, t_block *original)
 	i = 0;
 	while (split_input[i])
 	{
-		*tmp = (t_block){NULL, NULL, STDOUT_FILENO, STDIN_FILENO, NULL, NULL, NULL};
-		printf("--------------------split input process command : [%s]-----------------\n", split_input[i]);
-		// printf("-------------------tmp process command : [%s]-----------------\n", tmp);
+		*tmp = (t_block){NULL, NULL, STDOUT_FILENO, STDIN_FILENO, NULL, NULL};
 		if (treat_cmd_line(split_input[i], tmp))
 			return ;
-		// printf(BACK_GREEN"split_input[i]: %s"RST"\n", split_input[i]);
-		printf("\n-----------------split [%s]------------------\n", split_input[i]);
 		if (split_input[i + 1])
 			tmp->next = new_block();
 		if (tmp->next)
@@ -65,8 +61,10 @@ void	choose_type_redir(char **token, int j, t_dir *new_dir)
 // [switcher type de retour 1 -> FAILURE]
 void	process_command_token(char **token, int *j, t_block *tmp)
 {
-	tmp->cmd = ft_strdup(token[(*j)++]);
-	printf(PURPLE"first block->cmd: %s block->cmd: %p"RESET"\n", tmp->cmd, tmp->cmd);
+	if (!tmp->cmd && !is_redir(token[*j]))
+	{		
+		tmp->cmd = ft_strdup(token[(*j)++]);
+	}
 }
 
 void	process_redirection_token(char **token, int *j, t_block *tmp)

@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 21:16:58 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/27 21:51:28 by myassine         ###   ########.fr       */
+/*   Updated: 2024/01/12 19:28:49 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ t_block	*new_block(void)
 	new->arg = NULL;
 	new->next = NULL;
 	new->dir = NULL;
-	new->dir_head = NULL;
 	return (new);
 }
 
@@ -56,7 +55,7 @@ t_dir	*malloc_dir(void)
 	dir = (t_dir *)malloc(sizeof(t_dir));
 	if (!dir)
 		return (NULL);
-	memset(dir, 0, sizeof(t_dir)); // replace by ft_memset
+	memset(dir, 0, sizeof(t_dir));
 	return (dir);
 }
 
