@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/29 18:43:20 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/14 18:20:41 by myassine         ###   ########.fr       */
+/*   Updated: 2024/02/01 22:09:03 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,9 @@ void	allocate_and_assign_arguments(char **token, int *j, t_block *tmp)
 			args[v++] = ft_strdup(token[*j]);
 		(*j)++;
 	}
-	args[v] = NULL;
+	args[v] = '\0';
 	tmp->arg = args;
+	printf(CYAN"tmp->arg: %p"RESET"\n", tmp->arg);
 }
 
 int	treat_token(char **token, int *j, t_block *tmp)

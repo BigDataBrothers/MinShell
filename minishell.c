@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 00:52:02 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/12 19:56:28 by myassine         ###   ########.fr       */
+/*   Updated: 2024/02/01 22:59:52 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,12 +36,17 @@ char	*remove_char_at_index(char *str, int i)
 
 void	for_arg(t_block *test, int *i_a, int *j_a, char **args)
 {
+	// char	*tmp;
+	
 	if (test->arg)
 	{
 		while (test->arg[(*j_a)])
 		{
 			return_neg(test->arg[(*j_a)]);
-			test->arg[(*j_a)] = if_quote(test->arg[(*j_a)]);
+			// tmp = test->arg[(*j_a)];
+			/*test->arg[(*j_a)] = */if_quote_2(&test->arg[(*j_a)]);
+			// free(tmp);
+			// tmp = NULL;
 			args[(*i_a)] = ft_strdup(test->arg[(*j_a)]);
 			(*i_a)++;
 			(*j_a)++;
@@ -54,9 +59,16 @@ void	for_arg(t_block *test, int *i_a, int *j_a, char **args)
 char	**creat_args(t_block *test, int *i_a, int *j_a)
 {
 	char	**args;
+	// char	*tmp;
 
 	return_neg(test->cmd);
-	test->cmd = if_quote(test->cmd);
+	// tmp = test->cmd;
+	/*test->cmd = */if_quote_2(&test->cmd);
+	// if (!test->arg || !test->arg[0])
+	// {
+		// free(tmp);
+		// tmp = NULL;
+	// }
 	if (!test->arg)
 		args = malloc(sizeof(char *) * 2);
 	else

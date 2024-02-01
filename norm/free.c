@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/27 18:58:47 by myassine          #+#    #+#             */
-/*   Updated: 2024/02/01 18:29:01 by myassine         ###   ########.fr       */
+/*   Updated: 2024/02/01 22:48:22 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,13 @@ void	free_block(t_block *block)
 		{
 			printf(BACK_RED"TEST"RST"\n");
 			free(block->cmd);
+			printf(CYAN"block->cmd: %p"RESET"\n", block->cmd);
 			block->cmd = NULL;
 		}
-		free_string_array(block->arg);
+		if(block->arg)
+			free_string_array(block->arg);
+		printf(CYAN"block->arg: %p"RESET"\n", block->arg);
+		// printf(BACK_GREEN"block->arg[0]: %s"RST"\n", block->arg[0]);
 		block->arg = NULL;
 		free_struct_dir(block->dir);
 		free(block);

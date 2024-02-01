@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 00:51:05 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/14 18:09:57 by myassine         ###   ########.fr       */
+/*   Updated: 2024/02/01 22:59:40 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -306,6 +306,7 @@ int			check_quotes(int s, int d);
 int			ft_quote(char *input);
 void		in_quote(char *input);
 char		*if_quote(char *input);
+void		if_quote_2(char **input);
 char		*no_quote(char *str);
 
 //Check_redir_a_pipe
@@ -340,7 +341,7 @@ void		check_error_input(t_all *all);
 void		parsing(t_all *all);
 void		dup_in_child(t_all *all);
 void		prepare_block(t_all *all);
-void		exec_command_alone(t_all *all);
+void		exec_multi_cmd(t_all *all);
 void		exec_all(t_all *all);
 char		*ft_strjoin_lfree(char *s1, char *s2);
 char		*ft_strjoin_rfree(char *s1, char *s2);

@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/26 20:07:44 by myassine          #+#    #+#             */
-/*   Updated: 2024/02/01 21:37:55 by myassine         ###   ########.fr       */
+/*   Updated: 2024/02/01 22:20:37 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,6 @@ char	*verif_cmd(char **args, char **env)
 		return (NULL);
 	path = get_path(env);
 	tmp = ft_strdupf(args[0]);
-	printf(BACK_GREEN"args[0]: %s"RST"\n", args[0]);
 	if (access(tmp, F_OK) == 0 && verif_cmd_2(path, tmp, env, args) == NULL)
 				return (free_string_array(path), tmp);
 	args[0] = ft_strjoin_rfree("/", tmp);

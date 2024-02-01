@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 17:41:49 by myassine          #+#    #+#             */
-/*   Updated: 2024/02/01 20:46:08 by myassine         ###   ########.fr       */
+/*   Updated: 2024/02/01 22:19:13 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	prepare_block(t_all *all)
 	}
 }
 
-void	exec_command_alone(t_all *all)
+void	exec_multi_cmd(t_all *all)
 {
 	if (all->pid == 0)
 	{
@@ -92,7 +92,7 @@ void	prepare_n_exit(t_all *all)
 	}
 }
 
-void	exec_multi_cmd(t_all *all)
+void	exec_alone_command(t_all *all)
 {
 	if (!applic_bulltin(all->test, all->env, all->head_env, all->args))
 	{
@@ -122,13 +122,13 @@ void	exec_all(t_all *all)
 		while (all->test)
 		{
 			prepare_block(all);
-			exec_command_alone(all);
+			exec_multi_cmd(all);
 		}
 	}
 	else
 	{
 		prepare_n_exit(all);
-		exec_multi_cmd(all);
+		exec_alone_command(all);
 		free_string_array(all->envs);
 	}
 	end_prompt(all);

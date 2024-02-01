@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/28 21:47:40 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/12 18:09:01 by myassine         ###   ########.fr       */
+/*   Updated: 2024/02/01 22:59:31 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,40 @@ void	in_quote(char *input)
 	}
 }
 
+void	if_quote_2(char **input)
+{
+	int		i;
+	char	*str;
+	char	c;
+
+	i = 0;
+	if (!(*input))
+		return ;
+	while ((*input)[i])
+	{
+		if (is_double_quote((*input)[i]) || is_simple_quote((*input)[i]))
+		{
+			c = (*input)[i];
+			str = remove_char_at_index((*input), i);
+			// if (!str)
+			//  return (NULL);
+			while (str[i] && str[i] != c)
+				if (str[i++] < 0)
+					str[i - 1] *= -1;
+			if((*input))
+				free((*input));
+			(*input) = remove_char_at_index(str, i);
+			free(str);
+		}
+		else if ((*input)[i])
+			i++;
+	}
+	// if(str)
+		// free(str);
+	// str = ft_strdup()
+	// return (input);
+}
+
 char	*if_quote(char *input)
 {
 	int		i;
@@ -78,15 +112,22 @@ char	*if_quote(char *input)
 		{
 			c = input[i];
 			str = remove_char_at_index(input, i);
+			// if (!str)
+			//  return (NULL);
 			while (str[i] && str[i] != c)
 				if (str[i++] < 0)
 					str[i - 1] *= -1;
+			if(input)
+				free(input);
 			input = remove_char_at_index(str, i);
 			free(str);
 		}
 		else if (input[i])
 			i++;
 	}
+	// if(str)
+		// free(str);
+	// str = ft_strdup()
 	return (input);
 }
 
