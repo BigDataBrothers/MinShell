@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 00:51:05 by myassine          #+#    #+#             */
-/*   Updated: 2024/02/01 22:59:40 by myassine         ###   ########.fr       */
+/*   Updated: 2024/02/02 23:44:59 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -337,8 +337,8 @@ char		*ft_strdupf(char *s);
 int			start_input(t_all *all);
 void		init_all(t_all *all, char **envp);
 void		end_prompt(t_all *all);
-void		check_error_input(t_all *all);
-void		parsing(t_all *all);
+int			check_error_input(t_all *all);
+int			parsing(t_all *all);
 void		dup_in_child(t_all *all);
 void		prepare_block(t_all *all);
 void		exec_multi_cmd(t_all *all);
@@ -367,6 +367,7 @@ void		append_output(char *filename);
 //mini3.c
 void		redirect_input(char *filename);
 void		apply_redirections_to_command_line(t_all *all);
+void		redirect_output_append_no_cmd(char *filename);
 int			is_bultin(char *args);
 int			is_real_num(const char *num);
 int			ft_exit_1(t_block *block);

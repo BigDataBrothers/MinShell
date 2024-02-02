@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 00:52:02 by myassine          #+#    #+#             */
-/*   Updated: 2024/02/01 22:59:52 by myassine         ###   ########.fr       */
+/*   Updated: 2024/02/02 23:45:31 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,17 +36,13 @@ char	*remove_char_at_index(char *str, int i)
 
 void	for_arg(t_block *test, int *i_a, int *j_a, char **args)
 {
-	// char	*tmp;
-	
 	if (test->arg)
 	{
 		while (test->arg[(*j_a)])
 		{
 			return_neg(test->arg[(*j_a)]);
-			// tmp = test->arg[(*j_a)];
 			/*test->arg[(*j_a)] = */if_quote_2(&test->arg[(*j_a)]);
-			// free(tmp);
-			// tmp = NULL;
+			// test->arg[(*j_a)] = if_quote(test->arg[(*j_a)]);
 			args[(*i_a)] = ft_strdup(test->arg[(*j_a)]);
 			(*i_a)++;
 			(*j_a)++;
@@ -59,16 +55,10 @@ void	for_arg(t_block *test, int *i_a, int *j_a, char **args)
 char	**creat_args(t_block *test, int *i_a, int *j_a)
 {
 	char	**args;
-	// char	*tmp;
 
 	return_neg(test->cmd);
-	// tmp = test->cmd;
 	/*test->cmd = */if_quote_2(&test->cmd);
-	// if (!test->arg || !test->arg[0])
-	// {
-		// free(tmp);
-		// tmp = NULL;
-	// }
+	// test->cmd = if_quote(test->cmd);
 	if (!test->arg)
 		args = malloc(sizeof(char *) * 2);
 	else
@@ -108,8 +98,10 @@ int	main(int argc, char **argv, char *envp[])
 	{
 		if (start_input(&all) == FAILURE)
 			return (FAILURE);
-		check_error_input(&all);
-		parsing(&all);
+		if(check_error_input(&all))
+			continue ;
+		if(parsing(&all))
+			continue ;
 		if (is_empty_input(&all) == FAILURE)
 			exec_all(&all);
 	}

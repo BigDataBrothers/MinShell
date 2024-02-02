@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/26 20:07:44 by myassine          #+#    #+#             */
-/*   Updated: 2024/02/01 22:20:37 by myassine         ###   ########.fr       */
+/*   Updated: 2024/02/02 22:07:30 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,20 +19,20 @@ char	*verif_cmd_2(char **path, char *tmp,  char **env, char **args)
 	path = get_path(env);
 	tmp = ft_strdupf(args[0]);
 	args[0] = ft_strjoin_rfree("/", tmp);
-	printf(BACK_PURPLE"tmp: %s"RST"\n", tmp);
+	// printf(BACK_PURPLE"tmp: %s"RST"\n", tmp);
 	if (path != NULL)
 	{
 		while (path[++i])
 		{
-			printf(BACK_CYAN"path[i]: %s"RST"\n", path[i]);
+			// printf(BACK_CYAN"path[i]: %s"RST"\n", path[i]);
 			tmp = ft_strjoin(path[i], args[0]);
-			printf(BACK_BLUE"tmp: %s"RST"\n", tmp);
+			// printf(BACK_BLUE"tmp: %s"RST"\n", tmp);
 			if (access(tmp, F_OK) == 0)
 				return (free_string_array(path), free(args[0]), tmp);
 			free(tmp);
 		}
 	}
-	printf(BACK_RED"NULL"RST"\n");
+	// printf(BACK_RED"NULL"RST"\n");
 	return (NULL);
 }
 

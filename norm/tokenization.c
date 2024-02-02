@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 21:39:12 by myassine          #+#    #+#             */
-/*   Updated: 2024/02/01 22:12:19 by myassine         ###   ########.fr       */
+/*   Updated: 2024/02/02 23:43:58 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,12 +64,13 @@ void	process_command_token(char **token, int *j, t_block *tmp)
 	if (!tmp->cmd && !is_redir(token[*j]))
 	{		
 		tmp->cmd = ft_strdup(token[(*j)++]);
-		printf(CYAN"tmp->cmd: %p"RESET"\n", tmp->cmd);
+		// printf(CYAN"tmp->cmd: %p"RESET"\n", tmp->cmd);
 	}
 }
 
 void	process_redirection_token(char **token, int *j, t_block *tmp)
 {
+
 	choose_type_redir(token, *j, tmp->dir);
 	(*j)++;
 	tmp->dir->file = ft_strdup(token[*j]);

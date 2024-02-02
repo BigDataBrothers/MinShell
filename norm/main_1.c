@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 18:35:07 by myassine          #+#    #+#             */
-/*   Updated: 2024/02/01 22:05:45 by myassine         ###   ########.fr       */
+/*   Updated: 2024/02/02 23:44:48 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ void	free_struct_all(t_all *all)
 	all->test = NULL;
 }
 
-void	check_error_input(t_all *all)
+int	check_error_input(t_all *all)
 {
 	if (!all->input)
 	{
@@ -93,9 +93,10 @@ void	check_error_input(t_all *all)
 		print_error(check_error(all->input));
 	all->i_a = 0;
 	all->command_alone = 0;
+	return(check_error(all->input));
 }
 
-void	parsing(t_all *all)
+int		parsing(t_all *all)
 {
 	while (all->input && all->input[all->i_a])
 	{
@@ -111,6 +112,8 @@ void	parsing(t_all *all)
 	all->test = tokenization(all->input);
 	all->saved_stdout = dup(STDOUT_FILENO);
 	all->saved_stdin = dup(STDIN_FILENO);
+	return (check_error(all->input));
+	// printf(BACK_BOLD_RED"all->test->dir->file: %p"RESET"\n", &all->test->dir->file);
 }
 
 void	dup_in_child(t_all *all)
@@ -137,3 +140,8 @@ void	dup_in_child(t_all *all)
 		}
 	}
 }
+
+// .
+// $ | $
+// $lol | echo mdr.
+// "$c" et $c meme comportement 

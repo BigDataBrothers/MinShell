@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/29 18:43:20 by myassine          #+#    #+#             */
-/*   Updated: 2024/02/01 22:09:03 by myassine         ###   ########.fr       */
+/*   Updated: 2024/02/02 22:36:52 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,12 @@
 
 void	allocate_and_assign_arguments(char **token, int *j, t_block *tmp)
 {
+	// t_dir *tmp_1;
 	int		v;
 	int		argc;
 	char	**args;
 
+	// tmp_1 = tmp;
 	argc = nbr_arg(token, (*j));
 	if (argc == -1)
 		return ;
@@ -25,6 +27,7 @@ void	allocate_and_assign_arguments(char **token, int *j, t_block *tmp)
 	if (!args)
 		return ;
 	v = 0;
+	// tmp_1 = tmp->dir;
 	while (token[*j])
 	{
 		if (is_redir(token[*j]))
@@ -33,11 +36,16 @@ void	allocate_and_assign_arguments(char **token, int *j, t_block *tmp)
 			process_command_token(token, j, tmp);
 		else
 			args[v++] = ft_strdup(token[*j]);
+		// printf(CYAN"tmp->cmd2: %s"RESET"\n", tmp->cmd);
+		// printf(GREEN"tmp->dir->file2: %p"RESET"\n", tmp->dir->file);
 		(*j)++;
 	}
+	// tmp->dir = tmp_1;
+	// printf(YELLOW"tmp->dir->file: %s"RESET"\n", tmp->dir->file);
+	// printf(YELLOW"tmp->dir->next: %p"RESET"\n", tmp->dir->next);
 	args[v] = '\0';
 	tmp->arg = args;
-	printf(CYAN"tmp->arg: %p"RESET"\n", tmp->arg);
+	// printf(YELLOW"tmp->arg: %p"RESET "\n", tmp->arg);
 }
 
 int	treat_token(char **token, int *j, t_block *tmp)
@@ -80,12 +88,10 @@ int	treat_cmd_line(char *cmd_line, t_block *tmp)
 			return (1);
 	tmp->dir = head;
 	if (tmp->dir && tmp->dir->file == NULL)
-	{
-		puts("jsui passer");
 		return (free_string_array(token), 0);
-	}
-//	free_start_dir(tmp->dir);
+	free_start_dir(tmp->dir);
 	tmp->dir = head;
+	// printf(PURPLE"tmp->dir->file: %p"RESET"\n", tmp->dir->file);
 	free_string_array(token);
 	return (0);
 }

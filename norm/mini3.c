@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/26 20:07:09 by myassine          #+#    #+#             */
-/*   Updated: 2024/02/01 18:39:35 by myassine         ###   ########.fr       */
+/*   Updated: 2024/02/02 22:44:29 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,18 +28,32 @@ void	redirect_input(char *filename)
 
 void	apply_redirections_to_command_line(t_all *all)
 {
+	t_dir *tmp;
+
+	tmp = all->test->dir;
 	while (all->test && all->test->dir && all->test->dir->file)
 	{
-		if (all->test->dir->type == APPEND)
-			append_output(all->test->dir->file);
-		else if (all->test->dir->type == IN)
-			redirect_input(all->test->dir->file);
-		else if (all->test->dir->type == OUT)
-			redirect_output(all->test->dir->file);
-		else if (all->test->dir->type == HEREDOC)
+		if(all->str)
+		{
+			if (all->test->dir->type == APPEND)
+				append_output(all->test->dir->file);
+			else if (all->test->dir->type == IN)
+				redirect_input(all->test->dir->file);
+			else if (all->test->dir->type == OUT)
+				redirect_output(all->test->dir->file);
+		}
+		else if(!all->str)
+		{
+			if (all->test->dir->type == APPEND || all->test->dir->type == OUT)
+				redirect_output_append_no_cmd(all->test->dir->file);
+			else if (all->test->dir->type == IN)
+				printf(GREEN"%s: No such file or directory"RESET"\n", all->test->dir->file);
+		}
+		if (all->test->dir->type == HEREDOC)
 			redirect_heredoc(all->test->dir->file, all->saved_stdin, all);
 		all->test->dir = all->test->dir->next;
 	}
+	all->test->dir = tmp;
 }
 
 int	is_bultin(char *args)
