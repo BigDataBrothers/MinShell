@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 00:52:02 by myassine          #+#    #+#             */
-/*   Updated: 2024/02/02 23:45:31 by myassine         ###   ########.fr       */
+/*   Updated: 2024/02/05 23:39:05 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,7 @@ void	for_arg(t_block *test, int *i_a, int *j_a, char **args)
 		while (test->arg[(*j_a)])
 		{
 			return_neg(test->arg[(*j_a)]);
-			/*test->arg[(*j_a)] = */if_quote_2(&test->arg[(*j_a)]);
-			// test->arg[(*j_a)] = if_quote(test->arg[(*j_a)]);
+			if_quote_2(&test->arg[(*j_a)]);
 			args[(*i_a)] = ft_strdup(test->arg[(*j_a)]);
 			(*i_a)++;
 			(*j_a)++;
@@ -57,8 +56,7 @@ char	**creat_args(t_block *test, int *i_a, int *j_a)
 	char	**args;
 
 	return_neg(test->cmd);
-	/*test->cmd = */if_quote_2(&test->cmd);
-	// test->cmd = if_quote(test->cmd);
+	if_quote_2(&test->cmd);
 	if (!test->arg)
 		args = malloc(sizeof(char *) * 2);
 	else
@@ -87,9 +85,15 @@ void	free_tab(char **args)
 	}
 }
 
+void	close_saved(t_all *all)
+{
+	close(all->saved_stdin);
+	close(all->saved_stdout);
+}
+
 int	main(int argc, char **argv, char *envp[])
 {
-	t_all	all;
+	static t_all	all = {0};
 
 	init_all(&all, envp);
 	if (argc > 1)
@@ -97,15 +101,26 @@ int	main(int argc, char **argv, char *envp[])
 	while (1)
 	{
 		if (start_input(&all) == FAILURE)
+		{
+			printf("wqeqw\n");	
 			return (FAILURE);
+		}
 		if(check_error_input(&all))
+		{
+			printf(BACK_BLUE"1er"RST"\n");
 			continue ;
+		}
+		printf(GREEN"input: %s"RESET"\n", all.input);
 		if(parsing(&all))
 			continue ;
+		printf(CYAN"input: %s"RESET"\n", all.input);
 		if (is_empty_input(&all) == FAILURE)
 			exec_all(&all);
+		close_saved(&all);
 	}
+	printf("je quitte\n");
 	terminat(all.input, all.envs, all.env, all.head_env);
+	// free_block_list(all.test);
 	argv = argv;
 	return (all_free_1(all.test, all.env, all.head_env, all.args), SUCCESS);
 }

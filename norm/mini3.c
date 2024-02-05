@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/26 20:07:09 by myassine          #+#    #+#             */
-/*   Updated: 2024/02/02 22:44:29 by myassine         ###   ########.fr       */
+/*   Updated: 2024/02/05 21:34:03 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void	apply_redirections_to_command_line(t_all *all)
 			if (all->test->dir->type == APPEND || all->test->dir->type == OUT)
 				redirect_output_append_no_cmd(all->test->dir->file);
 			else if (all->test->dir->type == IN)
-				printf(GREEN"%s: No such file or directory"RESET"\n", all->test->dir->file);
+				printf("%s: No such file or directory\n", all->test->dir->file);
 		}
 		if (all->test->dir->type == HEREDOC)
 			redirect_heredoc(all->test->dir->file, all->saved_stdin, all);

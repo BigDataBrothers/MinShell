@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/29 18:44:48 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/11 18:33:15 by myassine         ###   ########.fr       */
+/*   Updated: 2024/02/05 23:24:58 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ char	*add_spaces(char *str)
 	int		i;
 	int		j;
 
-	result = (char *)malloc(sizeof(char) * (strlen(str) * 2 + 1));
+	result = (char *)malloc(sizeof(char) * (ft_strlen(str) * 2 + 1));
 	if (result == NULL)
 		return (NULL);
 	i = 0;

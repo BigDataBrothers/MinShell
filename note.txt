@@ -1,9 +1,13 @@
 
 
 /*
-	consider les bulltin comme des command pour ne pas print que la cmd existe pas
-	gerer tout les cas avec des quot char negatif
-	si command ecrit avec chemin absolut l executer
+	CAS A GERER :
+	$ | $
+	.
+	A FAIRE ;
+		$? valeur de retour a gerer
+		leaks a gerer
+		norm
 */
 
 
@@ -25,12 +29,3 @@ export a
 // $OKO>$Okok 2 variable inexistante marche pas avec pipe aussi
 */
 
-/*
-	A FAIRE ;
-		leaks a gerer
-		$? valeur de retour a gerer
-		norm
-		chercher dans sujets fonctions autorisees    -> isatty   avant argc
-
-	si n fichier a existe : a a fait un pb
-*/

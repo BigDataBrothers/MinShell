@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/28 21:47:40 by myassine          #+#    #+#             */
-/*   Updated: 2024/02/01 23:14:31 by myassine         ###   ########.fr       */
+/*   Updated: 2024/02/05 21:00:49 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,7 @@ void	if_quote_2(char **input)
 		else if ((*input)[i])
 			i++;
 	}
+	printf(BLUE"input: %s"RESET"\n", (*input));
 	// if(str)
 		// free(str);
 	// str = ft_strdup()

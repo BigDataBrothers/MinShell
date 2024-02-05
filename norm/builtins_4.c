@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 18:36:06 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/08 18:59:24 by myassine         ###   ########.fr       */
+/*   Updated: 2024/02/05 22:06:46 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void	ft_export(t_env *env, t_env *head_env, t_block *block)
 
 void	ft_unset(t_env *env, t_env *head_env, t_block *block)
 {
-	if ((!ft_strcmp(block->cmd, "unset")) && (block->arg[0])
+	if ((!ft_strcmp(block->cmd, "unset")) && (block->arg && block->arg[0])
 		&& (check_export_exist(env, head_env, block->arg[0])))
 	{
 		sup_env_var(env, head_env, block->arg[0]);

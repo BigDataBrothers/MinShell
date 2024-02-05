@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 00:51:05 by myassine          #+#    #+#             */
-/*   Updated: 2024/02/02 23:44:59 by myassine         ###   ########.fr       */
+/*   Updated: 2024/02/05 22:25:08 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -189,6 +189,7 @@ char		*get_current_directory_with_prompt(void);
 void		eof(char *input, char **envs, t_env *env, t_env *head_env);
 void		terminat(char *input, char **envs, t_env *env, t_env *head_env);
 char		*remove_char_at_index(char *str, int i);
+void		close_saved(t_all *all);
 
 //Print
 void		print_env(t_env *env, t_env *head_env);
@@ -341,7 +342,7 @@ int			check_error_input(t_all *all);
 int			parsing(t_all *all);
 void		dup_in_child(t_all *all);
 void		prepare_block(t_all *all);
-void		exec_multi_cmd(t_all *all);
+void		exec_multi_cmd(t_all *all, int i);
 void		exec_all(t_all *all);
 char		*ft_strjoin_lfree(char *s1, char *s2);
 char		*ft_strjoin_rfree(char *s1, char *s2);
@@ -358,6 +359,7 @@ char		**get_path(char **env);
 int			no_input(char *input);
 
 //mini2.c
+void		sig_antislash(int sig);
 void		sigint_handler(int sig);
 void		all_free_1(t_block *test, t_env *env, t_env *head_env, char **args);
 int			ft_strncmp(const char *s1, const char *s2, size_t n);
@@ -373,8 +375,8 @@ int			is_real_num(const char *num);
 int			ft_exit_1(t_block *block);
 
 //mini4.c
-int			applic_bulltin(t_block *test, t_env *env, t_env *head_env, \
-char **args);
+int	applic_bulltin(t_all *all, t_env *env, t_env *head_env, char **args);
+
 
 //minishell.c
 void		redirect_heredoc(char *delimiter, int saved_stdin, t_all *all);

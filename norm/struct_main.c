@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 17:41:49 by myassine          #+#    #+#             */
-/*   Updated: 2024/02/02 23:36:08 by myassine         ###   ########.fr       */
+/*   Updated: 2024/02/06 00:10:54 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ void	prepare_block(t_all *all)
 	}
 	if (pipe(all->pipe_fds) == -1)
 	{
+		// close_saved(all);
 		all_free_1(all->test, all->env, all->head_env, all->args);
 		exit(EXIT_FAILURE);
 	}
@@ -30,50 +31,47 @@ void	prepare_block(t_all *all)
 	if (all->pid < 0)
 	{
 		perror("fork\n");
+		// close_saved(all);
 		all_free_1(all->test, all->env, all->head_env, all->args);
 		exit(EXIT_FAILURE);
 	}
 }
 
-void	exec_multi_cmd(t_all *all)
+void	exec_multi_cmd(t_all *all, int i)
 {
-	char	*tmp;
-
 	if (all->pid == 0)
 	{
+		signal(SIGINT, &sigint_handler);
+		signal(SIGQUIT, &sig_antislash);
 		dup_in_child(all);
-		if (applic_bulltin(all->test, all->env, all->head_env, all->args))
+		if (applic_bulltin(all, all->env, all->head_env, all->args))
 		{
 			all_free_1(all->test, all->env, all->head_env, all->args);
 			exit(0);
 		}
-		else if (execve(all->args[0], all->args, all->envs) == -1)
-		{
-			if (all->args[0] && all->test->cmd && !all->str && all->test->dir->type != IN)
-			{
-				tmp = ft_strjoin(all->test->cmd, ": command not found\n");
-				write(2, tmp, ft_strlen(tmp));
-				free(tmp);
-			}
-			all_free_1(all->test, all->env, all->head_env, all->args);
-			//free_struct_all(all);
-			exit(127);
-		}
+		execve(all->args[0], all->args, all->envs);
+		write(2, all->test->cmd, ft_strlen(all->test->cmd));
+		write(2, ": command not found\n", 20);
+		close_saved(all);
+		all_free_1(all->test, all->env, all->head_env, all->args);
+		exit(127);
 	}
 	else
 	{
 		close(all->pipe_fds[1]);
-		if (all->test->next)
-			all->prev_pipe_fd = all->pipe_fds[0];
-		else
-			close(all->pipe_fds[0]);
-		all->test = all->test->next;
+		if (i)
+			close(all->prev_pipe_fd);
+		all->prev_pipe_fd = all->pipe_fds[0];
+		// all->test = all->test->next;
+		signal(SIGQUIT, SIG_IGN);
 	}
 }
 
 void	prepare_n_exit(t_all *all)
 {
 	all->args = creat_args(all->test, &all->i_a, &all->j_a);
+	// if(!all->args || !all->args[0])
+		// return ;
 	all->str = verif_cmd(all->args, all->envs);
 	apply_redirections_to_command_line(all);
 	if (all->str != NULL)
@@ -93,52 +91,36 @@ void	prepare_n_exit(t_all *all)
 			exit(ft_atoi(all->test->arg[0]));
 		}
 	}
-}
-
-void	exec_alone_command(t_all *all)
-{
-	char	*tmp;
-
-	if (!applic_bulltin(all->test, all->env, all->head_env, all->args))
-	{
-		all->pid = fork();
-		if ((all->pid) < 0)
-		{
-			perror("fork\n");
-			all_free_1(all->test, all->env, all->head_env, all->args);
-			exit(EXIT_FAILURE);
-		}
-		else if (all->pid == 0 && !is_bultin(all->args[0]) && \
-		execve(all->args[0], all->args, all->envs) == -1)
-		{
-			if (all->args[0] && all->test->cmd && !all->str && all->test->dir->type != IN)
-			{
-				tmp = ft_strjoin(all->test->cmd, ": command not found\n");
-				write(2, tmp, ft_strlen(tmp));
-				free(tmp);
-			}
-			all_free_1(all->test, all->env, all->head_env, all->args);
-			exit(127);
-		}
-	}
-}
+} 
 
 void	exec_all(t_all *all)
 {
-	if (all->command_alone > 0)
+	int i = 0;
+	if (all->command_alone < 1 && is_bultin(all->test->cmd))
 	{
-		all->prev_pipe_fd = -1;
-		while (all->test)
-		{
-			prepare_block(all);
-			exec_multi_cmd(all);
-		}
+		prepare_n_exit(all);
+		applic_bulltin(all, all->env, all->head_env, all->args);
+		free_string_array(all->envs);
+		return ;
 	}
 	else
 	{
-		prepare_n_exit(all);
-		exec_alone_command(all);
-		free_string_array(all->envs);
+		all->prev_pipe_fd = -1;
+		t_block *tmp = all->test;
+		while (tmp)
+		{
+
+			prepare_block(all);
+			exec_multi_cmd(all, i);
+			tmp = tmp->next;
+			i++;
+		}
+		close(all->pipe_fds[0]);
 	}
 	end_prompt(all);
 }
+
+// UNE COMMANDE && BUILTIN
+// 	exec sans fork
+// SINON echo | ls
+// 	exec avec fork

@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 18:35:07 by myassine          #+#    #+#             */
-/*   Updated: 2024/02/02 23:44:48 by myassine         ###   ########.fr       */
+/*   Updated: 2024/02/05 23:36:56 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,18 +56,24 @@ int	start_input(t_all *all)
 
 void	end_prompt(t_all *all)
 {
+	printf("Test\n");
 	unlink("heredoc_temp_file.txt");
 	dup2(all->saved_stdin, STDIN_FILENO);
 	dup2(all->saved_stdout, STDOUT_FILENO);
 	close(all->saved_stdin);
 	close(all->saved_stdout);
-	signal(SIGINT, SIG_IGN);
+	// signal(SIGINT, SIG_IGN);
 	while (1)
 	{
 		all->pid = waitpid(-1, &all->status, 0);
+		if (WIFEXITED(all->status))
+			all->status = WEXITSTATUS(all->status);
+		if (all->status == 131)
+			write(2, "Quit (core dumped)\n", 19);
 		if (all->pid < 0)
 			break ;
 	}
+	signal(SIGINT, &sigint_handler);
 	if(all->args != NULL)
 		free_struct_all(all);
 }
@@ -108,11 +114,11 @@ int		parsing(t_all *all)
 	all->input = expa_chang(all->input, all->env, all->head_env);
 	all->test = NULL;
 	if (check_error(all->input))
-		print_error(check_error(all->input));
+		return (print_error(check_error(all->input)), 1);
 	all->test = tokenization(all->input);
 	all->saved_stdout = dup(STDOUT_FILENO);
 	all->saved_stdin = dup(STDIN_FILENO);
-	return (check_error(all->input));
+	return (0);
 	// printf(BACK_BOLD_RED"all->test->dir->file: %p"RESET"\n", &all->test->dir->file);
 }
 
@@ -120,16 +126,13 @@ void	dup_in_child(t_all *all)
 {
 	if (all->prev_pipe_fd != -1)
 	{
-		if (dup2(all->prev_pipe_fd, STDIN_FILENO) == -1)
-			exit(EXIT_FAILURE);
+		dup2(all->prev_pipe_fd, STDIN_FILENO);
 		close(all->prev_pipe_fd);
 	}
 	if (all->test->next)
-	{
-		if (dup2(all->pipe_fds[1], STDOUT_FILENO) == -1)
-			exit(EXIT_FAILURE);
-		close(all->pipe_fds[1]);
-	}
+		dup2(all->pipe_fds[1], STDOUT_FILENO);
+	close(all->pipe_fds[0]);
+	close(all->pipe_fds[1]);
 	apply_redirections_to_command_line(all);
 	if (all->args && !ft_strcmp(all->test->cmd, "exit" ))
 	{

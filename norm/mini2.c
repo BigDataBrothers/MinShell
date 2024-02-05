@@ -6,11 +6,19 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/26 20:07:13 by myassine          #+#    #+#             */
-/*   Updated: 2024/02/02 21:50:21 by myassine         ###   ########.fr       */
+/*   Updated: 2024/02/05 23:37:11 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+void	sig_antislash(int sig)
+{
+	if (sig == SIGQUIT)
+		exit(131);
+	if (sig == SIGINT)
+		exit(130);
+}
 
 void	sigint_handler(int sig)
 {
