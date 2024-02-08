@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 19:46:28 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/12 18:32:42 by myassine         ###   ########.fr       */
+/*   Updated: 2024/02/08 01:31:11 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,7 @@ int	process_redir(char *input, int *i, int *tmp, int (*is_re_func)(char))
 	while (input[++*i])
 	{
 		if (is_alnum(input[*i]))
-		{
-			*tmp = 0;
-			return (0);
-		}
+			return (*tmp = 0, 0);
 		if (is_spec_char(input[*i]))
 		{
 			if (is_pipe(input[*i]))
@@ -47,9 +44,12 @@ int	check_redir(char *input)
 	int	error;
 	int	tmp;
 
-	i = 0;
+	i = -1;
 	error = 0;
 	tmp = 0;
+	// in_quote(input);
+	// printf("NEG = {%s}\n", input);	
+	i = 0;
 	while (input[i])
 	{
 		tmp = 0;
@@ -62,6 +62,11 @@ int	check_redir(char *input)
 		if (input[i])
 			i++;
 	}
+	i = -1;
+	// while (input[++i])
+		// if (input[i] < 0)
+			// input[i] *= -1;
+	// printf("POS = {%s}\n", input);
 	return (check_redir_result(tmp));
 }
 
@@ -82,6 +87,8 @@ int	check_pipe(char *input)
 			if (!input[i])
 				return (4);
 			skip_whitespace(input, &i);
+			if(is_pipe(input[i]))
+				return (4);
 		}
 		if (input[i])
 			i++;

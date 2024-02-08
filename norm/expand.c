@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/09 02:19:09 by myassine          #+#    #+#             */
-/*   Updated: 2024/02/02 23:16:44 by myassine         ###   ########.fr       */
+/*   Updated: 2024/02/07 23:20:24 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,11 +45,9 @@ void	free_exp(char **v)
 {
 	if (!v)
 		return ;
-	if_free(v[pre_exp]);//0
-	if_free(v[exp]);//1
+	if_free(v[pre_exp]);
+	if_free(v[exp]);
 	if_free(v[post_exp]);
-	//if_free(v[tmp]);//3
-	//printf(BLUE"invalid free %s\n"RESET, v[tmp]);
 	if_free(v[post_input]);
 	if_free(v[concat]);
 }
@@ -62,7 +60,6 @@ char	*process_exp_variable(char *input, int *i, t_env *env, t_env *head_env)
 
 	v[pre_exp] = ft_substr(input, 0, *i);
 	len_exp = len_word_exp(input, *i);
-	// printf(BLUE"len_exp: %d"RESET"\n", len_exp);
 	v[exp] = ft_substr(input, *i, len_exp);
 	j = *i + ft_strlen(v[exp]);
 	v[post_exp] = ft_substr(input, j, ft_strlen(input));

@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 18:35:07 by myassine          #+#    #+#             */
-/*   Updated: 2024/02/05 23:36:56 by myassine         ###   ########.fr       */
+/*   Updated: 2024/02/08 01:16:18 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,6 @@ int	start_input(t_all *all)
 
 void	end_prompt(t_all *all)
 {
-	printf("Test\n");
 	unlink("heredoc_temp_file.txt");
 	dup2(all->saved_stdin, STDIN_FILENO);
 	dup2(all->saved_stdout, STDOUT_FILENO);
@@ -80,7 +79,6 @@ void	end_prompt(t_all *all)
 void	free_struct_all(t_all *all)
 {
 	free_string_array(all->args);
-	// (void)all->args;
 	free_block_list(all->test);
 	all->test = NULL;
 }
@@ -119,7 +117,6 @@ int		parsing(t_all *all)
 	all->saved_stdout = dup(STDOUT_FILENO);
 	all->saved_stdin = dup(STDIN_FILENO);
 	return (0);
-	// printf(BACK_BOLD_RED"all->test->dir->file: %p"RESET"\n", &all->test->dir->file);
 }
 
 void	dup_in_child(t_all *all)
@@ -143,8 +140,3 @@ void	dup_in_child(t_all *all)
 		}
 	}
 }
-
-// .
-// $ | $
-// $lol | echo mdr.
-// "$c" et $c meme comportement 

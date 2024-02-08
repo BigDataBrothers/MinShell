@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 21:39:12 by myassine          #+#    #+#             */
-/*   Updated: 2024/02/05 23:37:56 by myassine         ###   ########.fr       */
+/*   Updated: 2024/02/07 19:58:30 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,10 +62,7 @@ void	choose_type_redir(char **token, int j, t_dir *new_dir)
 void	process_command_token(char **token, int *j, t_block *tmp)
 {
 	if (!tmp->cmd && !is_redir(token[*j]))
-	{
 		tmp->cmd = ft_strdup(token[(*j)++]);
-		printf("ADDRESS %p\n", tmp->cmd);
-	}
 }
 
 void	process_redirection_token(char **token, int *j, t_block *tmp)

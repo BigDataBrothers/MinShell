@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/26 20:07:13 by myassine          #+#    #+#             */
-/*   Updated: 2024/02/05 23:37:11 by myassine         ###   ########.fr       */
+/*   Updated: 2024/02/08 00:45:34 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,51 +55,41 @@ int	ft_strncmp(const char *s1, const char *s2, size_t n)
 	return (0);
 }
 
-void	redirect_output_append_no_cmd(char *filename)
+
+void	redirect_output(char *filename, t_all *all)
 {
 	int	file;
 
 	file = open(filename, O_CREAT | O_TRUNC | O_WRONLY, 0644);
 	if (file == -1)
 	{
-		perror("Erreur lors de l'ouverture du fichier");
-		exit(EXIT_FAILURE);
-	}
-	close(file);
-}
-
-void	redirect_output(char *filename)
-{
-	int	file;
-
-	file = open(filename, O_CREAT | O_TRUNC | O_WRONLY, 0644);
-	if (file == -1)
-	{
-		perror("Erreur lors de l'ouverture du fichier");
+		perror(filename);
+		close_saved(all);
 		exit(EXIT_FAILURE);
 	}
 	if (dup2(file, STDOUT_FILENO) == -1)
 	{
-		perror("Erreur lors de la redirection de la sortie standard");
+		write(2, "Erreur lors de la redirection de la sortie standard\n", 53);
 		close(file);
 		exit(EXIT_FAILURE);
 	}
 	close(file);
 }
 
-void	append_output(char *filename)
+void	append_output(char *filename, t_all *all)
 {
 	int	file;
 
 	file = open(filename, O_CREAT | O_APPEND | O_WRONLY, 0644);
 	if (file == -1)
 	{
-		perror("Erreur lors de l'ouverture du fichier en mode ajout");
+		perror(filename);
+		close_saved(all);
 		exit(EXIT_FAILURE);
 	}
 	if (dup2(file, STDOUT_FILENO) == -1)
 	{
-		perror("Erreur lors de la redirection de la sortie standard");
+		write(2, "Erreur lors de la redirection de la sortie standard\n", 53);
 		close(file);
 		exit(EXIT_FAILURE);
 	}

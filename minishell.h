@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 00:51:05 by myassine          #+#    #+#             */
-/*   Updated: 2024/02/05 22:25:08 by myassine         ###   ########.fr       */
+/*   Updated: 2024/02/08 00:41:48 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,6 +157,7 @@ typedef struct s_all
 	int		i_a;
 	int		j_a;
 	int		status;
+	int		erreur;
 }	t_all;
 
 enum e_REDIR_TYPES
@@ -193,8 +194,8 @@ void		close_saved(t_all *all);
 
 //Print
 void		print_env(t_env *env, t_env *head_env);
-void		print_env1(char *envp[]);
 void		print_error(int error);
+void	print_error_2(char *pre_arg, char *arg, char *post_arg);
 void		print_input(char *input);
 void		print_tab(char **tab, char *prefix);
 
@@ -363,13 +364,12 @@ void		sig_antislash(int sig);
 void		sigint_handler(int sig);
 void		all_free_1(t_block *test, t_env *env, t_env *head_env, char **args);
 int			ft_strncmp(const char *s1, const char *s2, size_t n);
-void		redirect_output(char *filename);
-void		append_output(char *filename);
+void		redirect_output(char *filename, t_all *all);
+void		append_output(char *filename, t_all *all);
 
 //mini3.c
-void		redirect_input(char *filename);
+void		redirect_input(char *filename, t_all *all);
 void		apply_redirections_to_command_line(t_all *all);
-void		redirect_output_append_no_cmd(char *filename);
 int			is_bultin(char *args);
 int			is_real_num(const char *num);
 int			ft_exit_1(t_block *block);

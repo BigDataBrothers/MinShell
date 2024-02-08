@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/09 02:20:08 by myassine          #+#    #+#             */
-/*   Updated: 2023/12/28 17:39:33 by myassine         ###   ########.fr       */
+/*   Updated: 2024/02/07 22:41:55 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,15 +17,15 @@ void	print_error(int error)
 	if (!error)
 		return ;
 	if (error == 1)
-		printf("Syntax error :\nSimple quote is open\n");
+		write(2, "Syntax error :\nSimple quote is open\n", 37);
 	else if (error == 2)
-		printf("Syntax error :\nDouble quote is open\n");
+		write(2, "Syntax error :\nDouble quote is open\n", 37);
 	else if (error == 3)
-		printf("Syntax error :\nRedirection is fail\n");
+		write(2, "Syntax error :\nRedirection is fail\n", 36);
 	else if (error == 4)
-		printf("Syntax error :\nPipe is fail\n");
+		write(2, "Syntax error :\nPipe is fail\n", 29);
 	else if (error == 5)
-		printf("Syntax error :\nambiguous redirect\n");
+		write(2, "Syntax error :\nambiguous redirect\n", 35);
 }
 //ECRIRE SUR LA SORTI D ERREUR
 
@@ -38,17 +38,6 @@ void	print_env(t_env *env, t_env *head_env)
 		env = env->next;
 	}
 	env = head_env;
-}
-
-void	print_env1(char *envp[])
-{
-	int	i;
-
-	printf(YELLOW"******************************************\n");
-	i = 0;
-	while (envp[i])
-		printf("%s\n", envp[i++]);
-	printf(YELLOW"******************************************\n");
 }
 
 void	print_input(char *input)

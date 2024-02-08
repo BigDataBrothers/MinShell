@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 17:41:49 by myassine          #+#    #+#             */
-/*   Updated: 2024/02/06 00:10:54 by myassine         ###   ########.fr       */
+/*   Updated: 2024/02/08 01:14:31 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	prepare_block(t_all *all)
 	}
 	if (pipe(all->pipe_fds) == -1)
 	{
-		// close_saved(all);
+		perror("pipe\n");
 		all_free_1(all->test, all->env, all->head_env, all->args);
 		exit(EXIT_FAILURE);
 	}
@@ -31,10 +31,39 @@ void	prepare_block(t_all *all)
 	if (all->pid < 0)
 	{
 		perror("fork\n");
-		// close_saved(all);
 		all_free_1(all->test, all->env, all->head_env, all->args);
 		exit(EXIT_FAILURE);
 	}
+}
+
+
+void free_one_block(t_block *block)
+{
+	int i;
+
+	(void)i;
+	(void)block;
+	i = -1;
+	while(block->arg && block->arg[++i])
+		free(block->arg[i]);
+	free(block->cmd);
+	t_dir *tmp = block->dir;
+   	// t_dir *temp;
+
+   while (block->dir != NULL)
+    {
+		free(block->dir->file);
+       tmp = block->dir;
+       block->dir = block->dir->next;
+       free(tmp);
+    }
+	// while (tmp)
+	// {
+	// 	free(tmp->file);
+	// 	tmp->file = NULL;
+	// 	tmp = tmp->next;
+	// }
+	// free_start_dir(block->dir);
 }
 
 void	exec_multi_cmd(t_all *all, int i)
@@ -50,8 +79,11 @@ void	exec_multi_cmd(t_all *all, int i)
 			exit(0);
 		}
 		execve(all->args[0], all->args, all->envs);
-		write(2, all->test->cmd, ft_strlen(all->test->cmd));
-		write(2, ": command not found\n", 20);
+		if(!all->erreur)
+		{
+			write(2, all->test->cmd, ft_strlen(all->test->cmd));
+			write(2, ": command not found\n", 20);
+		}
 		close_saved(all);
 		all_free_1(all->test, all->env, all->head_env, all->args);
 		exit(127);
@@ -62,16 +94,17 @@ void	exec_multi_cmd(t_all *all, int i)
 		if (i)
 			close(all->prev_pipe_fd);
 		all->prev_pipe_fd = all->pipe_fds[0];
-		// all->test = all->test->next;
 		signal(SIGQUIT, SIG_IGN);
 	}
+	t_block *tmp;
+	tmp = all->test;
+	all->test = all->test->next;
+	free_one_block(tmp);
 }
 
 void	prepare_n_exit(t_all *all)
 {
 	all->args = creat_args(all->test, &all->i_a, &all->j_a);
-	// if(!all->args || !all->args[0])
-		// return ;
 	all->str = verif_cmd(all->args, all->envs);
 	apply_redirections_to_command_line(all);
 	if (all->str != NULL)
@@ -101,6 +134,8 @@ void	exec_all(t_all *all)
 		prepare_n_exit(all);
 		applic_bulltin(all, all->env, all->head_env, all->args);
 		free_string_array(all->envs);
+		free_struct_all(all);
+
 		return ;
 	}
 	else

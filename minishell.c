@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 00:52:02 by myassine          #+#    #+#             */
-/*   Updated: 2024/02/05 23:39:05 by myassine         ###   ########.fr       */
+/*   Updated: 2024/02/08 01:13:59 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,33 @@ void	close_saved(t_all *all)
 	close(all->saved_stdout);
 }
 
+int is_space_word(char *str)
+{
+	int i;
+	
+	i = -1;
+	if(!str)
+		return (0);
+	while(str[++i])
+		if(!is_space(str[i]))
+			return (1);
+	return (0);
+}
+
+int	verif_block(t_block* block)
+{
+	t_block	*tmp;
+
+	tmp = block;
+	while(tmp)
+	{
+		if(!is_space_word(tmp->cmd) && tmp->dir->type == -1)
+			return (1);
+		tmp = tmp->next;
+	}
+	return (0);
+}
+
 int	main(int argc, char **argv, char *envp[])
 {
 	static t_all	all = {0};
@@ -101,26 +128,26 @@ int	main(int argc, char **argv, char *envp[])
 	while (1)
 	{
 		if (start_input(&all) == FAILURE)
-		{
-			printf("wqeqw\n");	
 			return (FAILURE);
-		}
+		if (!all.input)
+			break ;
+		if (!*all.input || !is_space_word(all.input))
+			continue;
 		if(check_error_input(&all))
-		{
-			printf(BACK_BLUE"1er"RST"\n");
 			continue ;
-		}
-		printf(GREEN"input: %s"RESET"\n", all.input);
 		if(parsing(&all))
 			continue ;
-		printf(CYAN"input: %s"RESET"\n", all.input);
+		if(verif_block(all.test))
+		{
+			write(2, "minishell: syntax error near unexpected token `|'\n", 51);
+			close_saved(&all);
+			continue ;
+		}
 		if (is_empty_input(&all) == FAILURE)
 			exec_all(&all);
 		close_saved(&all);
 	}
-	printf("je quitte\n");
 	terminat(all.input, all.envs, all.env, all.head_env);
-	// free_block_list(all.test);
 	argv = argv;
 	return (all_free_1(all.test, all.env, all.head_env, all.args), SUCCESS);
 }

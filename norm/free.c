@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/27 18:58:47 by myassine          #+#    #+#             */
-/*   Updated: 2024/02/02 22:06:17 by myassine         ###   ########.fr       */
+/*   Updated: 2024/02/07 22:39:52 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,10 @@ void	free_struct_dir(t_dir *dir)
 {
 	t_dir *tmp;
 
-	// printf("dir == %p", dir);
 	while (dir)
 	{
 		tmp = dir;
 		dir = dir->next;
-		// printf("file == %s", tmp->file);
 		free(tmp->file);
 		free(tmp);
 	}
@@ -33,15 +31,11 @@ void	free_block(t_block *block)
 	{
 		if (block->cmd)
 		{
-			// printf(BACK_RED"TEST"RST"\n");
 			free(block->cmd);
-			// printf(CYAN"block->cmd: %p"RESET"\n", block->cmd);
 			block->cmd = NULL;
 		}
 		if(block->arg)
 			free_string_array(block->arg);
-		// printf(CYAN"block->arg: %p"RESET"\n", block->arg);
-		// printf(BACK_GREEN"block->arg[0]: %s"RST"\n", block->arg[0]);
 		block->arg = NULL;
 		free_struct_dir(block->dir);
 		free(block);

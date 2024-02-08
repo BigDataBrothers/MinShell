@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 18:34:30 by myassine          #+#    #+#             */
-/*   Updated: 2024/01/08 18:59:17 by myassine         ###   ########.fr       */
+/*   Updated: 2024/02/07 23:32:36 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,17 @@ void	ft_env(t_env *env, t_env *head_env, t_block *block)
 		print_env(env, head_env);
 }
 
+void	print_error_2(char *pre_arg, char *arg, char *post_arg)
+{
+	if (pre_arg)
+		write(2, pre_arg, ft_strlen(pre_arg));
+	if (arg)
+		write(2, arg, ft_strlen(arg));
+	if (post_arg)
+		write(2, post_arg, ft_strlen(post_arg));
+	write(2, "\n", 1);
+}
+
 int	cut_export_argument(char *arg_export)
 {
 	char	**exported;
@@ -89,7 +100,7 @@ int	cut_export_argument(char *arg_export)
 	exported = ft_split_path(arg_export, '=');
 	status_export = check_export(exported[0]);
 	if (!status_export)
-		return (printf("export: `%s': not a valid identifier\n", exported[0]),
+		return (print_error_2("export: `", exported[0], "': not a valid identifier\n"),
 			SUCCESS);
 	return (SUCCESS);
 }

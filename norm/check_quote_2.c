@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/28 21:47:40 by myassine          #+#    #+#             */
-/*   Updated: 2024/02/05 21:00:49 by myassine         ###   ########.fr       */
+/*   Updated: 2024/02/08 00:40:56 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,13 +79,9 @@ void	if_quote_2(char **input)
 		{
 			c = (*input)[i];
 			str = remove_char_at_index((*input), i);
-			// if (!str)
-			//  return (NULL);
 			while (str[i] && str[i] != c)
 				if (str[i++] < 0)
 					str[i - 1] *= -1;
-			// if((*input))
-			// 	free((*input));
 			tmp = (*input);
 			(*input) = remove_char_at_index(str, i);
 			free(tmp);
@@ -94,11 +90,6 @@ void	if_quote_2(char **input)
 		else if ((*input)[i])
 			i++;
 	}
-	printf(BLUE"input: %s"RESET"\n", (*input));
-	// if(str)
-		// free(str);
-	// str = ft_strdup()
-	// return (input);
 }
 
 char	*if_quote(char *input)
@@ -129,9 +120,6 @@ char	*if_quote(char *input)
 		else if (input[i])
 			i++;
 	}
-	// if(str)
-		// free(str);
-	// str = ft_strdup()
 	return (input);
 }
 

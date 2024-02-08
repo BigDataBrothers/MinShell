@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/29 18:43:20 by myassine          #+#    #+#             */
-/*   Updated: 2024/02/05 23:17:20 by myassine         ###   ########.fr       */
+/*   Updated: 2024/02/08 01:05:03 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,16 +36,10 @@ void	allocate_and_assign_arguments(char **token, int *j, t_block *tmp)
 			process_command_token(token, j, tmp);
 		else
 			args[v++] = ft_strdup(token[*j]);
-		// printf(CYAN"tmp->cmd2: %s"RESET"\n", tmp->cmd);
-		// printf(GREEN"tmp->dir->file2: %p"RESET"\n", tmp->dir->file);
 		(*j)++;
 	}
-	// tmp->dir = tmp_1;
-	// printf(YELLOW"tmp->dir->file: %s"RESET"\n", tmp->dir->file);
-	// printf(YELLOW"tmp->dir->next: %p"RESET"\n", tmp->dir->next);
 	args[v] = '\0';
 	tmp->arg = args;
-	// printf(YELLOW"tmp->arg: %p"RESET "\n", tmp->arg);
 }
 
 int	treat_token(char **token, int *j, t_block *tmp)
@@ -91,7 +85,6 @@ int	treat_cmd_line(char *cmd_line, t_block *tmp)
 		return (free_string_array(token), 0);
 	free_start_dir(tmp->dir);
 	tmp->dir = head;
-	// printf(PURPLE"tmp->dir->file: %p"RESET"\n", tmp->dir->file);
 	free_string_array(token);
 	return (0);
 }
