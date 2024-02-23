@@ -6,74 +6,90 @@
 #    By: myassine <myassine@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/10/06 02:16:52 by myassine          #+#    #+#              #
-#    Updated: 2024/02/05 20:42:14 by myassine         ###   ########.fr        #
+#    Updated: 2024/02/23 16:41:45 by myassine         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-SRCS			= 	minishell.c \
-					norm/main_1.c \
-					norm/struct_main.c \
-					norm/struct_main2.c \
-					norm/check_quote.c \
-					norm/check_quote_2.c \
-					norm/redirect_heredoc.c\
-					norm/lib_mini.c \
-					norm/lib_mini_2.c \
-					norm/lib_mini_3.c \
-					norm/lib_mini_4.c \
-					norm/ft_split_path.c \
-					norm/tokenization.c \
-					norm/tokenization_2.c \
-					norm/tokenization_3.c \
-					norm/verifcmd.c \
-					norm/free.c \
-					norm/print.c \
-					norm/mini1.c \
-					norm/mini2.c \
-					norm/mini3.c \
-					norm/mini4.c \
-					norm/malloc.c \
-					norm/expand.c \
-					norm/expand_2.c \
-					norm/lstsplit.c \
-					norm/builtins.c \
-					norm/builtins_2.c \
-					norm/builtins_3.c \
-					norm/builtins_4.c \
-					norm/builtins_5.c \
-					norm/skip_char.c \
-					norm/check_error.c \
-					norm/check_char.c \
-					norm/check_char_2.c \
-					norm/check_char_3.c \
-					norm/check_redir_a_pipe.c \
-					norm/env.c
+SRCS_DIR = srcs/
 
+SRCS			= 	minishell.c \
+					main_1.c \
+					struct_main.c \
+					struct_main2.c \
+					check_quote.c \
+					check_quote_2.c \
+					redirect_heredoc.c\
+					lib_mini.c \
+					lib_mini_2.c \
+					lib_mini_3.c \
+					lib_mini_4.c \
+					ft_split_path.c \
+					tokenization.c \
+					tokenization_2.c \
+					tokenization_3.c \
+					verifcmd.c \
+					free.c \
+					print.c \
+					mini1.c \
+					mini2.c \
+					mini3.c \
+					mini4.c \
+					malloc.c \
+					expand.c \
+					expand_2.c \
+					lstsplit.c \
+					builtins.c \
+					builtins_2.c \
+					builtins_3.c \
+					builtins_4.c \
+					builtins_5.c \
+					skip_char.c \
+					check_error.c \
+					check_char.c \
+					check_char_2.c \
+					check_char_3.c \
+					check_redir_a_pipe.c \
+					env.c
+ 
+SRCS_PATH = $(addprefix $(SRCS_DIR), $(SRCS))
+
+OBJ_DIR 		= .obj/
 OBJS			= $(SRCS:.c=.o)
+OBJS_PATH = $(addprefix $(OBJ_DIR), $(OBJS))
+
 
 CC				= gcc
 RM				= rm -f
-CFLAGS			= -Wall -Wextra -Werror -g3 -g #-fsanitize=address
+CFLAGS			= -I. -Wall -Wextra -Werror -g3 -g #-fsanitize=address
 LIBS			= -lpthread -lreadline
 
 NAME			= minishell
 
-all:			$(NAME)
+all:			
+	@mkdir -p $(OBJ_DIR)
+	make $(NAME)
 
-$(NAME):		$(OBJS)
-				gcc ${CFLAGS} -o ${NAME} ${OBJS} ${LIBS}
+$(NAME):		$(OBJS_PATH) $(SRCS_PATH)
+				@gcc ${CFLAGS} -o ${NAME} ${OBJS_PATH} ${LIBS}
+				@echo -e Compiled '\033[1;32m' $(NAME) '\033[0m'
+
+$(OBJ_DIR)%.o: $(SRCS_DIR)%.c
+	@echo -e Compiling '\033[0;34m $< \033[0m'
+	@gcc $(CFLAGS) -c $< -o $@ 
+	
 
 clean:
-				$(RM) $(OBJS) $(BONUS_OBJS)
+				@$(RM) $(OBJ_DIR)* $(BONUS_OBJS)
+				@echo -e '\033[0;33m$(RM) $(OBJ_DIR)* $(BONUS_OBJS) \033[0m'
 
 fclean:			clean
-				$(RM) $(NAME)
+				@$(RM) $(NAME)
+				@echo -e '\033[0;33m$(RM) $(NAME) \033[0m'
 
 re:				fclean $(NAME)
 
 v: $(NAME)
-	valgrind --leak-check=full --suppressions=valgrind_leaks_ignore.txt --show-leak-kinds=all --track-fds=yes ./minishell
-
+	valgrind --suppressions=./valg.supp --track-fds=yes --leak-check=full --show-leak-kinds=all ./minishell
 i: re
 	@valgrind --leak-check=full --suppressions=valgrind_leaks_ignore.txt --show-leak-kinds=all --track-origins=yes --log-file=valgrind.log env -i ./minishell
 .PHONY:			all clean fclean re valgrind

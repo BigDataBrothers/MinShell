@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 00:51:05 by myassine          #+#    #+#             */
-/*   Updated: 2024/02/08 00:41:48 by myassine         ###   ########.fr       */
+/*   Updated: 2024/02/23 17:24:00 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,8 @@
 //   STRUCTURES   //
 ////////////////////
 
+extern int	g_ctrl_c;
+
 enum e_dir
 {
 	FILES,
@@ -126,12 +128,10 @@ typedef struct s_dir
 
 typedef struct s_block
 {
-	char	*cmd;
-	char	**arg;
-	int		pipe_out;
-	int		pipe_in;
-	void	*next;
-	t_dir	*dir;
+	char			*cmd;
+	char			**arg;
+	struct s_block	*next;
+	t_dir			*dir;
 }	t_block;
 
 typedef struct s_all
@@ -141,6 +141,7 @@ typedef struct s_all
 	t_env	*env;
 	t_env	*head_env;
 	t_block	*test;
+	t_block	*head;
 
 	char	*input;
 	char	*path;
@@ -168,10 +169,14 @@ enum e_REDIR_TYPES
 	HEREDOC
 };
 
+void		freeme(t_all *all, int action);
+int			len_z_tab(char *str);
+char		*mouv_tab(char *cmd);
+
+/* ************************************************************************** */
 char		**ft_split_path(char const *s, char c);
 //Tokenizer
-t_block		*tokenization(char *input);
-t_block		*initialize_and_prepare(char **input);
+t_block		*tokenization(t_all *all);
 t_dir		*create_new_dir(void);
 void		process_commands(char **split_input, t_block *original);
 void		choose_type_redir(char **token, int j, t_dir *new_dir);
@@ -184,34 +189,34 @@ void		cleanup_memory(char **split_input);
 int			treat_token(char **token, int *j, t_block *tmp);
 int			treat_cmd_line(char *cmd_line, t_block *tmp);
 char		*add_spaces(char *str);
-
+void		free_struct_dir(t_dir *dir);
 //Minishell
 char		*get_current_directory_with_prompt(void);
 void		eof(char *input, char **envs, t_env *env, t_env *head_env);
 void		terminat(char *input, char **envs, t_env *env, t_env *head_env);
 char		*remove_char_at_index(char *str, int i);
 void		close_saved(t_all *all);
-
 //Print
 void		print_env(t_env *env, t_env *head_env);
 void		print_error(int error);
-void	print_error_2(char *pre_arg, char *arg, char *post_arg);
+void		print_error_2(char *pre_arg, char *arg, char *post_arg);
 void		print_input(char *input);
 void		print_tab(char **tab, char *prefix);
 
 //Free
 void		if_free(char *ptr);
 void		free_block(t_block *block);
+void		free_block2(t_block *test);
 void		free_block_list(t_block *head);
 void		freeStringArrays(char ***arrays);
 void		free_string_array(char **arrays);
 void		terminat(char *input, char **envs, t_env *env, t_env *head_env);
 void		free_struct_all(t_all *all);
 
+int			ft_lstsize_block(t_block *lst);
 
 //Expand
-void		expand_variables(char *input);
-char		*expa_chang(char *input, t_env *env, t_env *head_env);
+char		*expa_chang(char *input, t_all *all);
 char		*exp_(char *exp, t_env *env, t_env *head_env);
 void		if_free(char *ptr);
 void		free_exp(char **v);
@@ -303,7 +308,8 @@ int			handle_simple_quote(int s);
 int			handle_double_quote(int d);
 int			process_dollar_sign(char *input, int i);
 int			check_quotes(int s, int d);
-
+void		sigint_handler_fork(int sig);
+void		rsigint_handle(int sig);
 //Chevk_quote_2
 int			ft_quote(char *input);
 void		in_quote(char *input);
@@ -355,13 +361,15 @@ t_dir		*malloc_dir(void);
 t_block		*new_block(void);
 char		**add_new_block_tab(char ***tab, char *str);
 
+void		sigint_handler(int sig);
+
 //mini1.c
 char		**get_path(char **env);
 int			no_input(char *input);
 
 //mini2.c
 void		sig_antislash(int sig);
-void		sigint_handler(int sig);
+// void		sigint_handler(int sig);
 void		all_free_1(t_block *test, t_env *env, t_env *head_env, char **args);
 int			ft_strncmp(const char *s1, const char *s2, size_t n);
 void		redirect_output(char *filename, t_all *all);
@@ -375,12 +383,11 @@ int			is_real_num(const char *num);
 int			ft_exit_1(t_block *block);
 
 //mini4.c
-int	applic_bulltin(t_all *all, t_env *env, t_env *head_env, char **args);
-
+int			aplic_bulltin(t_all *all, t_env *env, t_env *head_env, char **args);
 
 //minishell.c
 void		redirect_heredoc(char *delimiter, int saved_stdin, t_all *all);
-
+void		sigdoc(int sig);
 //lstsplit.c
 char		**ft_lstsplit(t_env **lst);
 char		*verif_cmd(char **args, char **env);

@@ -1,3 +1,31 @@
+PAS GERER
+
+
+cmd / bad cmd
+exit
+
+
+
+
+
+cat << l | ls | << a | grep "mini" | test | echo "asd\n" | ls | cat launch | cat > out | test
+
+a/bin/ls | test | cat out | << l
+
+grep "mini" | echo "asd\n"  
+
+
+
+
+
+heredoc execve
+heredoc | cat -e
+
+ < ls > aaaa >> bbbb > cccc cat | leaks & invalid read
+ redir | bad result $ leak
+ $var_env | leak
+
+/*                                                  */
 ls -la | grep -i MY | wc -l > ok > abc 
 cat abc
 export abc=$USER
@@ -20,3 +48,27 @@ echo "'$USER$USER'"
 ls -la | grep -i MY | wc -l > ok > abc 
 
 exit 8
+
+
+// all == addresse d une structure t_all
+// *all == valeur a l adresse stockee
+// &all == addresse de all
+
+// {
+// t_lst *lst; lst == addr d un lst  *lst == valeur dans struct lst  &lst == 
+
+// lst = 0xfee7548;
+
+// lst->next = 0xfee7548
+// }
+
+// call(&lst);
+
+// {
+
+
+// lst == 0x1684ade
+
+// *lst = (*lst)->next;
+
+// }
