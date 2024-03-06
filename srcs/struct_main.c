@@ -6,98 +6,37 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 17:41:49 by myassine          #+#    #+#             */
-/*   Updated: 2024/02/23 18:59:24 by myassine         ###   ########.fr       */
+/*   Updated: 2024/03/03 20:45:40 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	prepare_block(t_all *all)
+void	exec(t_all *all, char *n_cmd)
 {
-	if (all->args)
-		free_string_array(all->args);
-	all->args = creat_args(all->test, &all->i_a, &all->j_a);
-	all->str = verif_cmd(all->args, all->envs);
-	if (all->str != NULL)
+	if (aplic_bulltin(all, all->env, all->head_env, all->args))
 	{
-		all->args[0] = ft_strdup(all->str);
-		free(all->str);
-		all->str = NULL;
+		freeme(all, 1);
+		close_saved(all);
+		exit(0);
 	}
-	if (pipe(all->pipe_fds) == -1)
+	if (all->args[0] && g_ctrl_c != 130)
+		execve(all->args[0], all->args, all->envs);
+	if (n_cmd)
+		free(n_cmd);
+	if (!all->erreur && all->test->cmd && !g_ctrl_c)
 	{
-		perror("pipe\n");
-		all_free_1(all->test, all->env, all->head_env, all->args);
-		exit(EXIT_FAILURE);
+		n_cmd = mouv_tab(all->test->cmd);
+		write(2, n_cmd, ft_strlen(n_cmd));
+		write(2, ": command not found\n", 20);
+		free(n_cmd);
 	}
-	all->pid = fork();
-	if (all->pid < 0)
-	{
-		perror("fork\n");
-		all_free_1(all->test, all->env, all->head_env, all->args);
-		exit(EXIT_FAILURE);
-	}
-}
-
-void	free_one_block(t_block *block)
-{
-	int		i;
-	t_dir	*tmp;
-
-	(void)i;
-	(void)block;
-	i = -1;
-	while (block->arg && block->arg[++i])
-		free(block->arg[i]);
-	free(block->cmd);
-	tmp = block->dir;
-	while (block->dir != NULL)
-	{
-		free(block->dir->file);
-		tmp = block->dir;
-		block->dir = block->dir->next;
-		free(tmp);
-	}
-}
-
-int	len_z_tab(char *str)
-{
-	int	len;
-	int	it;
-
-	len = 0;
-	it = -1;
-	while (str[++it])
-		if (str[it] != '\t')
-			len++;
-	return (len);
-}
-
-char	*mouv_tab(char *cmd)
-{
-	char	*n_cmd;
-	int		it;
-	int		it2;
-
-	it = 0;
-	it2 = 0;
-	n_cmd = malloc(sizeof(char) * len_z_tab(cmd) + 1);
-	if (!n_cmd)
-		return (NULL);
-	while (cmd[it])
-	{
-		if (cmd[it] != '\t')
-			n_cmd[it2++] = cmd[it];
-		it++;
-	}
-	n_cmd[it2] = '\0';
-	return (n_cmd);
 }
 
 void	exec_multi_cmd(t_all *all, int i)
 {
 	char	*n_cmd;
-;
+
 	n_cmd = NULL;
 	signal(SIGINT, &rsigint_handle);
 	if (all->pid == 0)
@@ -105,25 +44,7 @@ void	exec_multi_cmd(t_all *all, int i)
 		signal(SIGINT, &rsigint_handle);
 		signal(SIGQUIT, &sig_antislash);
 		dup_in_child(all);
-		if (aplic_bulltin(all, all->env, all->head_env, all->args))
-		{
-			freeme(all, 1);
-			exit(0);
-		}
-		if (all->args[0] && !g_ctrl_c)
-		{
-			execve(all->args[0], all->args, all->envs);
-		}
-		if (n_cmd)
-			free(n_cmd);
-		if (!all->erreur && all->test->cmd && !g_ctrl_c)
-		{
-			n_cmd = mouv_tab(all->test->cmd);
-			write(2, n_cmd, ft_strlen(n_cmd));
-			write(2, ": command not found\n", 20);
-			free(n_cmd);
-		}
-		close_saved(all);
+		exec(all, n_cmd);
 		freeme(all, 1);
 		exit(127);
 	}
@@ -148,7 +69,11 @@ void	prepare_n_exit(t_all *all)
 	all->str = verif_cmd(all->args, all->envs);
 	apply_redirections_to_command_line(all);
 	if (all->str != NULL)
+	{
+		free(all->args[0]);
 		all->args[0] = ft_strdupf(all->str);
+		all->str = NULL;
+	}
 	if (!ft_strcmp(all->test->cmd, "exit"))
 	{
 		if (ft_exit_1(all->test))
@@ -163,6 +88,19 @@ void	prepare_n_exit(t_all *all)
 	}
 }
 
+int	exec_all_2(t_all *all)
+{
+	if (all->command_alone < 1 && is_bultin(all->test->cmd))
+	{
+		all->pid = -1;
+		prepare_n_exit(all);
+		if (all->i_a != -1 && all->j_a != -1)
+			aplic_bulltin(all, all->env, all->head_env, all->args);
+		return (0);
+	}
+	return (1);
+}
+
 void	exec_all(t_all *all)
 {
 	t_block	*tmp;
@@ -170,13 +108,7 @@ void	exec_all(t_all *all)
 	int		i;
 
 	i = 0;
-	if (all->command_alone < 1 && is_bultin(all->test->cmd))
-	{
-		prepare_n_exit(all);
-		aplic_bulltin(all, all->env, all->head_env, all->args);
-		return ;
-	}
-	else
+	if (exec_all_2(all))
 	{
 		all->prev_pipe_fd = -1;
 		all->head = all->test;

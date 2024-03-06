@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 18:35:07 by myassine          #+#    #+#             */
-/*   Updated: 2024/02/23 18:57:53 by myassine         ###   ########.fr       */
+/*   Updated: 2024/03/03 20:48:13 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,18 @@
 
 int	start_input(t_all *all)
 {
+	g_ctrl_c = 0;
+	if (all->test)
+		all->test = NULL;
+	if (all->str)
+		all->str = NULL;
 	signal(SIGINT, &sigint_handler);
 	signal(SIGQUIT, SIG_IGN);
 	all->path = get_current_directory_with_prompt();
 	if (all->envs)
 		free_string_array(all->envs);
 	all->envs = ft_lstsplit(&all->env);
+	all->head_env = all->env;
 	if (!all->path)
 		return (FAILURE);
 	while (all->path[all->i_a])
@@ -60,16 +66,6 @@ void	end_prompt(t_all *all)
 		}
 	}
 	signal(SIGINT, &sigint_handler);
-}
-
-void	free_struct_all(t_all *all)
-{
-	if (all->args)
-		free_string_array(all->args);
-	if (all->env)
-		free_env(all->env, all->head_env);
-	if (all->envs)
-		free_string_array(all->envs);
 }
 
 int	check_error_input(t_all *all)

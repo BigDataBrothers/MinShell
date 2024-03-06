@@ -6,26 +6,36 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/26 20:07:09 by myassine          #+#    #+#             */
-/*   Updated: 2024/02/23 17:09:48 by myassine         ###   ########.fr       */
+/*   Updated: 2024/03/03 21:14:05 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	redirect_input(char *filename, t_all *all)
+int	redirect_input(char *filename, t_all *all)
 {
 	int	file;
 
 	file = open(filename, O_RDONLY);
 	if (file == -1)
 	{
-		perror(filename);
+		close(all->saved_stdin);
 		close_saved(all);
-		freeme(all, 1);
-		exit(EXIT_FAILURE);
+		print_error_2("minishell: ", filename, ": No such file or directory");
+		close(all->pipe_fds[0]);
+		close(all->pipe_fds[1]);
+		if (all->pid != -1)
+		{
+			freeme(all, 1);
+			exit(EXIT_FAILURE);
+		}
+		all->i_a = -1;
+		all->j_a = -1;
+		return (1);
 	}
 	dup2(file, STDIN_FILENO);
 	close(file);
+	return (0);
 }
 
 void	apply_redirections_to_command_line(t_all *all)
@@ -33,19 +43,21 @@ void	apply_redirections_to_command_line(t_all *all)
 	t_dir	*tmp;
 
 	tmp = all->test->dir;
-	while (all->test && all->test->dir && all->test->dir->file)
+	while (tmp)
 	{
-		if (all->test->dir->type == HEREDOC)
-			redirect_heredoc(all->test->dir->file, all->saved_stdin, all);
-		if (all->test->dir->type == APPEND)
-			append_output(all->test->dir->file, all);
-		else if (all->test->dir->type == IN)
-			redirect_input(all->test->dir->file, all);
-		else if (all->test->dir->type == OUT)
-			redirect_output(all->test->dir->file, all);
-		all->test->dir = all->test->dir->next;
+		tmp->file = if_quote(tmp->file);
+		if (tmp->type == HEREDOC \
+			&& redirect_heredoc(tmp->file, all->saved_stdin, all))
+			break ;
+		else if (tmp->type == APPEND && append_output(tmp->file, all))
+			break ;
+		else if (tmp->type == IN && (redirect_input(tmp->file, all)))
+			break ;
+		else if (tmp->type == OUT && (redirect_output(tmp->file, all)))
+			break ;
+		tmp = tmp->next;
 	}
-	all->test->dir = tmp;
+	close(all->saved_stdin);
 }
 
 int	is_bultin(char *args)
@@ -87,8 +99,9 @@ int	is_real_num(const char *num)
 
 int	ft_exit_1(t_block *block)
 {
-	write(2, "exit\n", 5);
-	if (block->arg && len_tab(block->arg) > 1 && !is_real_num(block->arg[1]))
+	if ((block->arg && len_tab(block->arg) != 1) \
+	|| (block->arg && !is_real_num(block->arg[0])))
 		return (write(2, "exit doesn't have the right arguments\n", 39), 0);
+	write(2, "exit\n", 5);
 	return (1);
 }

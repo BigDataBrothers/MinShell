@@ -6,7 +6,7 @@
 #    By: myassine <myassine@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/10/06 02:16:52 by myassine          #+#    #+#              #
-#    Updated: 2024/02/23 16:41:45 by myassine         ###   ########.fr        #
+#    Updated: 2024/02/27 17:32:33 by myassine         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,6 +14,7 @@ SRCS_DIR = srcs/
 
 SRCS			= 	minishell.c \
 					main_1.c \
+					main_2.c \
 					struct_main.c \
 					struct_main2.c \
 					check_quote.c \
@@ -23,13 +24,16 @@ SRCS			= 	minishell.c \
 					lib_mini_2.c \
 					lib_mini_3.c \
 					lib_mini_4.c \
+					lib_mini_5.c \
 					ft_split_path.c \
 					tokenization.c \
 					tokenization_2.c \
 					tokenization_3.c \
 					verifcmd.c \
 					free.c \
+					free_2.c\
 					print.c \
+					signal.c \
 					mini1.c \
 					mini2.c \
 					mini3.c \

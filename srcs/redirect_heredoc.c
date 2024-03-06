@@ -6,28 +6,27 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 17:47:27 by myassine          #+#    #+#             */
-/*   Updated: 2024/02/23 17:23:55 by myassine         ###   ########.fr       */
+/*   Updated: 2024/03/01 20:25:32 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	redirect_heredoc_2(int *heredoc_file)
+int	redirect_heredoc_2(int *heredoc_file, t_all *all)
 {
 	(*heredoc_file) = open("heredoc_temp_file.txt", \
 	O_CREAT | O_TRUNC | O_WRONLY, 0666);
 	if ((*heredoc_file) == -1)
 	{
 		write(2, "Erreur lors de la création du fichier heredoc\n", 48);
-		exit(EXIT_FAILURE);
+		if (all->pid != -1)
+		{
+			freeme(all, 1);
+			exit(EXIT_FAILURE);
+		}
+		return (1);
 	}
-}
-
-void	redirect_heredoc_3(t_all *all)
-{
-	write(2, "Erreur lors de l'écriture dans le fichier heredoc\n", 52);
-	all_free_1(all->test, all->env, all->head_env, all->args);
-	exit(EXIT_FAILURE);
+	return (0);
 }
 
 void	sigdoc(int sig)
@@ -52,15 +51,15 @@ void	sigdoc2(int sig)
 	}
 }
 
-void	redirect_heredoc(char *delimiter, int saved_stdin, t_all *all)
+int	redirect_heredoc(char *delimiter, int saved_stdin, t_all *all)
 {
 	char	*input;
 	int		heredoc_file;
 
 	signal(SIGQUIT, SIG_IGN);
 	signal(SIGINT, &sigdoc);
-	redirect_heredoc_2(&heredoc_file);
-	g_ctrl_c = heredoc_file;
+	if (redirect_heredoc_2(&heredoc_file, all))
+		return (1);
 	dup2(saved_stdin, STDIN_FILENO);
 	while (g_ctrl_c != 130)
 	{
@@ -75,6 +74,8 @@ void	redirect_heredoc(char *delimiter, int saved_stdin, t_all *all)
 		ft_putstr_fd("\n", heredoc_file);
 		free(input);
 	}
+	dup2(STDIN_FILENO, saved_stdin);
 	close(heredoc_file);
 	redirect_input("heredoc_temp_file.txt", all);
+	return (0);
 }

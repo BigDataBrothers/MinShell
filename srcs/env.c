@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 21:16:50 by myassine          #+#    #+#             */
-/*   Updated: 2024/02/21 12:07:05 by myassine         ###   ########.fr       */
+/*   Updated: 2024/03/01 16:21:01 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,20 +16,20 @@ int	build_env_2(t_env *env, t_env *head_env, char **envp)
 {
 	envp = envp;
 	head_env = env;
-	env->str[0] = "PWD";
+	env->str[0] = ft_strdup("PWD");
 	env->str[1] = get_current_directory_with_prompt();
 	env->next = malloc(sizeof(t_env));
 	if (!env->next)
 		return (FAILURE);
 	env = env->next;
-	env->str[0] = "SHLVL";
-	env->str[1] = "1";
+	env->str[0] = ft_strdup("SHLVL");
+	env->str[1] = ft_strdup("1");
 	env->next = malloc(sizeof(t_env));
 	if (!env->next)
 		return (FAILURE);
 	env = env->next;
-	env->str[0] = "_";
-	env->str[1] = "/usr/bin/env";
+	env->str[0] = ft_strdup("_");
+	env->str[1] = ft_strdup("/usr/bin/env");
 	env->next = NULL;
 	env = head_env;
 	return (SUCCESS);
@@ -95,5 +95,5 @@ int	build_env(t_env *env, t_env *head_env, char **envp)
 		env = env->next;
 		i++;
 	}
-	return (SUCCESS);
+	return (env = head_env, SUCCESS);
 }

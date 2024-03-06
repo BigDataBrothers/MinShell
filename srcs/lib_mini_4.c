@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/28 20:12:03 by myassine          #+#    #+#             */
-/*   Updated: 2024/02/21 18:10:14 by myassine         ###   ########.fr       */
+/*   Updated: 2024/02/25 16:24:14 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,28 +81,4 @@ void	return_neg(char *str)
 	while (str[++i])
 		if (str[i] < 0)
 			str[i] *= -1;
-}
-
-int	nbr_arg(char **token, int j)
-{
-	int	i;
-	int	len;
-
-	i = 0;
-	len = j;
-	while (token[j])
-	{
-		if (is_redir(token[j]))
-		{
-			if (!token[j + 1])
-				return (-1);
-			j += 2;
-			i += 2;
-		}
-		else
-			j++;
-	}
-	j -= len;
-	j -= i;
-	return (j);
 }

@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 18:34:30 by myassine          #+#    #+#             */
-/*   Updated: 2024/02/13 16:12:12 by myassine         ###   ########.fr       */
+/*   Updated: 2024/03/01 16:20:31 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ int	rpl_en_var_2(char *str, t_env *tmp)
 		free(tmp->str[1]);
 	te = if_quote(str);
 	tmp->str[1] = post_egal(te);
-	free(te);
 	if (!tmp->str[1])
 		return (0);
 	return (1);
@@ -54,25 +53,30 @@ t_env	*rpl_env_var(t_env *env, t_env *head_env, char *str)
 t_env	*sup_env_var(t_env *env, t_env *head_env, char *str)
 {
 	t_env	*tmp;
+	t_env	*tmp_av;
 	char	*str2;
 
 	str2 = pre_egal(str);
-	while (env && env->next)
+	tmp = env;
+	tmp_av = NULL;
+	while (tmp)
 	{
-		tmp = env->next;
 		if (!ft_strcmp(tmp->str[0], str2))
 		{
-			env->next = tmp->next;
+			if (tmp_av)
+				tmp_av->next = tmp->next;
+			if (tmp == env)
+				env = tmp->next;
 			free(tmp->str[0]);
 			free(tmp->str[1]);
 			free(tmp);
 			free(str2);
-			return (head_env);
+			return (env);
 		}
-		env = env->next;
+		tmp_av = tmp;
+		tmp = tmp->next;
 	}
-	free(str2);
-	return (head_env);
+	return (free(str2), head_env);
 }
 
 void	ft_env(t_env *env, t_env *head_env, t_block *block)

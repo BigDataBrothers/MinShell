@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/09 02:19:09 by myassine          #+#    #+#             */
-/*   Updated: 2024/02/23 19:07:29 by myassine         ###   ########.fr       */
+/*   Updated: 2024/02/27 17:13:09 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,6 @@ enum e_vars
 	post_input,
 	concat
 };
-
-void	if_free(char *ptr)
-{
-	if (ptr)
-		free(ptr);
-}
 
 char	*exp_(char *exp, t_env *env, t_env *head_env)
 {
@@ -49,17 +43,8 @@ void	free_exp(char **v)
 		if_free(v[tmp]);
 }
 
-char	*process_exp_variable(char *input, int *i, t_all *all)
+void	process_exp_variable_2(char *v[6], t_all *all)
 {
-	char	*v[6];
-	int		len_exp;
-	int		j;
-
-	v[pre_exp] = ft_substr(input, 0, *i);
-	len_exp = len_word_exp(input, *i);
-	v[exp] = ft_substr(input, *i, len_exp);
-	j = *i + ft_strlen(v[exp]);
-	v[post_exp] = ft_substr(input, j, ft_strlen(input));
 	if (!ft_strcmp(v[exp] + 1, "?"))
 	{
 		if (g_ctrl_c == 130)
@@ -71,6 +56,20 @@ char	*process_exp_variable(char *input, int *i, t_all *all)
 	}
 	else
 		v[tmp] = exp_(v[exp], all->env, all->head_env);
+}
+
+char	*process_exp_variable(char *input, int *i, t_all *all)
+{
+	char	*v[6];
+	int		len_exp;
+	int		j;
+
+	v[pre_exp] = ft_substr(input, 0, *i);
+	len_exp = len_word_exp(input, *i);
+	v[exp] = ft_substr(input, *i, len_exp);
+	j = *i + ft_strlen(v[exp]);
+	v[post_exp] = ft_substr(input, j, ft_strlen(input));
+	process_exp_variable_2(v, all);
 	j = -1;
 	while (v[tmp] && v[tmp][++j])
 		if (is_spec_char(v[tmp][j]))
@@ -94,7 +93,7 @@ char	*expa_chang(char *input, t_all *all)
 
 	i = 0;
 	tmp = NULL;
-	while (input[i] && input[i + 1])
+	while (input && input[i] && input[i + 1])
 	{
 		if (is_doll_sign(input[i]))
 		{
@@ -102,13 +101,11 @@ char	*expa_chang(char *input, t_all *all)
 			if (!tmp)
 			{
 				if_free(input);
-				// input = NULL;
 				break ;
 			}
-			// printf(GREEN"input: %s"RESET"\n", input);
 			input = ft_strdup(tmp);
-			if (tmp)
-				free(tmp);
+			if_free(tmp);
+			i = 0;
 		}
 		if (is_doll_sign(input[i]) && input[i + 1] && is_alpha(input[i + 1]))
 			i--;

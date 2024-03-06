@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 21:39:12 by myassine          #+#    #+#             */
-/*   Updated: 2024/02/23 17:09:21 by myassine         ###   ########.fr       */
+/*   Updated: 2024/02/25 16:41:32 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,10 +63,10 @@ void	process_command_token(char **token, int *j, t_block *tmp)
 		tmp->cmd = ft_strdup(token[(*j)++]);
 }
 
-void	process_redirection_token(char **token, int *j, t_block *tmp)
+void	process_redirection_token(char **token, int *i, int *j, t_block *tmp)
 {
-	choose_type_redir(token, *j, tmp->dir);
-	(*j)++;
+	choose_type_redir(token, *i, tmp->dir);
+	(*j) = (*i) + 1;
 	tmp->dir->file = ft_strdup(token[(*j)]);
 	tmp->dir->fd = -1;
 	tmp->dir->next = create_new_dir();

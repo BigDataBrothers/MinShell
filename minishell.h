@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jskiba <jskiba@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 00:51:05 by myassine          #+#    #+#             */
-/*   Updated: 2024/02/23 17:24:00 by myassine         ###   ########.fr       */
+/*   Updated: 2024/03/03 22:10:01 by jskiba           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,8 +103,6 @@
 //   STRUCTURES   //
 ////////////////////
 
-extern int	g_ctrl_c;
-
 enum e_dir
 {
 	FILES,
@@ -172,6 +170,7 @@ enum e_REDIR_TYPES
 void		freeme(t_all *all, int action);
 int			len_z_tab(char *str);
 char		*mouv_tab(char *cmd);
+extern int	g_ctrl_c;
 
 /* ************************************************************************** */
 char		**ft_split_path(char const *s, char c);
@@ -181,8 +180,8 @@ t_dir		*create_new_dir(void);
 void		process_commands(char **split_input, t_block *original);
 void		choose_type_redir(char **token, int j, t_dir *new_dir);
 void		process_command_token(char **token, int *j, t_block *tmp);
-void		process_redirection_token(char **token, int *j, t_block *tmp);
-void		allocate_and_assign_arguments(char **token, int *j, t_block *tmp);
+void		process_redirection_token(char **tok, int *i, int *j, t_block *tmp);
+void		alloc_and_assign_args(char **token, int *j, t_block *tmp);
 void		free_start_dir(t_dir *dir);
 void		add_to_special(char *result, char *str, int *i, int *j);
 void		cleanup_memory(char **split_input);
@@ -193,7 +192,6 @@ void		free_struct_dir(t_dir *dir);
 //Minishell
 char		*get_current_directory_with_prompt(void);
 void		eof(char *input, char **envs, t_env *env, t_env *head_env);
-void		terminat(char *input, char **envs, t_env *env, t_env *head_env);
 char		*remove_char_at_index(char *str, int i);
 void		close_saved(t_all *all);
 //Print
@@ -218,7 +216,6 @@ int			ft_lstsize_block(t_block *lst);
 //Expand
 char		*expa_chang(char *input, t_all *all);
 char		*exp_(char *exp, t_env *env, t_env *head_env);
-void		if_free(char *ptr);
 void		free_exp(char **v);
 
 //Expand_2
@@ -246,7 +243,7 @@ void		ft_env(t_env *env, t_env *head_env, t_block *block);
 int			cut_export_argument(char *arg_export);
 
 void		ft_export(t_env *env, t_env *head_env, t_block *block);
-void		ft_unset(t_env *env, t_env *head_env, t_block *block);
+t_all		*ft_unset(t_env *env, t_env *head_env, t_all *all);
 int			is_quote(char *str);
 void		printc(char *input);
 int			check_n(char **tab);
@@ -354,7 +351,8 @@ void		exec_all(t_all *all);
 char		*ft_strjoin_lfree(char *s1, char *s2);
 char		*ft_strjoin_rfree(char *s1, char *s2);
 char		*ft_strjoin_dfree(char *s1, char *s2);
-
+int			is_space_word(char *str);
+bool		alloc_and_assign_args_2(char **token, int *i, int *j, t_block *tmp);
 //Malloc
 t_dir		*new_dir(char *redir, char *target, t_dir *dir);
 t_dir		*malloc_dir(void);
@@ -369,14 +367,13 @@ int			no_input(char *input);
 
 //mini2.c
 void		sig_antislash(int sig);
-// void		sigint_handler(int sig);
 void		all_free_1(t_block *test, t_env *env, t_env *head_env, char **args);
 int			ft_strncmp(const char *s1, const char *s2, size_t n);
-void		redirect_output(char *filename, t_all *all);
-void		append_output(char *filename, t_all *all);
+int			redirect_output(char *filename, t_all *all);
+int			append_output(char *filename, t_all *all);
 
 //mini3.c
-void		redirect_input(char *filename, t_all *all);
+int			redirect_input(char *filename, t_all *all);
 void		apply_redirections_to_command_line(t_all *all);
 int			is_bultin(char *args);
 int			is_real_num(const char *num);
@@ -386,12 +383,13 @@ int			ft_exit_1(t_block *block);
 int			aplic_bulltin(t_all *all, t_env *env, t_env *head_env, char **args);
 
 //minishell.c
-void		redirect_heredoc(char *delimiter, int saved_stdin, t_all *all);
+int			redirect_heredoc(char *delimiter, int saved_stdin, t_all *all);
 void		sigdoc(int sig);
 //lstsplit.c
 char		**ft_lstsplit(t_env **lst);
 char		*verif_cmd(char **args, char **env);
 char		**creat_args(t_block *test, int *i_a, int *j_a);
 int			is_empty_input(t_all *all);
+int			redirect_heredoc_2(int *heredoc_file, t_all *all);
 
 #endif

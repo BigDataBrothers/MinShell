@@ -6,40 +6,35 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/29 18:43:20 by myassine          #+#    #+#             */
-/*   Updated: 2024/02/23 17:10:25 by myassine         ###   ########.fr       */
+/*   Updated: 2024/02/25 16:40:26 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	allocate_and_assign_arguments(char **token, int *j, t_block *tmp)
+void	alloc_and_assign_args(char **token, int *j, t_block *tmp)
 {
 	int		v;
 	int		argc;
 	char	**args;
 	int		i;
 
-	i = *j;
-	argc = nbr_arg(token, (i));
+	i = (*j - 1);
+	argc = nbr_arg(token, (i + 1));
 	if (argc == -1)
 		return ;
 	args = (char **)malloc(sizeof(char *) * (argc + 2));
 	if (!args)
 		return ;
 	v = 0;
-	while (token[i])
+	while (token[++i])
 	{
-		if (is_redir(token[i]))
-		{
-			process_redirection_token(token, j, tmp);
-			i++;
-			(*j)++;
-		}
+		if (alloc_and_assign_args_2(token, &i, j, tmp) == true)
+			;
 		else if (!tmp->cmd)
 			process_command_token(token, j, tmp);
 		else
 			args[v++] = ft_strdup(token[i]);
-		i++;
 	}
 	*j = i;
 	args[v] = '\0';
@@ -51,7 +46,7 @@ int	treat_token(char **token, int *j, t_block *tmp)
 	if (!tmp->cmd && !is_redir(token[*j]))
 		process_command_token(token, j, tmp);
 	else
-		allocate_and_assign_arguments(token, j, tmp);
+		alloc_and_assign_args(token, j, tmp);
 	return (0);
 }
 

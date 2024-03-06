@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/26 20:07:15 by myassine          #+#    #+#             */
-/*   Updated: 2024/02/21 12:25:05 by myassine         ###   ########.fr       */
+/*   Updated: 2024/03/01 16:21:25 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,8 @@ char	*get_current_directory_with_prompt(void)
 {
 	static char	cwd[PATH_MAX];
 
-	getcwd(cwd, sizeof(cwd));
+	if (!getcwd(cwd, sizeof(cwd)))
+		return (NULL);
 	return (cwd);
 }
 

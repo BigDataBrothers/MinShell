@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/26 20:07:05 by myassine          #+#    #+#             */
-/*   Updated: 2024/02/23 17:06:38 by myassine         ###   ########.fr       */
+/*   Updated: 2024/02/29 16:39:32 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,24 +26,16 @@ void	*ft_cd(char **args, t_env *env, t_env *head_env, t_all *all)
 	{
 		home = ft_get_env("HOME", env, head_env);
 		if (!home)
-		{
-			write(2, "$HOME not set\n", 14);
-			return (all->status = 1, NULL);
-		}
+			return (write(2, "$HOME not set\n", 14), all->status = 1, NULL);
 		res = chdir(home);
+		free(home);
 		if (res == -1)
-		{
-			perror("cd");
-			return (all->status = 1, NULL);
-		}
+			return (perror("cd"), all->status = 1, NULL);
 		return (all->status = 0, NULL);
 	}
 	res = chdir(args[1]);
 	if (res == -1)
-	{
-		perror("cd");
-		return (all->status = 1, NULL);
-	}
+		return (perror("cd"), all->status = 1, NULL);
 	return (all->status = 0, NULL);
 }
 
@@ -53,8 +45,7 @@ int	aplic_bulltin(t_all *all, t_env *env, t_env *head_env, char **args)
 		return (ft_cd(args, env, head_env, all), \
 		free(all->test->cmd), all->test->cmd = NULL, 1);
 	else if (args && !ft_strcmp(all->test->cmd, "unset"))
-		return (ft_unset(env, head_env, all->test), \
-		free(all->test->cmd), all->test->cmd = NULL, 1);
+		return (all = ft_unset(env, head_env, all), 1);
 	else if (args && !ft_strcmp(all->test->cmd, "export"))
 		return (ft_export(env, head_env, all->test), \
 		free(all->test->cmd), all->test->cmd = NULL, 1);

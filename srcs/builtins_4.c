@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 18:36:06 by myassine          #+#    #+#             */
-/*   Updated: 2024/02/13 16:13:59 by myassine         ###   ########.fr       */
+/*   Updated: 2024/03/01 15:48:39 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	ft_export(t_env *env, t_env *head_env, t_block *block)
 			i = i;
 		else if (check_export(block->arg[i]) == 2
 			&& !check_export_exist(env, head_env, block->arg[i]))
-			env = export_env_2(env, head_env, block->arg[i]);
+				env = export_env_2(env, head_env, block->arg[i]);
 		else if (check_export(block->arg[i]) == 2
 			&& check_export_exist(env, head_env, block->arg[i]))
 			env = rpl_env_var(env, head_env, block->arg[i]);
@@ -40,14 +40,13 @@ void	ft_export(t_env *env, t_env *head_env, t_block *block)
 	}
 }
 
-void	ft_unset(t_env *env, t_env *head_env, t_block *block)
+t_all	*ft_unset(t_env *env, t_env *head_env, t_all *all)
 {
-	if ((!ft_strcmp(block->cmd, "unset")) && (block->arg && block->arg[0])
-		&& (check_export_exist(env, head_env, block->arg[0])))
-	{
-		sup_env_var(env, head_env, block->arg[0]);
-		return ;
-	}
+	if ((!ft_strcmp(all->test->cmd, "unset"))
+		&& (all->test->arg && all->test->arg[0])
+		&& (check_export_exist(env, head_env, all->test->arg[0])))
+		all->env = sup_env_var(env, head_env, all->test->arg[0]);
+	return (all);
 }
 
 int	is_quote(char *str)

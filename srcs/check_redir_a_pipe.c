@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 19:46:28 by myassine          #+#    #+#             */
-/*   Updated: 2024/02/23 16:56:38 by myassine         ###   ########.fr       */
+/*   Updated: 2024/03/01 17:12:24 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,16 +26,17 @@ int	process_redir(char *input, int *i, int *tmp, int (*is_re_func)(char))
 		(*i)++;
 	while (input[++*i])
 	{
-		if (is_alnum(input[*i]))
+		if (is_alnum(input[*i]) || is_simple_quote(input[*i]) \
+			|| is_double_quote(input[*i]))
 			return (*tmp = 0, 0);
-		if (is_spec_char(input[*i]))
+		else if (is_spec_char(input[*i]))
 		{
 			if (is_pipe(input[*i]))
 				return (4);
 			return (3);
 		}
 	}
-	return (0);
+	return (3);
 }
 
 int	check_redir(char *input)
@@ -60,7 +61,6 @@ int	check_redir(char *input)
 		if (input[i])
 			i++;
 	}
-	i = -1;
 	return (check_redir_result(tmp));
 }
 

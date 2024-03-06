@@ -6,7 +6,7 @@
 /*   By: myassine <myassine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/28 21:47:40 by myassine          #+#    #+#             */
-/*   Updated: 2024/02/23 16:56:09 by myassine         ###   ########.fr       */
+/*   Updated: 2024/03/01 16:24:12 by myassine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ void	if_quote_2(char **input)
 	char	*tmp;
 
 	i = 0;
-	if (!(*input))
+	if (!input || !(*input))
 		return ;
 	while ((*input)[i])
 	{
