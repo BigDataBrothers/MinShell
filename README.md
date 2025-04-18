@@ -27,7 +27,7 @@ MinShell est un shell minimaliste implémentant les fonctionnalités de base d'u
 Clonez le dépôt et compilez le projet :
 
 ```bash
-git clone https://github.com/votre-nom/MinShell.git
+git clone https://github.com/BigDataBrothers/MinShell
 cd MinShell
 make
 ```
@@ -76,4 +76,4 @@ Assurez-vous que ces bibliothèques sont installées sur votre système avant de
 
 ## Licence
 
-Ce projet est sous licence MIT. Consultez le fichier `LICENSE` pour plus d'informations.
+Ce projet est sous licence MIT.
