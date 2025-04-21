@@ -2,7 +2,7 @@
 
 [![École 42](https://img.shields.io/badge/École-42-0055FF.svg)](https://42.fr)
 [![Status](https://img.shields.io/badge/Status-Completed-green.svg)]()
-[![License](https://img.shields.io/badge/License-MIT-green.svg)]()
+![License](https://img.shields.io/badge/License-42--School-lightblue)
 ![Shell](https://img.shields.io/badge/Shell-Bash-lightgrey.svg)
 ![C](https://img.shields.io/badge/C-Language-00599C.svg)
 ![Readline](https://img.shields.io/badge/Readline-lib-lightgrey.svg)
@@ -84,4 +84,4 @@ Assurez-vous que ces bibliothèques sont installées sur votre système avant de
 
 ## Licence
 
-Ce projet est sous licence MIT.
+Ce projet est réalisé dans le cadre du cursus de l'école 42. Il est soumis à ses politiques académiques et ne peut être utilisé à des fins commerciales ou éducatives sans autorisation.
