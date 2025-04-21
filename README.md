@@ -1,5 +1,13 @@
 # MinShell
 
+[![École 42](https://img.shields.io/badge/École-42-0055FF.svg)](https://42.fr)
+[![Status](https://img.shields.io/badge/Status-Completed-green.svg)]()
+[![License](https://img.shields.io/badge/License-MIT-green.svg)]()
+![Shell](https://img.shields.io/badge/Shell-Bash-lightgrey.svg)
+![C](https://img.shields.io/badge/C-Language-00599C.svg)
+![Readline](https://img.shields.io/badge/Readline-lib-lightgrey.svg)
+![Threads](https://img.shields.io/badge/Pthreads-supported-blue.svg)
+
 MinShell est un shell minimaliste implémentant les fonctionnalités de base d'un shell Unix.
 
 ## Fonctionnalités
