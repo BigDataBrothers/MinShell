@@ -80,7 +80,7 @@ Assurez-vous que ces bibliothèques sont installées sur votre système avant de
 
 ## Auteur
 
-- **Mehdi Yassine**
+- **Mehdi Yassine** - [GitHub](https://github.com/BigDataBrothers)
 
 ## Licence
 
